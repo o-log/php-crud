@@ -1,0 +1,23 @@
+{
+	"repositories" : [
+		{
+			"type" : "git",
+			"url" : "https://github.com/o-log/php-router"
+		},
+		{
+			"type" : "git",
+			"url" : "https://github.com/o-log/php-model"
+		}
+	],
+	"require" : {
+		"phpunit/phpunit" : "5.2.*",
+		"o-log/php-router" : "dev-master",
+		"o-log/php-model" : "dev-master"
+	},
+	"autoload" : {
+		"psr-0" : {
+            "OLOG" : "",
+			"CRUDDemo" : ""
+		}
+	}
+}
