@@ -7,7 +7,6 @@ class ListTemplate
 {
     static public function render($config_arr, $context_arr, $list_title = ''){
         $model_class_name = $config_arr[ControllerCRUD::CONFIG_KEY_MODEL_CLASS_NAME];
-
         \OLOG\Helpers::assert($model_class_name);
 
         //
@@ -124,8 +123,6 @@ class ListTemplate
             foreach ($objs_ids_arr as $obj_id) {
                 $obj_obj = \OLOG\CRUD\Helpers::createAndLoadObject($model_class_name, $obj_id);
 
-                $show_edit_button = true;
-
                 echo '<tr>';
                 foreach ($props_arr as $prop_obj) {
                     $title = $prop_obj->getValue($obj_obj);
@@ -172,24 +169,16 @@ class ListTemplate
                     }
                     */
 
-                    echo '<td>' . $title . '</td>';
+                    echo '<td>' . Sanitize::sanitizeTagContent($title) . '</td>';
                 }
 
-                $edit_url = \OLOG\CRUD\ControllerCRUD::getEditUrl($model_class_name, $obj_id);
-                $delete_url = \OLOG\CRUD\ControllerCRUD::getDeleteUrl($model_class_name, $obj_id);
                 echo '<td style="text-align: right;">';
 
-                if ($show_edit_button){
-                    echo '<a class="glyphicon glyphicon-edit" href="' . $edit_url . '"></a> ';
-                }
+                $edit_url = \OLOG\CRUD\ControllerCRUD::getEditUrl($model_class_name, $obj_id);
+                echo '<a class="glyphicon glyphicon-edit" href="' . $edit_url . '"></a> ';
 
-                $delete_disabled = false;
-                $model_class_interfaces_arr = class_implements($model_class_name);
-                if (!array_key_exists('OLOG\Model\InterfaceDelete', $model_class_interfaces_arr)) {
-                    $delete_disabled = true;
-                }
-
-                if (!$delete_disabled) {
+                if ($model_class_name instanceof \OLOG\Model\InterfaceDelete){
+                    $delete_url = \OLOG\CRUD\ControllerCRUD::getDeleteUrl($model_class_name, $obj_id);
                     echo '<a class="glyphicon glyphicon-remove" href="' . $delete_url . '?destination=' . urlencode($_SERVER['REQUEST_URI']) . '" onclick="return window.confirm(\'Уверены?\')"></a>';
                 }
 
@@ -197,7 +186,8 @@ class ListTemplate
                 echo '</tr>';
             }
 
-            echo '</tbody></table>';
+            echo '</tbody>';
+            echo '</table>';
 
             /* TODO
             echo \Sportbox\Pager::renderPager(count($objs_ids_arr));

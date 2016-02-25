@@ -16,10 +16,19 @@ class ControllerCRUD
 
     static public $base_breadcrumbs = array();
 
+    /**
+     * Выводит список моделей.
+     * @param $_mode
+     * @param string $config_key ключ конфига круда, для которого нужно вывести список моделей
+     * @return string
+     * @throws \Exception
+     */
     static public function listAction($_mode, $config_key = '(\w+)')
     {
         if ($_mode == \OLOG\Router::GET_URL) return self::URL_PREFIX . $config_key;
         if ($_mode == \OLOG\Router::GET_METHOD) return __METHOD__;
+
+        //
 
         $config_arr = \OLOG\ConfWrapper::value(self::CONFIG_ROOT . '.' . $config_key);
         \OLOG\Helpers::assert($config_arr);
@@ -55,7 +64,8 @@ class ControllerCRUD
         ListTemplate::render($config_arr, $context_arr);
         $list_html = ob_get_clean();
 
-        echo $list_html;
+        // TODO: get layout render callable from config
+        DefaultLayoutTemplate::render($list_html);
 
         /* TODO
         // todo: move to helper?
