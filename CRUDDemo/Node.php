@@ -6,6 +6,9 @@
 
 namespace CRUDDemo;
 
+use OLOG\CRUD\CRUDConfigReader;
+use OLOG\CRUD\Elements;
+
 class Node implements
     \OLOG\Model\InterfaceFactory,
     \OLOG\Model\InterfaceLoad,
@@ -51,5 +54,35 @@ class Node implements
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    static public function getCRUDConfig(){
+        return [
+            CRUDConfigReader::CONFIG_KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class,
+            CRUDConfigReader::CONFIG_KEY_LIST => [
+            ],
+            CRUDConfigReader::CONFIG_KEY_EDITOR => [
+                'tab_fields' => [
+                    'ELEMENTS' => [
+                        'form' => [
+                            'TYPE' => Elements::ELEMENT_FORM,
+                            'ELEMENTS' => [
+                                'title' => [
+                                    'TYPE' => Elements::ELEMENT_FORM_ROW,
+                                    'FIELD_NAME' => 'title'
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'tab_terms' => [
+                    'ELEMENTS' => [
+                        'title' => [
+
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 }

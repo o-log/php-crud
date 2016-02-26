@@ -4,7 +4,7 @@ namespace OLOG\CRUD;
 
 class AddFormTemplate
 {
-    static public function render($model_class_name)
+    static public function render($model_class_name, $config_key)
     {
         $context_arr = array();
         if (array_key_exists('context_arr', $_GET)) {
@@ -37,7 +37,8 @@ class AddFormTemplate
         $context_arr_fields = $context_arr;
 
         // TODO: fix action
-        echo '<form id="form" role="form" method="post" class="form-horizontal" action="/crud/create/' . urlencode($model_class_name) . '">';
+        echo '<form id="form" role="form" method="post" class="form-horizontal" action="' . CRUDController::addAction(\OLOG\Router::GET_URL, $config_key) . '">';
+        echo '<input type="hidden" name="operation_code" value="' . CRUDController::OPERATION_SAVE_EDITOR_FORM . '">';
 
         foreach ($props_arr as $prop_obj){
             // TODO
@@ -77,9 +78,13 @@ class AddFormTemplate
         <input type="hidden" name="<?php echo $field_name ?>" value="<?php echo $field_value ?>">
     <?php endforeach ?>
         <?php
+
+        /* TODO
         if (array_key_exists("destination_url", $_REQUEST)) {
             echo '<input type="hidden" name="destination" value="' . $_REQUEST["destination_url"] . '">';
         }
+        */
+
         ?>
         <div class="row">
             <div class="col-sm-8 col-sm-offset-4">

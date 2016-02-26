@@ -10,13 +10,16 @@ class Helpers
      * Формат:
      * экранное_имя_класса "имя_объекта_из_поля_с_именем"
      */
+    /*
     static public function getFullObjectTitle($container_obj)
     {
         $container_obj_title = \Sportbox\CRUD\Helpers::getModelTitleForObj($container_obj);
         $container_obj_model_screen_name = \Sportbox\CRUD\Helpers::getModelClassScreenNameForObj($container_obj);
         return $container_obj_model_screen_name . ' "' . $container_obj_title . '"';
     }
+    */
 
+    /* REMOVE?
     static public function getObjContainerObj($obj)
     {
         \Sportbox\Helpers::assert($obj);
@@ -41,7 +44,9 @@ class Helpers
 
         throw new \Exception();
     }
+    */
 
+    /* REMOVE?
     public static function getContainerObjByLinkFieldName($obj, $field_name)
     {
 
@@ -63,6 +68,7 @@ class Helpers
         return null;
 
     }
+    */
 
     /**
      * Кнопку "добавить" по умолчанию не выводим. Это для защиты, чтобы не создавали модели без родителей (или без других обязательных данных).
@@ -75,6 +81,7 @@ class Helpers
      * @param $context_arr
      * @return bool
      */
+    /*
     public static function canDisplayCreateButton($model_class_name, $context_arr)
     {
         if (!property_exists($model_class_name, 'crud_create_button_required_fields_arr')) {
@@ -95,14 +102,9 @@ class Helpers
 
         return true;
     }
-
-    /*
-    static public function exceptionIfClassNotImplementsInterface($class_name, $interface_class_name)
-    {
-        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($class_name, $interface_class_name);
-    }
     */
 
+    /*
     public static function getModelTitle($model_class_name, $obj_id)
     {
         if (!property_exists($model_class_name, 'crud_model_title_field')) {
@@ -153,25 +155,6 @@ class Helpers
         return $crud_model_class_screen_name;
     }
 
-    public static function getObjectFieldValue($obj, $field_name)
-    {
-        $obj_class_name = get_class($obj);
-
-        $reflect = new \ReflectionClass($obj_class_name);
-        $field_prop_obj = null;
-
-        foreach ($reflect->getProperties() as $prop_obj) {
-            if ($prop_obj->getName() == $field_name) {
-                $field_prop_obj = $prop_obj;
-            }
-        }
-
-        \OLOG\Helpers::assert($field_prop_obj);
-
-        $field_prop_obj->setAccessible(true);
-        return $field_prop_obj->getValue($obj);
-    }
-
     static public function getCrudEditorFieldsArrForClass($model_class_name)
     {
         $rc = new \ReflectionClass($model_class_name);
@@ -206,23 +189,9 @@ class Helpers
 
         return $required;
     }
+    */
 
-    static public function getTitleForField($model_class_name, $field_name)
-    {
-        $title = $field_name;
-
-        /* TODO
-        if (property_exists($model_class_name, 'crud_field_titles_arr')) {
-            $crud_field_titles_arr = $model_class_name::$crud_field_titles_arr;
-            if (array_key_exists($field_name, $crud_field_titles_arr)) {
-                $title = $crud_field_titles_arr[$field_name];
-            }
-        }
-        */
-
-        return $title;
-    }
-
+    /*
     static public function getDescriptionForField($model_class_name, $field_name)
     {
         $description = '';
@@ -236,6 +205,7 @@ class Helpers
 
         return $description;
     }
+    */
 
     /**
      * Возвращает одну страницу списка объектов указанного класса.
@@ -301,6 +271,7 @@ class Helpers
 
     }
 
+    /*
     public static function currentUserHasRightsToEditModel($model_class_name)
     {
 
@@ -314,31 +285,7 @@ class Helpers
 
         return false;
     }
-
-    public static function setObjectFieldsFromArray($obj, $values_arr)
-    {
-        $reflect = new \ReflectionClass($obj);
-
-        foreach ($values_arr as $key => $value) {
-            $property_obj = $reflect->getProperty($key);
-            $property_obj->setAccessible(true);
-            $property_obj->setValue($obj, $value);
-        }
-
-        return $obj;
-    }
-
-    public static function createAndLoadObject($model_class_name, $obj_id)
-    {
-        // TODO: use interfaceFactory
-
-        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceLoad');
-
-        $obj = new $model_class_name;
-        \OLOG\Helpers::assert($obj->load($obj_id));
-
-        return $obj;
-    }
+    */
 
     public static function getIdFieldName($model_class_name)
     {
@@ -349,8 +296,10 @@ class Helpers
         }
     }
 
+    /*
     public static function stringCanBeUsedAsLinkText($text)
     {
         return preg_match('/[0-9A-Za-zА-Яа-яЁё]/u', $text);
     }
+    */
 }

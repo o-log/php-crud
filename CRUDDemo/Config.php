@@ -2,7 +2,7 @@
 
 namespace CRUDDemo;
 
-use OLOG\CRUD\ConfigReader;
+use OLOG\CRUD\CRUDConfigReader;
 
 class Config
 {
@@ -10,20 +10,8 @@ class Config
 
     public static function get()
     {
-        $conf[ConfigReader::CONFIG_ROOT] = [
-            'node' => [
-                ConfigReader::CONFIG_KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class,
-                'editor' => [
-                    'tab_1' => [
-                        'fields' => [
-                            'title' => [
-
-                            ]
-                        ]
-                    ]
-                ]
-
-            ]
+        $conf[CRUDConfigReader::CONFIG_ROOT] = [
+            'node' => \CRUDDemo\Node::getCRUDConfig()
         ];
 
         $conf['return_false_if_no_route'] = true; // for local php server

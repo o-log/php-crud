@@ -5,9 +5,9 @@ namespace OLOG\CRUD;
 
 class ListTemplate
 {
-    static public function render($config_key, $context_arr, $list_title = ''){
+    static public function render($bubble_key, $context_arr, $list_title = ''){
         //$config_arr = CRUDController::getConfigForKey($config_key);
-        $model_class_name = ConfigReader::getModelClassNameForConfigKey($config_key);
+        $model_class_name = CRUDConfigReader::getModelClassNameForKey($bubble_key);
 
         if (!$list_title){
             // TODO: get title from config
@@ -70,7 +70,7 @@ class ListTemplate
         /* TODO restore check
         if (\OLOG\CRUD\Helpers::canDisplayCreateButton($model_class_name, $context_arr)) {
         */
-            echo ' <a class="btn btn-default glyphicon glyphicon-plus" href="' . Sanitize::sanitizeUrl(CRUDController::addAction(\OLOG\Router::GET_URL, $config_key)) . '?' . http_build_query(array('context_arr' => $context_arr)) . '"></a>';
+            echo ' <a class="btn btn-default glyphicon glyphicon-plus" href="' . Sanitize::sanitizeUrl(CRUDController::addAction(\OLOG\Router::GET_URL, $bubble_key)) . '?' . http_build_query(array('context_arr' => $context_arr)) . '"></a>';
         /*
         }
         */
@@ -86,7 +86,8 @@ class ListTemplate
         }
         */
 
-        echo '<div class="clearfix"></div>';
+        // TODO: not needed?
+        //echo '<div class="clearfix"></div>';
 
 
         // create fast add block
@@ -122,14 +123,17 @@ class ListTemplate
             echo '<thead><tr>';
 
             foreach ($props_arr as $prop_obj) {
-                $table_title = \OLOG\CRUD\Helpers::getTitleForField($model_class_name, $prop_obj->getName());
+                // TODO
+                //$table_title = \OLOG\CRUD\Helpers::getTitleForField($model_class_name, $prop_obj->getName());
+                $table_title = $prop_obj->getName();
+
                 echo '<th>' . $table_title . '</th>';
             }
             echo '<th></th></tr></thead>';
             echo '<tbody>';
 
             foreach ($objs_ids_arr as $obj_id) {
-                $obj_obj = \OLOG\CRUD\Helpers::createAndLoadObject($model_class_name, $obj_id);
+                $obj_obj = ObjectLoader::createAndLoadObject($model_class_name, $obj_id);
 
                 echo '<tr>';
                 foreach ($props_arr as $prop_obj) {
@@ -182,8 +186,16 @@ class ListTemplate
 
                 echo '<td style="text-align: right;">';
 
-                $edit_url = \OLOG\CRUD\CRUDController::getEditUrl($model_class_name, $obj_id);
-                echo '<a class="glyphicon glyphicon-edit" href="' . $edit_url . '"></a> ';
+                // если есть конфиг редактора - выводим ссылку на первый таб из этого конфига
+                $editor_config_arr = CRUDConfigReader::getEditorConfigForKey($bubble_key);
+                if ($editor_config_arr) {
+                    $editor_tabs_arr = array_keys($editor_config_arr);
+                    if (count($editor_tabs_arr)) {
+                        $tab_key = $editor_tabs_arr[0];
+                        $edit_url = \OLOG\CRUD\CRUDController::editAction(\OLOG\Router::GET_URL, $bubble_key, $obj_id, $tab_key);
+                        echo '<a class="glyphicon glyphicon-edit" href="' . $edit_url . '"></a> ';
+                    }
+                }
 
                 if ($model_class_name instanceof \OLOG\Model\InterfaceDelete){
                     $delete_url = \OLOG\CRUD\CRUDController::getDeleteUrl($model_class_name, $obj_id);
