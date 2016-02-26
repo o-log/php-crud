@@ -7,14 +7,12 @@ namespace OLOG\CRUD;
  * Если умеет загружаться - круд может показывать такие модели.
  * Если умеет сохраняться - круд может редактировать такие модели.
  */
-class ControllerCRUD
+class CRUDController
 {
-    const CONFIG_ROOT = 'phpcrud';
-    const CONFIG_KEY_MODEL_CLASS_NAME = 'model_class_name';
-
     const URL_PREFIX = '/admin/php_crud/';
 
-    static public $base_breadcrumbs = array();
+    // goes to layout?
+    //static public $base_breadcrumbs = array();
 
     /**
      * Выводит список моделей.
@@ -30,20 +28,11 @@ class ControllerCRUD
 
         //
 
-        $config_arr = \OLOG\ConfWrapper::value(self::CONFIG_ROOT . '.' . $config_key);
-        \OLOG\Helpers::assert($config_arr);
-
-        //
-        // проверка
-        //
-
         /* TODO
         \Sportbox\Helpers::exit403If(!\Sportbox\CRUD\Helpers::currentUserHasRightsToEditModel($model_class_name));
         \Sportbox\CRUD\Helpers::exceptionIfClassNotImplementsInterface($model_class_name, 'Sportbox\Model\InterfaceLoad');
         */
 
-        //
-        //
         //
 
         $context_arr = array();
@@ -51,21 +40,11 @@ class ControllerCRUD
             $context_arr = $_GET['context_arr'];
         }
 
-        /*
-        $list_html =  \Sportbox\Render::template2('Sportbox/CRUD/templates/list.tpl.php', array(
-                'model_class_name' => $model_class_name,
-                'context_arr' => $context_arr,
-                'list_title' => ''
-            )
-        );
-        */
-
         ob_start();
-        ListTemplate::render($config_arr, $context_arr);
-        $list_html = ob_get_clean();
+        ListTemplate::render($config_key, $context_arr);
+        $html = ob_get_clean();
 
-        // TODO: get layout render callable from config
-        DefaultLayoutTemplate::render($list_html);
+        self::renderLayout($html);
 
         /* TODO
         // todo: move to helper?
@@ -88,28 +67,35 @@ class ControllerCRUD
      * Принимает в запросе контекст (набор полей со значениями) и передает его на экшен создания объекта.
      * @param $model_class_name
      */
-    public function addAction($model_class_name)
+    static public function addAction($_mode, $config_key = '(\w+)')
     {
+        if ($_mode == \OLOG\Router::GET_URL) return self::URL_PREFIX . $config_key . '/add';
+        if ($_mode == \OLOG\Router::GET_METHOD) return __METHOD__;
 
-        \Sportbox\Helpers::exit403If(!\Sportbox\CRUD\Helpers::currentUserHasRightsToEditModel($model_class_name));
+        //
 
-        \Sportbox\Helpers::assert($model_class_name);
-        \Sportbox\CRUD\Helpers::exceptionIfClassNotImplementsInterface($model_class_name, 'Sportbox\Model\InterfaceLoad');
-        \Sportbox\CRUD\Helpers::exceptionIfClassNotImplementsInterface($model_class_name, 'Sportbox\Model\InterfaceSave');
+        $model_class_name = ConfigReader::getModelClassNameForConfigKey($config_key);
 
-        $html = \Sportbox\Render::template2('Sportbox/CRUD/templates/add_form.tpl.php', array(
-                'model_class_name' => $model_class_name
-            )
-        );
 
-        echo \Sportbox\Render::template2('Sportbox/Admin/templates/layout.tpl.php', array(
-                'title' => 'Добавление',
-                'content' => $html,
-                'breadcrumbs_arr' => self::$base_breadcrumbs
-            )
-        );
+        /* TODO
+        \OLOG\Helpers::exit403If(!\OLOG\CRUD\Helpers::currentUserHasRightsToEditModel($model_class_name));
+        */
 
-        //return true;
+        \OLOG\Helpers::assert($model_class_name);
+        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceLoad');
+        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceSave');
+
+        ob_start();
+        AddFormTemplate::render($model_class_name);
+        $html = ob_get_clean();
+
+        self::renderLayout($html);
+    }
+
+    static public function renderLayout($html){
+        // TODO: also get layout render callable from config
+
+        DefaultLayoutTemplate::render($html);
     }
 
     /**

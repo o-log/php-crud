@@ -96,17 +96,12 @@ class Helpers
         return true;
     }
 
+    /*
     static public function exceptionIfClassNotImplementsInterface($class_name, $interface_class_name)
     {
-        /*
-        $model_class_interfaces_arr = class_implements($class_name);
-        if (!array_key_exists($interface_class_name, $model_class_interfaces_arr)) {
-            throw new \Exception('model class ' . $class_name . ' does not implement ' . $interface_class_name);
-        }
-        */
-
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($class_name, $interface_class_name);
     }
+    */
 
     public static function getModelTitle($model_class_name, $obj_id)
     {
@@ -125,7 +120,7 @@ class Helpers
 
     public static function getModelTitleForObj($obj)
     {
-        \Sportbox\Helpers::assert($obj);
+        \OLOG\Helpers::assert($obj);
 
         $obj_class_name = get_class($obj);
         $reflect = new \ReflectionClass($obj_class_name);
@@ -145,7 +140,7 @@ class Helpers
 
     public static function getModelClassScreenNameForObj($obj)
     {
-        \Sportbox\Helpers::assert($obj);
+        \OLOG\Helpers::assert($obj);
 
         $obj_class_name = get_class($obj);
 
@@ -171,7 +166,7 @@ class Helpers
             }
         }
 
-        \Sportbox\Helpers::assert($field_prop_obj);
+        \OLOG\Helpers::assert($field_prop_obj);
 
         $field_prop_obj->setAccessible(true);
         return $field_prop_obj->getValue($obj);
@@ -251,7 +246,7 @@ class Helpers
      * @param $context_arr array Массив пар "имя поля" - "значение поля"
      * @return array Массив идентикаторов объектов.
      */
-    static public function getObjIdsArrayForModel($model_class_name, $context_arr, $title_filter = '')
+    static public function getObjIdsArrForClassName($model_class_name, $context_arr, $title_filter = '')
     {
         $page_size = 100;
         $start = 0;
@@ -337,7 +332,7 @@ class Helpers
     {
         // TODO: use interfaceFactory
 
-        self::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceLoad');
+        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceLoad');
 
         $obj = new $model_class_name;
         \OLOG\Helpers::assert($obj->load($obj_id));

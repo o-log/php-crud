@@ -8,7 +8,8 @@ namespace CRUDDemo;
 
 class Node implements
     \OLOG\Model\InterfaceFactory,
-    \OLOG\Model\InterfaceLoad
+    \OLOG\Model\InterfaceLoad,
+    \OLOG\Model\InterfaceSave
 {
     use \OLOG\Model\FactoryTrait;
     use \OLOG\Model\ActiveRecord;

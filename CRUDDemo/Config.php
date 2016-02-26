@@ -2,7 +2,7 @@
 
 namespace CRUDDemo;
 
-use OLOG\CRUD\ControllerCRUD;
+use OLOG\CRUD\ConfigReader;
 
 class Config
 {
@@ -10,9 +10,18 @@ class Config
 
     public static function get()
     {
-        $conf[ControllerCRUD::CONFIG_ROOT] = [
+        $conf[ConfigReader::CONFIG_ROOT] = [
             'node' => [
-                ControllerCRUD::CONFIG_KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class
+                ConfigReader::CONFIG_KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class,
+                'editor' => [
+                    'tab_1' => [
+                        'fields' => [
+                            'title' => [
+
+                            ]
+                        ]
+                    ]
+                ]
 
             ]
         ];

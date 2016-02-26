@@ -5,9 +5,14 @@ namespace OLOG\CRUD;
 
 class ListTemplate
 {
-    static public function render($config_arr, $context_arr, $list_title = ''){
-        $model_class_name = $config_arr[ControllerCRUD::CONFIG_KEY_MODEL_CLASS_NAME];
-        \OLOG\Helpers::assert($model_class_name);
+    static public function render($config_key, $context_arr, $list_title = ''){
+        //$config_arr = CRUDController::getConfigForKey($config_key);
+        $model_class_name = ConfigReader::getModelClassNameForConfigKey($config_key);
+
+        if (!$list_title){
+            // TODO: get title from config
+            $list_title = $model_class_name;
+        }
 
         //
         // готовим список ID объектов для вывода
@@ -17,7 +22,7 @@ class ListTemplate
         if (isset($_GET['filter'])){
             $filter = $_GET['filter'];
         }
-        $objs_ids_arr = \OLOG\CRUD\Helpers::getObjIdsArrayForModel($model_class_name, $context_arr, $filter);
+        $objs_ids_arr = \OLOG\CRUD\Helpers::getObjIdsArrForClassName($model_class_name, $context_arr, $filter);
 
         //
         // готовим список полей, которые будем выводить в таблицу
@@ -57,16 +62,19 @@ class ListTemplate
         // вывод таблицы
         //
 
-        echo '<div class="spb_admin_section">'; // TODO: css?
-        echo '<h2 class="pull-left">' . $list_title;
+        echo '<h2>' . $list_title . '</h2>';
 
-        /* TODO
+        // LIST TOOLBAR
+        echo '<div>';
+
+        /* TODO restore check
         if (\OLOG\CRUD\Helpers::canDisplayCreateButton($model_class_name, $context_arr)) {
-            echo ' <a style="font-size: 75%;" class="glyphicon glyphicon-plus" href="/crud/add/' . urlencode($model_class_name) . '?' . http_build_query(array('context_arr' => $context_arr)) . '"></a>';
+        */
+            echo ' <a class="btn btn-default glyphicon glyphicon-plus" href="' . Sanitize::sanitizeUrl(CRUDController::addAction(\OLOG\Router::GET_URL, $config_key)) . '?' . http_build_query(array('context_arr' => $context_arr)) . '"></a>';
+        /*
         }
         */
-
-        echo '</h2>';
+        echo '</div>';
 
         /* TODO
         if (isset($model_class_name::$crud_model_title_field)) {
@@ -174,11 +182,11 @@ class ListTemplate
 
                 echo '<td style="text-align: right;">';
 
-                $edit_url = \OLOG\CRUD\ControllerCRUD::getEditUrl($model_class_name, $obj_id);
+                $edit_url = \OLOG\CRUD\CRUDController::getEditUrl($model_class_name, $obj_id);
                 echo '<a class="glyphicon glyphicon-edit" href="' . $edit_url . '"></a> ';
 
                 if ($model_class_name instanceof \OLOG\Model\InterfaceDelete){
-                    $delete_url = \OLOG\CRUD\ControllerCRUD::getDeleteUrl($model_class_name, $obj_id);
+                    $delete_url = \OLOG\CRUD\CRUDController::getDeleteUrl($model_class_name, $obj_id);
                     echo '<a class="glyphicon glyphicon-remove" href="' . $delete_url . '?destination=' . urlencode($_SERVER['REQUEST_URI']) . '" onclick="return window.confirm(\'Уверены?\')"></a>';
                 }
 
@@ -194,6 +202,5 @@ class ListTemplate
             */
         }
 
-        echo '</div>';
     }
 }
