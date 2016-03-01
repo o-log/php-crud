@@ -5,6 +5,7 @@ namespace OLOG\CRUD;
 class Elements
 {
     const ELEMENT_FORM = 'ELEMENT_FORM';
+    const ELEMENT_LIST = 'ELEMENT_LIST';
     const ELEMENT_FORM_ROW = 'ELEMENT_FORM_ROW';
 
     static public function renderElement($config_arr){

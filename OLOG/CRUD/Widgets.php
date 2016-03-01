@@ -149,12 +149,12 @@ class Widgets {
     }
     */
 
-    /*
     public static function widgetInput($field_name, $field_value)
     {
         return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" rows="1">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
     }
 
+    /*
     public static function widgetCheckbox($field_name, $field_value)
     {
 

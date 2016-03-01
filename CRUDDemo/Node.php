@@ -8,6 +8,7 @@ namespace CRUDDemo;
 
 use OLOG\CRUD\CRUDConfigReader;
 use OLOG\CRUD\Elements;
+use CRUDDemo\Config;
 
 class Node implements
     \OLOG\Model\InterfaceFactory,
@@ -56,12 +57,14 @@ class Node implements
         $this->title = $title;
     }
 
-    static public function getCRUDConfig(){
+    static public function getCRUDBubble(){
         return [
             CRUDConfigReader::CONFIG_KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class,
-            CRUDConfigReader::CONFIG_KEY_LIST => [
+            CRUDConfigReader::CONFIG_KEY_PERMISSIONS_ARR => array(Config::PERMISSION_EDIT_NODES),
+            CRUDConfigReader::CONFIG_KEY_LIST_CONFIG => [
+                'TYPE' => Elements::ELEMENT_LIST
             ],
-            CRUDConfigReader::CONFIG_KEY_EDITOR => [
+            CRUDConfigReader::CONFIG_KEY_EDITOR_CONFIG => [
                 'tab_fields' => [
                     'ELEMENTS' => [
                         'form' => [
@@ -77,8 +80,8 @@ class Node implements
                 ],
                 'tab_terms' => [
                     'ELEMENTS' => [
-                        'title' => [
-
+                        'terms_list' => [
+                            'TYPE' => Elements::ELEMENT_LIST
                         ]
                     ]
                 ]

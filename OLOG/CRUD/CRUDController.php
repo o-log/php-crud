@@ -2,11 +2,6 @@
 
 namespace OLOG\CRUD;
 
-/**
- * КРУД проверяет, реализует ли модель функционал наших моделей.
- * Если умеет загружаться - круд может показывать такие модели.
- * Если умеет сохраняться - круд может редактировать такие модели.
- */
 class CRUDController
 {
     const URL_PREFIX = '/admin/php_crud/';
@@ -15,8 +10,11 @@ class CRUDController
 
     static protected $editor_context_obj = null;
 
-    // goes to layout?
-    //static public $base_breadcrumbs = array();
+    static public function routing(){
+        \OLOG\Router::match3(self::listAction(\OLOG\Router::GET_METHOD));
+        \OLOG\Router::match3(self::addAction(\OLOG\Router::GET_METHOD));
+        \OLOG\Router::match3(self::editAction(\OLOG\Router::GET_METHOD));
+    }
 
     /**
      * Выбрасывает исключение если контекст не сохранен. Это для того, чтобы клиентам не нужно было проверять существование контекста.
@@ -27,6 +25,23 @@ class CRUDController
         \OLOG\Helpers::assert(self::$editor_context_obj);
 
         return self::$editor_context_obj;
+    }
+
+    static public function checkOperatorPermissionsForBubble($bubble_key){
+        $permissions_arr = CRUDConfigReader::getPermissionsArrForBubbleKey($bubble_key);
+        \OLOG\Helpers::assert(!empty($permissions_arr), 'Bubble has empty permissions array');
+
+        $auth_class_name = CRUDConfigReader::getAuthProviderClassName();
+
+        \OLOG\Helpers::assert(
+            is_subclass_of($auth_class_name, InterfaceCurrentUserHasAnyOfPermissions::class),
+            'Auth provider does not implement permissions check'
+        );
+
+        $has_permissions = $auth_class_name::currentUserHasAnyOfPermissions($permissions_arr);
+        if (!$has_permissions){
+            \OLOG\Helpers::exit403();
+        }
     }
 
     /**
@@ -43,8 +58,9 @@ class CRUDController
 
         //
 
-        /* TODO
-        \Sportbox\Helpers::exit403If(!\Sportbox\CRUD\Helpers::currentUserHasRightsToEditModel($model_class_name));
+        self::checkOperatorPermissionsForBubble($bubble_key);
+
+        /* TODO: place somewhere
         \Sportbox\CRUD\Helpers::exceptionIfClassNotImplementsInterface($model_class_name, 'Sportbox\Model\InterfaceLoad');
         */
 
@@ -67,13 +83,6 @@ class CRUDController
         if (property_exists($model_class_name, 'crud_model_class_screen_name_for_list')){
             $crud_model_class_screen_name_for_list = $model_class_name::$crud_model_class_screen_name_for_list;
         }
-
-        echo \Sportbox\Render::template2('Sportbox/Admin/templates/layout.tpl.php', array(
-                'title' => $crud_model_class_screen_name_for_list,
-                'content' => $list_html,
-                'breadcrumbs_arr' => self::$base_breadcrumbs
-            )
-        );
         */
     }
 
@@ -91,10 +100,7 @@ class CRUDController
 
         $model_class_name = CRUDConfigReader::getModelClassNameForKey($config_key);
 
-
-        /* TODO
-        \OLOG\Helpers::exit403If(!\OLOG\CRUD\Helpers::currentUserHasRightsToEditModel($model_class_name));
-        */
+        self::checkOperatorPermissionsForBubble($config_key);
 
         \OLOG\Helpers::assert($model_class_name);
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceLoad');
@@ -128,6 +134,8 @@ class CRUDController
         // сохранение контекста
 
         self::$editor_context_obj = new EditorContext($bubble_key, $object_id, $tab_key);
+
+        self::checkOperatorPermissionsForBubble($bubble_key);
 
         // операции
 
@@ -178,10 +186,6 @@ class CRUDController
 
             \OLOG\Helpers::redirectToSelfNoGetForm();
         });
-
-        /* TODO
-        \Sportbox\Helpers::exit403If(!\Sportbox\CRUD\Helpers::currentUserHasRightsToEditModel($model_class_name));
-        */
 
         /*
         \Sportbox\Helpers::assert($model_class_name);

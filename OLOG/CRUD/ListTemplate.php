@@ -5,11 +5,11 @@ namespace OLOG\CRUD;
 
 class ListTemplate
 {
-    static public function render($bubble_key, $context_arr, $list_title = ''){
-        //$config_arr = CRUDController::getConfigForKey($config_key);
+    static public function render($bubble_key, $context_arr, $list_title = '')
+    {
         $model_class_name = CRUDConfigReader::getModelClassNameForKey($bubble_key);
 
-        if (!$list_title){
+        if (!$list_title) {
             // TODO: get title from config
             $list_title = $model_class_name;
         }
@@ -19,10 +19,13 @@ class ListTemplate
         //
 
         $filter = '';
+        /* TODO
         if (isset($_GET['filter'])){
             $filter = $_GET['filter'];
         }
-        $objs_ids_arr = \OLOG\CRUD\Helpers::getObjIdsArrForClassName($model_class_name, $context_arr, $filter);
+        */
+
+        $objs_ids_arr = self::getObjIdsArrForClassName($model_class_name, $context_arr, $filter);
 
         //
         // готовим список полей, которые будем выводить в таблицу
@@ -70,7 +73,7 @@ class ListTemplate
         /* TODO restore check
         if (\OLOG\CRUD\Helpers::canDisplayCreateButton($model_class_name, $context_arr)) {
         */
-            echo ' <a class="btn btn-default glyphicon glyphicon-plus" href="' . Sanitize::sanitizeUrl(CRUDController::addAction(\OLOG\Router::GET_URL, $bubble_key)) . '?' . http_build_query(array('context_arr' => $context_arr)) . '"></a>';
+        echo ' <a class="btn btn-default glyphicon glyphicon-plus" href="' . Sanitize::sanitizeUrl(CRUDController::addAction(\OLOG\Router::GET_URL, $bubble_key)) . '?' . http_build_query(array('context_arr' => $context_arr)) . '"></a>';
         /*
         }
         */
@@ -117,102 +120,171 @@ class ListTemplate
         }
         */
 
-        if (count($objs_ids_arr) > 0) {
+        if (count($objs_ids_arr) == 0) {
+            return;
+        }
 
-            echo '<table class="table table-hover">';
-            echo '<thead><tr>';
+        echo '<table class="table table-hover">';
+        echo '<thead>';
+        echo '<tr>';
 
+        foreach ($props_arr as $prop_obj) {
+            // TODO
+            //$table_title = \OLOG\CRUD\Helpers::getTitleForField($model_class_name, $prop_obj->getName());
+            $table_title = $prop_obj->getName();
+
+            echo '<th>' . $table_title . '</th>';
+        }
+        echo '<th>';
+        echo '</th>';
+        echo '</tr>';
+        echo '</thead>';
+
+        echo '<tbody>';
+
+        foreach ($objs_ids_arr as $obj_id) {
+            $obj_obj = ObjectLoader::createAndLoadObject($model_class_name, $obj_id);
+
+            echo '<tr>';
             foreach ($props_arr as $prop_obj) {
-                // TODO
-                //$table_title = \OLOG\CRUD\Helpers::getTitleForField($model_class_name, $prop_obj->getName());
-                $table_title = $prop_obj->getName();
+                $title = $prop_obj->getValue($obj_obj);
 
-                echo '<th>' . $table_title . '</th>';
-            }
-            echo '<th></th></tr></thead>';
-            echo '<tbody>';
+                /* TODO: completely rewrite
+                $link_field_key = array_search($prop_obj->getName(), array_values($container_models_arr));
+                $roles = \Sportbox\CRUD\Widgets::getFieldWidgetName($prop_obj->getName(), $obj_obj);
 
-            foreach ($objs_ids_arr as $obj_id) {
-                $obj_obj = ObjectLoader::createAndLoadObject($model_class_name, $obj_id);
+                $title = "";
 
-                echo '<tr>';
-                foreach ($props_arr as $prop_obj) {
-                    $title = $prop_obj->getValue($obj_obj);
+                if ($link_field_key !== false) {
+                    $container_array_keys = array_keys($container_models_arr);
+                    $container_model = $container_array_keys[$link_field_key];
 
-                    /* TODO: completely rewrite
-                    $link_field_key = array_search($prop_obj->getName(), array_values($container_models_arr));
-                    $roles = \Sportbox\CRUD\Widgets::getFieldWidgetName($prop_obj->getName(), $obj_obj);
+                    $container_obj = \Sportbox\CRUD\Helpers::createAndLoadObject($container_model, $prop_obj->getValue($obj_obj));
 
-                    $title = "";
-
-                    if ($link_field_key !== false) {
-                        $container_array_keys = array_keys($container_models_arr);
-                        $container_model = $container_array_keys[$link_field_key];
-
-                        $container_obj = \Sportbox\CRUD\Helpers::createAndLoadObject($container_model, $prop_obj->getValue($obj_obj));
-
-                        if (method_exists($container_obj, 'getTitle')) {
-                            $title .= $container_obj->getTitle() . " ";
-                        }
-
-                        $title .= "(" . $container_obj->getId() . ")";
+                    if (method_exists($container_obj, 'getTitle')) {
+                        $title .= $container_obj->getTitle() . " ";
                     }
-                    else if ($roles == "options") {
-                        $role = \Sportbox\CRUD\Widgets::getFieldWidgetOptionsArr($prop_obj->getName(), $obj_obj);
-                        if (array_key_exists($prop_obj->getValue($obj_obj), $role)) {
-                            $title = $role[$prop_obj->getValue($obj_obj)];
-                        }
-                    }
-                    else {
-                        $title = \Sportbox\CRUD\Widgets::renderListFieldWithWidget($prop_obj->getName(), $obj_obj);
 
-                        // если это поле с названием модели - делаем его значение ссылкой на редактирование
-                        // если же значение не содержит видимымх символов - выводим кнопку редактирования (чтобы не остаться без ссылки)
-                        if (property_exists($model_class_name, 'crud_model_title_field')) {
-                            if ($prop_obj->getName() == $model_class_name::$crud_model_title_field){
-                                if (\Sportbox\CRUD\Helpers::stringCanBeUsedAsLinkText($title)) {
-                                    $edit_url = \Sportbox\CRUD\ControllerCRUD::getEditUrl($model_class_name, $obj_id);
-                                    $title = '<a href="' . $edit_url . '">' . $title . '</a>';
-                                    $show_edit_button = false;
-                                }
+                    $title .= "(" . $container_obj->getId() . ")";
+                }
+                else if ($roles == "options") {
+                    $role = \Sportbox\CRUD\Widgets::getFieldWidgetOptionsArr($prop_obj->getName(), $obj_obj);
+                    if (array_key_exists($prop_obj->getValue($obj_obj), $role)) {
+                        $title = $role[$prop_obj->getValue($obj_obj)];
+                    }
+                }
+                else {
+                    $title = \Sportbox\CRUD\Widgets::renderListFieldWithWidget($prop_obj->getName(), $obj_obj);
+
+                    // если это поле с названием модели - делаем его значение ссылкой на редактирование
+                    // если же значение не содержит видимымх символов - выводим кнопку редактирования (чтобы не остаться без ссылки)
+                    if (property_exists($model_class_name, 'crud_model_title_field')) {
+                        if ($prop_obj->getName() == $model_class_name::$crud_model_title_field){
+                            if (\Sportbox\CRUD\Helpers::stringCanBeUsedAsLinkText($title)) {
+                                $edit_url = \Sportbox\CRUD\ControllerCRUD::getEditUrl($model_class_name, $obj_id);
+                                $title = '<a href="' . $edit_url . '">' . $title . '</a>';
+                                $show_edit_button = false;
                             }
                         }
-
                     }
-                    */
 
-                    echo '<td>' . Sanitize::sanitizeTagContent($title) . '</td>';
                 }
+                */
 
-                echo '<td style="text-align: right;">';
-
-                // если есть конфиг редактора - выводим ссылку на первый таб из этого конфига
-                $editor_config_arr = CRUDConfigReader::getEditorConfigForKey($bubble_key);
-                if ($editor_config_arr) {
-                    $editor_tabs_arr = array_keys($editor_config_arr);
-                    if (count($editor_tabs_arr)) {
-                        $tab_key = $editor_tabs_arr[0];
-                        $edit_url = \OLOG\CRUD\CRUDController::editAction(\OLOG\Router::GET_URL, $bubble_key, $obj_id, $tab_key);
-                        echo '<a class="glyphicon glyphicon-edit" href="' . $edit_url . '"></a> ';
-                    }
-                }
-
-                if ($model_class_name instanceof \OLOG\Model\InterfaceDelete){
-                    $delete_url = \OLOG\CRUD\CRUDController::getDeleteUrl($model_class_name, $obj_id);
-                    echo '<a class="glyphicon glyphicon-remove" href="' . $delete_url . '?destination=' . urlencode($_SERVER['REQUEST_URI']) . '" onclick="return window.confirm(\'Уверены?\')"></a>';
-                }
-
-                echo '</td>';
-                echo '</tr>';
+                echo '<td>' . Sanitize::sanitizeTagContent($title) . '</td>';
             }
 
-            echo '</tbody>';
-            echo '</table>';
+            echo '<td style="text-align: right;">';
 
-            /* TODO
-            echo \Sportbox\Pager::renderPager(count($objs_ids_arr));
-            */
+            // если есть конфиг редактора - выводим ссылку на первый таб из этого конфига
+            $editor_config_arr = CRUDConfigReader::getEditorConfigForKey($bubble_key);
+            if ($editor_config_arr) {
+                $editor_tabs_arr = array_keys($editor_config_arr);
+                if (count($editor_tabs_arr)) {
+                    $tab_key = $editor_tabs_arr[0];
+                    $edit_url = \OLOG\CRUD\CRUDController::editAction(\OLOG\Router::GET_URL, $bubble_key, $obj_id, $tab_key);
+                    echo '<a class="glyphicon glyphicon-edit" href="' . $edit_url . '"></a> ';
+                }
+            }
+
+            if ($model_class_name instanceof \OLOG\Model\InterfaceDelete) {
+                $delete_url = \OLOG\CRUD\CRUDController::getDeleteUrl($model_class_name, $obj_id);
+                echo '<a class="glyphicon glyphicon-remove" href="' . $delete_url . '?destination=' . urlencode($_SERVER['REQUEST_URI']) . '" onclick="return window.confirm(\'Уверены?\')"></a>';
+            }
+
+            echo '</td>';
+            echo '</tr>';
         }
+
+        echo '</tbody>';
+        echo '</table>';
+
+        /* TODO
+        echo \Sportbox\Pager::renderPager(count($objs_ids_arr));
+        */
+    }
+
+    /**
+     * Возвращает одну страницу списка объектов указанного класса.
+     * Сортировка: TODO.
+     * Фильтры: массив $context_arr.
+     * Как определяется страница: см. Pager.
+     * @param $model_class_name Имя класса модели
+     * @param $context_arr array Массив пар "имя поля" - "значение поля"
+     * @return array Массив идентикаторов объектов.
+     */
+    static public function getObjIdsArrForClassName($model_class_name, $context_arr, $title_filter = '')
+    {
+        $page_size = 100;
+        $start = 0;
+
+        // TODO: check interfaceLoad
+
+        /* TODO
+        $page_size = \Sportbox\Pager::getPageSize();
+        $start = \Sportbox\Pager::getPageOffset();
+        */
+
+        $db_table_name = $model_class_name::DB_TABLE_NAME;
+        $db_id = $model_class_name::DB_ID;
+
+        $db_id_field_name = FieldsAccess::getIdFieldName($model_class_name);
+
+        // selecting ids by params from context
+        $query_param_values_arr = array();
+
+        // TODO
+        // внести в контекст кроме имени поля и значения еще и оператор, чтобы можно было делать поиск лайком через
+        // контекст, а не отдельный параметр
+
+        $where = ' 1 = 1 ';
+        foreach ($context_arr as $column_name => $value) {
+            // чистим имя поля, возможно пришедшее из запроса
+            $column_name = preg_replace("/[^a-zA-Z0-9_]+/", "", $column_name);
+
+            $where .= ' and ' . $column_name . ' = ?';
+            $query_param_values_arr[] = $value;
+        }
+
+        /* TODO
+        if (isset($model_class_name::$crud_model_title_field)){
+            $title_field_name = $model_class_name::$crud_model_title_field;
+            if ($title_filter != ''){
+                $where .= ' and ' . $title_field_name . ' like ?';
+                $query_param_values_arr[] = '%' . $title_filter . '%';
+            }
+        }
+        */
+
+        $order_field_name = $db_id_field_name;
+
+        $obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
+            $db_id,
+            "select " . $db_id_field_name . " from " . $db_table_name . ' where ' . $where . ' order by ' . $order_field_name . ' desc limit ' . intval($page_size) . ' offset ' . intval($start),
+            $query_param_values_arr
+        );
+
+        return $obj_ids_arr;
 
     }
 }

@@ -4,6 +4,15 @@ namespace OLOG\CRUD;
 
 class FieldsAccess
 {
+    public static function getIdFieldName($model_class_name)
+    {
+        if (defined($model_class_name . '::DB_ID_FIELD_NAME')) {
+            return $model_class_name::DB_ID_FIELD_NAME;
+        } else {
+            return 'id';
+        }
+    }
+
     public static function getObjectFieldValue($obj, $field_name)
     {
         $obj_class_name = get_class($obj);
