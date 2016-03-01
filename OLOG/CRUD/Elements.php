@@ -9,15 +9,15 @@ class Elements
     const ELEMENT_FORM_ROW = 'ELEMENT_FORM_ROW';
 
     static public function renderElement($config_arr){
-        $element_type = $config_arr['TYPE'];
+        $element_type = $config_arr[CRUDConfigReader::CONFIG_KEY_ELEMENT_TYPE];
 
         switch ($element_type){
             case self::ELEMENT_FORM:
-                return self::renderElementForm($config_arr);
+                self::renderElementForm($config_arr);
                 break;
 
             case self::ELEMENT_FORM_ROW:
-                return self::renderElementFormRow($config_arr);
+                self::renderElementFormRow($config_arr);
                 break;
 
             default:

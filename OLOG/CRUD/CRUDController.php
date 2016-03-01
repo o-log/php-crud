@@ -8,6 +8,9 @@ class CRUDController
 
     const OPERATION_SAVE_EDITOR_FORM = 'OPERATION_SAVE_EDITOR_FORM';
 
+    /**
+     * @var EditorContext
+     */
     static protected $editor_context_obj = null;
 
     static public function routing(){
@@ -18,29 +21,29 @@ class CRUDController
 
     /**
      * Выбрасывает исключение если контекст не сохранен. Это для того, чтобы клиентам не нужно было проверять существование контекста.
-     * @return null
+     * @return EditorContext
      * @throws \Exception
      */
     static public function getEditorContext(){
-        \OLOG\Helpers::assert(self::$editor_context_obj);
+        \OLOG\Assert::assert(self::$editor_context_obj);
 
         return self::$editor_context_obj;
     }
 
     static public function checkOperatorPermissionsForBubble($bubble_key){
         $permissions_arr = CRUDConfigReader::getPermissionsArrForBubbleKey($bubble_key);
-        \OLOG\Helpers::assert(!empty($permissions_arr), 'Bubble has empty permissions array');
+        \OLOG\Assert::assert(!empty($permissions_arr), 'Bubble has empty permissions array');
 
         $auth_class_name = CRUDConfigReader::getAuthProviderClassName();
 
-        \OLOG\Helpers::assert(
+        \OLOG\Assert::assert(
             is_subclass_of($auth_class_name, InterfaceCurrentUserHasAnyOfPermissions::class),
             'Auth provider does not implement permissions check'
         );
 
         $has_permissions = $auth_class_name::currentUserHasAnyOfPermissions($permissions_arr);
         if (!$has_permissions){
-            \OLOG\Helpers::exit403();
+            \OLOG\Exits::exit403();
         }
     }
 
@@ -102,7 +105,7 @@ class CRUDController
 
         self::checkOperatorPermissionsForBubble($config_key);
 
-        \OLOG\Helpers::assert($model_class_name);
+        \OLOG\Assert::assert($model_class_name);
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceLoad');
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceSave');
 
@@ -146,6 +149,8 @@ class CRUDController
 
             $model_class_name = CRUDConfigReader::getModelClassNameForKey($bubble_key);
 
+            // TODO: check save support
+
             $new_prop_values_arr = array();
             $reflect = new \ReflectionClass($model_class_name);
 
@@ -184,7 +189,7 @@ class CRUDController
             \Sportbox\Helpers::redirect($redirect_url);
             */
 
-            \OLOG\Helpers::redirectToSelfNoGetForm();
+            \OLOG\Redirects::redirectToSelfNoGetForm();
         });
 
         /*

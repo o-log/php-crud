@@ -62,16 +62,16 @@ class Node implements
             CRUDConfigReader::CONFIG_KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class,
             CRUDConfigReader::CONFIG_KEY_PERMISSIONS_ARR => array(Config::PERMISSION_EDIT_NODES),
             CRUDConfigReader::CONFIG_KEY_LIST_CONFIG => [
-                'TYPE' => Elements::ELEMENT_LIST
+                /*'TYPE' => Elements::ELEMENT_LIST*/
             ],
             CRUDConfigReader::CONFIG_KEY_EDITOR_CONFIG => [
                 'tab_fields' => [
-                    'ELEMENTS' => [
+                    CRUDConfigReader::CONFIG_KEY_ELEMENTS => [
                         'form' => [
-                            'TYPE' => Elements::ELEMENT_FORM,
-                            'ELEMENTS' => [
+                            CRUDConfigReader::CONFIG_KEY_ELEMENT_TYPE => Elements::ELEMENT_FORM,
+                            CRUDConfigReader::CONFIG_KEY_ELEMENTS => [
                                 'title' => [
-                                    'TYPE' => Elements::ELEMENT_FORM_ROW,
+                                    CRUDConfigReader::CONFIG_KEY_ELEMENT_TYPE => Elements::ELEMENT_FORM_ROW,
                                     'FIELD_NAME' => 'title'
                                 ]
                             ]
@@ -79,9 +79,9 @@ class Node implements
                     ]
                 ],
                 'tab_terms' => [
-                    'ELEMENTS' => [
+                    CRUDConfigReader::CONFIG_KEY_ELEMENTS => [
                         'terms_list' => [
-                            'TYPE' => Elements::ELEMENT_LIST
+                            CRUDConfigReader::CONFIG_KEY_ELEMENT_TYPE => Elements::ELEMENT_LIST
                         ]
                     ]
                 ]

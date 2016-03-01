@@ -34,7 +34,7 @@ class EditFormTemplate
         self::renderTabs($bubble_key, $requested_tab_key);
 
         $tab_config = $editor_config_arr[$requested_tab_key];
-        $elements_arr = $tab_config['ELEMENTS'];
+        $elements_arr = $tab_config[CRUDConfigReader::CONFIG_KEY_ELEMENTS];
 
         foreach ($elements_arr as $element_key => $element_config_arr){
             Elements::renderElement($element_config_arr);
