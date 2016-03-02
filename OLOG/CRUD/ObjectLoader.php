@@ -9,10 +9,10 @@ class ObjectLoader
     {
         // TODO: use interfaceFactory if implemented!
 
-        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceLoad');
+        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
 
         $obj = new $model_class_name;
-        \OLOG\Helpers::assert($obj->load($obj_id));
+        \OLOG\Assert::assert($obj->load($obj_id));
 
         return $obj;
     }

@@ -8,10 +8,20 @@ class Elements
     const ELEMENT_LIST = 'ELEMENT_LIST';
     const ELEMENT_FORM_ROW = 'ELEMENT_FORM_ROW';
 
+    static public function renderElements($elements_arr){
+        foreach ($elements_arr as $element_key => $element_config_arr){
+            Elements::renderElement($element_config_arr);
+        }
+    }
+
     static public function renderElement($config_arr){
-        $element_type = $config_arr[CRUDConfigReader::CONFIG_KEY_ELEMENT_TYPE];
+        $element_type = $config_arr[CRUDConfigReader::KEY_ELEMENT_TYPE];
 
         switch ($element_type){
+            case self::ELEMENT_LIST:
+                self::renderElementList($config_arr);
+                break;
+
             case self::ELEMENT_FORM:
                 self::renderElementForm($config_arr);
                 break;
@@ -26,6 +36,17 @@ class Elements
 
     }
 
+    static public function renderElementList($element_config_arr){
+        //$class_name = CRUDConfigReader::getModelClassNameForBubble($config_arr);
+        $class_name = CRUDConfigReader::getSubkey($element_config_arr, CRUDConfigReader::KEY_MODEL_CLASS_NAME);
+        ListTemplate::render($class_name);
+    }
+
+    /**
+     * Редактируемый объект здесь берется из контроллера.
+     * @param $config_arr
+     * @throws \Exception
+     */
     static public function renderElementForm($config_arr){
         $editor_context_obj = CRUDController::getEditorContext();
 
@@ -34,8 +55,8 @@ class Elements
 
         echo Operations::operationCodeHiddenField(CRUDController::OPERATION_SAVE_EDITOR_FORM);
 
-        foreach ($config_arr['ELEMENTS'] as $element_key => $element_config){
-            echo self::renderElement($element_config);
+        foreach ($config_arr[CRUDConfigReader::KEY_ELEMENTS] as $element_key => $element_config){
+            self::renderElement($element_config);
         }
 
         echo '<div class="row">';
@@ -47,6 +68,10 @@ class Elements
         echo '</form>';
     }
 
+    /**
+     * Редактируемый объект здесь берется из контроллера.
+     * @param $element_config_arr
+     */
     static public function renderElementFormRow($element_config_arr){
         $required = false;
         // TODO
@@ -58,9 +83,10 @@ class Elements
 
         $editor_context_obj = CRUDController::getEditorContext();
 
-        $model_class_name = CRUDConfigReader::getModelClassNameForKey($editor_context_obj->bubble_key);
+        $model_class_name = CRUDConfigReader::getModelClassNameForBubble($editor_context_obj->bubble_key);
         $obj = ObjectLoader::createAndLoadObject($model_class_name, $editor_context_obj->object_id);
 
+        // TODO introduce constant
         $field_name = $element_config_arr['FIELD_NAME'];
 
         // TODO: read title from config

@@ -13,6 +13,9 @@ class CRUDController
      */
     static protected $editor_context_obj = null;
 
+    /**
+     * Роутинг. Этот метод нужно вызывать из точки входа.
+     */
     static public function routing(){
         \OLOG\Router::match3(self::listAction(\OLOG\Router::GET_METHOD));
         \OLOG\Router::match3(self::addAction(\OLOG\Router::GET_METHOD));
@@ -75,7 +78,12 @@ class CRUDController
         }
 
         ob_start();
-        ListTemplate::render($bubble_key, $context_arr);
+        //ListTemplate::render($bubble_key, $context_arr);
+        $list_config_arr = CRUDConfigReader::getListConfigForKey($bubble_key);
+        $elements_arr = CRUDConfigReader::getElements($list_config_arr);
+
+        Elements::renderElements($elements_arr);
+
         $html = ob_get_clean();
 
         self::renderLayout($html);
@@ -101,13 +109,13 @@ class CRUDController
 
         //
 
-        $model_class_name = CRUDConfigReader::getModelClassNameForKey($config_key);
+        $model_class_name = CRUDConfigReader::getModelClassNameForBubble($config_key);
 
         self::checkOperatorPermissionsForBubble($config_key);
 
         \OLOG\Assert::assert($model_class_name);
-        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceLoad');
-        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, 'OLOG\Model\InterfaceSave');
+        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
+        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
 
         ob_start();
         AddFormTemplate::render($model_class_name, $config_key);
@@ -143,53 +151,7 @@ class CRUDController
         // операции
 
         Operations::matchOperation(self::OPERATION_SAVE_EDITOR_FORM, function() use($bubble_key, $object_id, $tab_key) {
-            //
-            // чтение данных из формы
-            //
-
-            $model_class_name = CRUDConfigReader::getModelClassNameForKey($bubble_key);
-
-            // TODO: check save support
-
-            $new_prop_values_arr = array();
-            $reflect = new \ReflectionClass($model_class_name);
-
-            foreach ($reflect->getProperties() as $prop_obj) {
-                if (!$prop_obj->isStatic()) { // игнорируем статические свойства класса - они относятся не к объекту, а только к классу (http://www.php.net/manual/en/language.oop5.static.php), и в них хранятся настройки ActiveRecord и CRUD
-                    $prop_name = $prop_obj->getName();
-                    if (array_key_exists($prop_name, $_POST)) {
-                        // Проверка на заполнение обязательных полей
-                        /* TODO
-                        if ( (($_POST[$prop_name] == '') && (\Sportbox\CRUD\Helpers::isRequiredField($model_class_name, $prop_obj->getName())) ) ) {
-                            throw new \Exception('поле ' . $prop_obj->getName() . ' обязательно для заполнения');
-                        }
-                        */
-                        $new_prop_values_arr[$prop_name] = $_POST[$prop_name];
-                    }
-                }
-            }
-
-            //
-            // сохранение
-            //
-
-            $obj = ObjectLoader::createAndLoadObject($model_class_name, $object_id);
-
-            $obj = FieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr);
-            $obj->save();
-
-            /* TODO
-            \Sportbox\Logger\Logger::logObjectEvent($obj, 'CRUD сохранение');
-            $redirect_url = \Sportbox\CRUD\ControllerCRUD::getEditUrlForObj($obj);
-
-            if (array_key_exists('destination', $_POST)){
-                $redirect_url = $_POST['destination'];
-            }
-
-            \Sportbox\Helpers::redirect($redirect_url);
-            */
-
-            \OLOG\Redirects::redirectToSelfNoGetForm();
+            self::saveEditorFormOperation($bubble_key, $object_id, $tab_key);
         });
 
         /*
@@ -252,6 +214,54 @@ class CRUDController
             )
         );
         */
+    }
+
+    static protected function saveEditorFormOperation($bubble_key, $object_id, $tab_key){
+        self::checkOperatorPermissionsForBubble($bubble_key);
+
+        $model_class_name = CRUDConfigReader::getModelClassNameForBubble($bubble_key);
+
+        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
+
+        $new_prop_values_arr = array();
+        $reflect = new \ReflectionClass($model_class_name);
+
+        foreach ($reflect->getProperties() as $prop_obj) {
+            if (!$prop_obj->isStatic()) { // игнорируем статические свойства класса - они относятся не к объекту, а только к классу (http://www.php.net/manual/en/language.oop5.static.php), и в них хранятся настройки ActiveRecord и CRUD
+                $prop_name = $prop_obj->getName();
+                if (array_key_exists($prop_name, $_POST)) {
+                    // Проверка на заполнение обязательных полей
+                    /* TODO
+                    if ( (($_POST[$prop_name] == '') && (\Sportbox\CRUD\Helpers::isRequiredField($model_class_name, $prop_obj->getName())) ) ) {
+                        throw new \Exception('поле ' . $prop_obj->getName() . ' обязательно для заполнения');
+                    }
+                    */
+                    $new_prop_values_arr[$prop_name] = $_POST[$prop_name];
+                }
+            }
+        }
+
+        //
+        // сохранение
+        //
+
+        $obj = ObjectLoader::createAndLoadObject($model_class_name, $object_id);
+
+        $obj = FieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr);
+        $obj->save();
+
+        /* TODO
+        \Sportbox\Logger\Logger::logObjectEvent($obj, 'CRUD сохранение');
+        $redirect_url = \Sportbox\CRUD\ControllerCRUD::getEditUrlForObj($obj);
+
+        if (array_key_exists('destination', $_POST)){
+            $redirect_url = $_POST['destination'];
+        }
+
+        \Sportbox\Helpers::redirect($redirect_url);
+        */
+
+        \OLOG\Redirects::redirectToSelfNoGetForm();
     }
 
     /**

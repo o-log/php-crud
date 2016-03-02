@@ -11,8 +11,8 @@ class Config
 
     public static function get()
     {
-        $conf[CRUDConfigReader::CONFIG_ROOT] = [
-            CRUDConfigReader::CONFIG_KEY_AUTH_PROVIDER_CLASS_NAME => Auth::class,
+        $conf[CRUDConfigReader::KEY_ROOT] = [
+            CRUDConfigReader::KEY_AUTH_PROVIDER_CLASS_NAME => Auth::class,
             'node' => \CRUDDemo\Node::getCRUDBubble()
         ];
 

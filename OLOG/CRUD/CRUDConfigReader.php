@@ -4,17 +4,22 @@ namespace OLOG\CRUD;
 
 class CRUDConfigReader
 {
-    const CONFIG_ROOT = 'PHPCRUD';
-    const CONFIG_KEY_ELEMENTS = 'ELEMENTS';
-    const CONFIG_KEY_ELEMENT_TYPE = 'ELEMENT_TYPE';
-    const CONFIG_KEY_MODEL_CLASS_NAME = 'MODEL_CLASS_NAME';
-    const CONFIG_KEY_LIST_CONFIG = 'LIST_CONFIG';
-    const CONFIG_KEY_EDITOR_CONFIG = 'EDITOR_CONFIG';
-    const CONFIG_KEY_AUTH_PROVIDER_CLASS_NAME = 'AUTH_PROVIDER_CLASS_NAME';
-    const CONFIG_KEY_PERMISSIONS_ARR = 'PERMISSIONS_ARR';
+    const KEY_ROOT = 'PHPCRUD';
+    const KEY_ELEMENTS = 'ELEMENTS';
+    const KEY_ELEMENT_TYPE = 'ELEMENT_TYPE';
+    const KEY_MODEL_CLASS_NAME = 'MODEL_CLASS_NAME';
+    const KEY_LIST_CONFIG = 'LIST_CONFIG';
+    const KEY_EDITOR_CONFIG = 'EDITOR_CONFIG';
+    const KEY_AUTH_PROVIDER_CLASS_NAME = 'AUTH_PROVIDER_CLASS_NAME';
+    const KEY_PERMISSIONS_ARR = 'PERMISSIONS_ARR';
+
+    static public function getElements($config_arr){
+        \OLOG\Assert::assert($config_arr[CRUDConfigReader::KEY_ELEMENTS]);
+        return $config_arr[CRUDConfigReader::KEY_ELEMENTS];
+    }
 
     static public function getAuthProviderClassName(){
-        $auth_provider_class_name = self::getConfigForKey(self::CONFIG_KEY_AUTH_PROVIDER_CLASS_NAME);
+        $auth_provider_class_name = self::getBubbleConfig(self::KEY_AUTH_PROVIDER_CLASS_NAME);
 
         \OLOG\Assert::assert($auth_provider_class_name, 'auth provider class name missing');
         return $auth_provider_class_name;
@@ -28,10 +33,15 @@ class CRUDConfigReader
      * @throws \Exception
      */
     static public function getPermissionsArrForBubbleKey($bubble_key){
-        $config_arr = self::getConfigForKey($bubble_key);
+        $config_arr = self::getBubbleConfig($bubble_key);
 
-        \OLOG\Assert::assert(array_key_exists(self::CONFIG_KEY_PERMISSIONS_ARR, $config_arr));
-        return $config_arr[self::CONFIG_KEY_PERMISSIONS_ARR];
+        \OLOG\Assert::assert(array_key_exists(self::KEY_PERMISSIONS_ARR, $config_arr));
+        return $config_arr[self::KEY_PERMISSIONS_ARR];
+    }
+
+    static public function getSubkey($config_arr, $key){
+        \OLOG\Assert::assert(array_key_exists($key, $config_arr));
+        return $config_arr[$key];
     }
 
     /**
@@ -40,39 +50,39 @@ class CRUDConfigReader
      * @return mixed
      * @throws \Exception
      */
-    public static function getConfigForKey($bubble_key)
+    public static function getBubbleConfig($bubble_key)
     {
-        $config_arr = \OLOG\ConfWrapper::value(self::CONFIG_ROOT . '.' . $bubble_key);
+        $config_arr = \OLOG\ConfWrapper::value(self::KEY_ROOT . '.' . $bubble_key);
         \OLOG\Assert::assert($config_arr);
 
         return $config_arr;
     }
 
     public static function getListConfigForKey($config_key){
-        $config_arr = self::getConfigForKey($config_key);
+        $config_arr = self::getBubbleConfig($config_key);
 
-        \OLOG\Assert::assert(array_key_exists(self::CONFIG_KEY_LIST_CONFIG, $config_arr));
-        return $config_arr[self::CONFIG_KEY_LIST_CONFIG];
+        \OLOG\Assert::assert(array_key_exists(self::KEY_LIST_CONFIG, $config_arr));
+        return $config_arr[self::KEY_LIST_CONFIG];
     }
 
     public static function getEditorConfigForKey($config_key){
-        $config_arr = self::getConfigForKey($config_key);
+        $config_arr = self::getBubbleConfig($config_key);
 
-        \OLOG\Assert::assert(array_key_exists(self::CONFIG_KEY_EDITOR_CONFIG, $config_arr));
-        return $config_arr[self::CONFIG_KEY_EDITOR_CONFIG];
+        \OLOG\Assert::assert(array_key_exists(self::KEY_EDITOR_CONFIG, $config_arr));
+        return $config_arr[self::KEY_EDITOR_CONFIG];
     }
 
     /**
      * Выбрасывает исключение если нет конфига для такого ключа или в конфиге не указано имя класса модели.
-     * @param $config_key
+     * @param $bubble_key
      * @return mixed
      * @throws \Exception
      */
-    public static function getModelClassNameForKey($config_key)
+    public static function getModelClassNameForBubble($bubble_key)
     {
-        $config_arr = self::getConfigForKey($config_key);
+        $config_arr = self::getBubbleConfig($bubble_key);
 
-        $model_class_name = $config_arr[CRUDConfigReader::CONFIG_KEY_MODEL_CLASS_NAME];
+        $model_class_name = $config_arr[CRUDConfigReader::KEY_MODEL_CLASS_NAME];
         \OLOG\Assert::assert($model_class_name);
 
         return $model_class_name;

@@ -5,9 +5,9 @@ namespace OLOG\CRUD;
 
 class ListTemplate
 {
-    static public function render($bubble_key, $context_arr, $list_title = '')
+    static public function render($model_class_name, $context_arr = array(), $list_title = '')
     {
-        $model_class_name = CRUDConfigReader::getModelClassNameForKey($bubble_key);
+        //$model_class_name = CRUDConfigReader::getModelClassNameForBubble($bubble_key);
 
         if (!$list_title) {
             // TODO: get title from config

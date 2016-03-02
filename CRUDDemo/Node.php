@@ -57,31 +57,37 @@ class Node implements
         $this->title = $title;
     }
 
-    static public function getCRUDBubble(){
+    static public function getCRUDBubble()
+    {
         return [
-            CRUDConfigReader::CONFIG_KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class,
-            CRUDConfigReader::CONFIG_KEY_PERMISSIONS_ARR => array(Config::PERMISSION_EDIT_NODES),
-            CRUDConfigReader::CONFIG_KEY_LIST_CONFIG => [
-                /*'TYPE' => Elements::ELEMENT_LIST*/
+            CRUDConfigReader::KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class,
+            CRUDConfigReader::KEY_PERMISSIONS_ARR => array(Config::PERMISSION_EDIT_NODES),
+            CRUDConfigReader::KEY_LIST_CONFIG => [
+                CRUDConfigReader::KEY_ELEMENTS => [
+                    [
+                        CRUDConfigReader::KEY_ELEMENT_TYPE => Elements::ELEMENT_LIST,
+                        CRUDConfigReader::KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class
+                    ]
+                ]
             ],
-            CRUDConfigReader::CONFIG_KEY_EDITOR_CONFIG => [
-                'tab_fields' => [
-                    CRUDConfigReader::CONFIG_KEY_ELEMENTS => [
-                        'form' => [
-                            CRUDConfigReader::CONFIG_KEY_ELEMENT_TYPE => Elements::ELEMENT_FORM,
-                            CRUDConfigReader::CONFIG_KEY_ELEMENTS => [
-                                'title' => [
-                                    CRUDConfigReader::CONFIG_KEY_ELEMENT_TYPE => Elements::ELEMENT_FORM_ROW,
+            CRUDConfigReader::KEY_EDITOR_CONFIG => [
+                [
+                    CRUDConfigReader::KEY_ELEMENTS => [
+                        [
+                            CRUDConfigReader::KEY_ELEMENT_TYPE => Elements::ELEMENT_FORM,
+                            CRUDConfigReader::KEY_ELEMENTS => [
+                                [
+                                    CRUDConfigReader::KEY_ELEMENT_TYPE => Elements::ELEMENT_FORM_ROW,
                                     'FIELD_NAME' => 'title'
                                 ]
                             ]
                         ]
                     ]
                 ],
-                'tab_terms' => [
-                    CRUDConfigReader::CONFIG_KEY_ELEMENTS => [
-                        'terms_list' => [
-                            CRUDConfigReader::CONFIG_KEY_ELEMENT_TYPE => Elements::ELEMENT_LIST
+                '_tab_node_terms' => [
+                    CRUDConfigReader::KEY_ELEMENTS => [
+                        [
+                            CRUDConfigReader::KEY_ELEMENT_TYPE => Elements::ELEMENT_LIST
                         ]
                     ]
                 ]
