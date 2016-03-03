@@ -11,11 +11,6 @@ class Config
 
     public static function get()
     {
-        $conf[CRUDConfigReader::KEY_ROOT] = [
-            CRUDConfigReader::KEY_AUTH_PROVIDER_CLASS_NAME => Auth::class,
-            'node' => \CRUDDemo\Node::getCRUDBubble()
-        ];
-
         $conf['return_false_if_no_route'] = true; // for local php server
 
         $conf['db'] = [

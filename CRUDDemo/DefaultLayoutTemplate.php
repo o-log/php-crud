@@ -1,10 +1,10 @@
 <?php
 
-namespace OLOG\CRUD;
+namespace CRUDDemo;
 
 class DefaultLayoutTemplate
 {
-    static public function render($content_html){
+    static public function render($content_html, $h1_str = ''){
         ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +26,7 @@ class DefaultLayoutTemplate
 </head>
 <body>
 <div class="container">
+    <h1><?= $h1_str ?></h1>
     <?= $content_html ?>
 </div>
 

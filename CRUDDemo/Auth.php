@@ -8,7 +8,7 @@ namespace CRUDDemo;
  * Class Auth
  * @package CRUDDemo
  */
-class Auth implements \OLOG\CRUD\InterfaceCurrentUserHasAnyOfPermissions
+class Auth
 {
     static public function currentUserHasAnyOfPermissions(array $permission_codes_arr){
         return true;

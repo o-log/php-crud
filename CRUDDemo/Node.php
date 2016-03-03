@@ -7,7 +7,7 @@
 namespace CRUDDemo;
 
 use OLOG\CRUD\CRUDConfigReader;
-use OLOG\CRUD\Elements;
+use OLOG\CRUD\CRUDElements;
 use CRUDDemo\Config;
 
 class Node implements
@@ -55,43 +55,5 @@ class Node implements
     public function setTitle($title)
     {
         $this->title = $title;
-    }
-
-    static public function getCRUDBubble()
-    {
-        return [
-            CRUDConfigReader::KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class,
-            CRUDConfigReader::KEY_PERMISSIONS_ARR => array(Config::PERMISSION_EDIT_NODES),
-            CRUDConfigReader::KEY_LIST_CONFIG => [
-                CRUDConfigReader::KEY_ELEMENTS => [
-                    [
-                        CRUDConfigReader::KEY_ELEMENT_TYPE => Elements::ELEMENT_LIST,
-                        CRUDConfigReader::KEY_MODEL_CLASS_NAME => \CRUDDemo\Node::class
-                    ]
-                ]
-            ],
-            CRUDConfigReader::KEY_EDITOR_CONFIG => [
-                [
-                    CRUDConfigReader::KEY_ELEMENTS => [
-                        [
-                            CRUDConfigReader::KEY_ELEMENT_TYPE => Elements::ELEMENT_FORM,
-                            CRUDConfigReader::KEY_ELEMENTS => [
-                                [
-                                    CRUDConfigReader::KEY_ELEMENT_TYPE => Elements::ELEMENT_FORM_ROW,
-                                    'FIELD_NAME' => 'title'
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                '_tab_node_terms' => [
-                    CRUDConfigReader::KEY_ELEMENTS => [
-                        [
-                            CRUDConfigReader::KEY_ELEMENT_TYPE => Elements::ELEMENT_LIST
-                        ]
-                    ]
-                ]
-            ]
-        ];
     }
 }

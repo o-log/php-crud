@@ -6,13 +6,90 @@ namespace OLOG\CRUD;
 class Widgets {
     const WIDGET_CHECKBOX = 'WIDGET_CHECKBOX';
 
-    public static function renderEditorFieldWithWidget($field_name, $obj)
+    static public function renderListWidget($widget_config_arr, $row_obj){
+        $widget_type = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'WIDGET_TYPE');
+
+        switch ($widget_type){
+            case 'TEXT':
+                return self::widgetText($widget_config_arr, $row_obj);
+
+            case 'TEXT_WITH_LINK':
+                return self::widgetTextWithLink($widget_config_arr, $row_obj);
+
+            default:
+                throw new \Exception('unknown list widget: ' . $widget_type);
+        }
+    }
+
+    public static function compile($str, array $data){
+
+        // TODO: clean and finish
+
+        $matches = [];
+        while (preg_match('@{([^}{]+)}@', $str, $matches)){
+            $magic = $matches[1];
+            $magic_replacement = 'UNKNOWN_MAGIC';
+
+            $magic_matches = [];
+            if (preg_match('@^(\w+)\->(\w+)$@', $magic, $magic_matches)){
+                $obj_name_in_data = $magic_matches[1];
+                $obj_field_name = $magic_matches[2];
+
+                \OLOG\Assert::assert($data[$obj_name_in_data]);
+
+                $magic_replacement = FieldsAccess::getObjectFieldValue($data[$obj_name_in_data], $obj_field_name);
+            }
+
+            if (preg_match('@^([\w\\\\]+)\.(\w+)->(\w+)$@', $magic, $magic_matches)){
+                $class_name = $magic_matches[1];
+                $obj_id = $magic_matches[2];
+                $obj_field_name = $magic_matches[3];
+
+                $obj = ObjectLoader::createAndLoadObject($class_name, $obj_id);
+                $magic_replacement = FieldsAccess::getObjectFieldValue($obj, $obj_field_name);
+            }
+
+            $str = preg_replace('@{([^}{]+)}@', $magic_replacement, $str);
+        }
+
+        return $str;
+    }
+
+    public static function widgetText($widget_config_arr, $obj){
+        $text = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'TEXT');
+        $text = self::compile($text, ['this' => $obj]);
+
+        $o = Sanitize::sanitizeTagContent($text);
+
+        return $o;
+    }
+
+    public static function widgetTextWithLink($widget_config_arr, $obj){
+        $url = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'LINK_URL');
+        $url = self::compile($url, ['this' => $obj]);
+
+        $text = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'TEXT');
+        $text = self::compile($text, ['this' => $obj]);
+
+        if (trim($text) == ''){
+            $text = '#EMPTY#';
+        }
+
+        $o = '<a href="' . Sanitize::sanitizeUrl($url) . '">' . Sanitize::sanitizeTagContent($text) . '</a>';
+
+        return $o;
+    }
+
+    public static function renderEditorFieldWithWidget($widget_config_arr, $field_name, $obj = null)
     {
-        $widget_name = '';
+        $widget_name = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'WIDGET_TYPE');
         // TODO
         //$widget_name = self::getFieldWidgetName($field_name, $obj);
 
-        $field_value = \OLOG\CRUD\FieldsAccess::getObjectFieldValue($obj, $field_name);
+        $field_value = '';
+        if ($obj) {
+            $field_value = \OLOG\CRUD\FieldsAccess::getObjectFieldValue($obj, $field_name);
+        }
 
         /* TODO
         if (is_callable($widget_name)){
@@ -33,12 +110,13 @@ class Widgets {
                 $o = self::widgetOptions($field_name, $field_value, $options_arr);
                 break;
             */
+            case 'WIDGET_TEXTAREA':
+                return self::widgetTextarea($field_name, $field_value);
+            case 'WIDGET_INPUT':
+                return self::widgetInput($field_name, $field_value);
             default:
-                $o = self::widgetInput($field_name, $field_value);
+                throw new \Exception('unknown widget type: ' . $widget_name);
         }
-
-        return $o;
-
     }
 
     /*
@@ -152,6 +230,11 @@ class Widgets {
     public static function widgetInput($field_name, $field_value)
     {
         return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" rows="1">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
+    }
+
+    public static function widgetTextarea($field_name, $field_value)
+    {
+        return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" rows="5">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
     }
 
     /*
