@@ -27,14 +27,14 @@ class NodeCrudController
                     'ELEMENTS' => [
                         [
                             CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                            'FIELD_NAME' => 'node_id',
+                            CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'node_id',
                             'WIDGET' => [
                                 'WIDGET_TYPE' => 'WIDGET_INPUT'
                             ]
                         ],
                         [
                             CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                            'FIELD_NAME' => 'term_id',
+                            CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'term_id',
                             'WIDGET' => [
                                 'WIDGET_TYPE' => 'WIDGET_INPUT'
                             ]
@@ -64,7 +64,95 @@ class NodeCrudController
         );
         $html .= ob_get_clean();
 
-        DefaultLayoutTemplate::render($html, '<a href="' . self::nodesListAction(\OLOG\Router::GET_URL) . '">Nodes</a> / Node ' . $node_id);
+        LayoutTemplate::render($html, '<a href="' . self::nodesListAction(\OLOG\Router::GET_URL) . '">Nodes</a> / Node ' . $node_id);
+    }
+
+    static public function nodeEditAction($_mode, $node_id = '(\d+)')
+    {
+        if ($_mode == \OLOG\Router::GET_URL) return '/admin/node/' . $node_id;
+        if ($_mode == \OLOG\Router::GET_METHOD) return __METHOD__;
+
+        //
+
+        \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
+
+        $html = self::getTabsHtml($node_id);
+
+        ob_start();
+        \OLOG\CRUD\CRUDElements::renderEditorForm(
+            Node::class, $node_id,
+            [
+                'ELEMENTS' => [
+                    [
+                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
+                        CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'title',
+                        CRUDElements::KEY_FORM_ROW_TITLE => 'Название',
+                        'WIDGET' => [
+                            'WIDGET_TYPE' => 'WIDGET_TEXTAREA'
+                        ]
+                    ],
+                    [
+                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
+                        CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'id',
+                        'WIDGET' => [
+                            'WIDGET_TYPE' => 'WIDGET_INPUT'
+                        ]
+                    ]
+                ]
+            ]
+        );
+        $html .= ob_get_clean();
+
+        LayoutTemplate::render($html, '<a href="' . self::nodesListAction(\OLOG\Router::GET_URL) . '">Nodes</a> / Node ' . $node_id);
+    }
+
+    static public function nodesListAction($_mode)
+    {
+        if ($_mode == \OLOG\Router::GET_URL) return '/admin/nodes';
+        if ($_mode == \OLOG\Router::GET_METHOD) return __METHOD__;
+
+        //
+
+        \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
+
+        ob_start();
+        CRUDListTemplate::render(
+            Node::class,
+            [
+                'CREATE_FORM' => [
+                    'ELEMENTS' => [
+                        [
+                            CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
+                            CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'title',
+                            CRUDElements::KEY_FORM_ROW_TITLE => 'Название',
+                            'WIDGET' => [
+                                'WIDGET_TYPE' => 'WIDGET_INPUT'
+                            ]
+                        ]
+                    ]
+                ],
+                CRUDListTemplate::KEY_LIST_COLUMNS => [
+                    [
+                        'COLUMN_TITLE' => 'Edit',
+                        'WIDGET' => [
+                            'WIDGET_TYPE' => 'TEXT',
+                            'TEXT' => '{this.title}'
+                        ]
+                    ],
+                    [
+                        'COLUMN_TITLE' => 'Edit',
+                        'WIDGET' => [
+                            'WIDGET_TYPE' => \OLOG\CRUD\CRUDWidgets::WIDGET_TEXT_WITH_LINK,
+                            'LINK_URL' => NodeCrudController::nodeEditAction(\OLOG\Router::GET_URL, '{this->id}'),
+                            'TEXT' => '{\CRUDDemo\Node.{this->id}->title}'
+                        ]
+                    ]
+                ]
+            ]
+        );
+        $html = ob_get_clean();
+
+        LayoutTemplate::render($html, 'Nodes');
     }
 
     static public function renderTabs(array $tabs_arr)
@@ -74,17 +162,14 @@ class NodeCrudController
         foreach ($tabs_arr as $tab_arr) {
             $classes = '';
 
-            // TODO: код из Router::match3() - использовать общую реализацию?
+            // TODO: код взят из Router::match3() - использовать общую реализацию?
 
             $url_regexp = '@^' . $tab_arr['MATCH_URL'] . '$@';
-
             $matches_arr = array();
             $current_url = \OLOG\Router::uri_no_getform();
-
             if (preg_match($url_regexp, $current_url, $matches_arr)) {
                 $classes .= ' active ';
             }
-
 
             echo '<li role="presentation" class="' . Sanitize::sanitizeAttrValue($classes) . '"><a href="' . Sanitize::sanitizeUrl($tab_arr['LINK_URL']) . '">' . Sanitize::sanitizeTagContent($tab_arr['TITLE']) . '</a></li>';
         }
@@ -111,89 +196,4 @@ class NodeCrudController
         return ob_get_clean();
     }
 
-    static public function nodeEditAction($_mode, $node_id = '(\d+)')
-    {
-        if ($_mode == \OLOG\Router::GET_URL) return '/admin/node/' . $node_id;
-        if ($_mode == \OLOG\Router::GET_METHOD) return __METHOD__;
-
-        //
-
-        \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
-
-        $html = self::getTabsHtml($node_id);
-
-        ob_start();
-        \OLOG\CRUD\CRUDElements::renderEditorForm(
-            Node::class, $node_id,
-            [
-                'ELEMENTS' => [
-                    [
-                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                        'FIELD_NAME' => 'title',
-                        'WIDGET' => [
-                            'WIDGET_TYPE' => 'WIDGET_TEXTAREA'
-                        ]
-                    ],
-                    [
-                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                        'FIELD_NAME' => 'id',
-                        'WIDGET' => [
-                            'WIDGET_TYPE' => 'WIDGET_INPUT'
-                        ]
-                    ]
-                ]
-            ]
-        );
-        $html .= ob_get_clean();
-
-        DefaultLayoutTemplate::render($html, '<a href="' . self::nodesListAction(\OLOG\Router::GET_URL) . '">Nodes</a> / Node ' . $node_id);
-    }
-
-    static public function nodesListAction($_mode)
-    {
-        if ($_mode == \OLOG\Router::GET_URL) return '/admin/nodes';
-        if ($_mode == \OLOG\Router::GET_METHOD) return __METHOD__;
-
-        //
-
-        \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
-
-        ob_start();
-        CRUDListTemplate::render(
-            Node::class,
-            [
-                'CREATE_FORM' => [
-                    'ELEMENTS' => [
-                        [
-                            CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                            'FIELD_NAME' => 'title',
-                            'WIDGET' => [
-                                'WIDGET_TYPE' => 'WIDGET_INPUT'
-                            ]
-                        ]
-                    ]
-                ],
-                CRUDListTemplate::KEY_LIST_COLUMNS => [
-                    [
-                        'COLUMN_TITLE' => 'Edit',
-                        'WIDGET' => [
-                            'WIDGET_TYPE' => 'TEXT',
-                            'TEXT' => '{this.title}'
-                        ]
-                    ],
-                    [
-                        'COLUMN_TITLE' => 'Edit',
-                        'WIDGET' => [
-                            'WIDGET_TYPE' => 'TEXT_WITH_LINK',
-                            'LINK_URL' => NodeCrudController::nodeEditAction(\OLOG\Router::GET_URL, '{this->id}'),
-                            'TEXT' => '{\CRUDDemo\Node.{this->id}->title}'
-                        ]
-                    ]
-                ]
-            ]
-        );
-        $html = ob_get_clean();
-
-        DefaultLayoutTemplate::render($html, 'Nodes');
-    }
 }

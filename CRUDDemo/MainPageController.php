@@ -8,6 +8,10 @@ class MainPageController
         if ($_mode == \OLOG\Router::GET_URL) return '/';
         if ($_mode == \OLOG\Router::GET_METHOD) return __METHOD__;
 
-        echo '<a href="' . \OLOG\CRUD\CRUDController::listAction(\OLOG\Router::GET_URL, 'node') . '">NODES</a>';
+        $html = '';
+        $html .= '<div><a href="' . NodeCrudController::nodesListAction(\OLOG\Router::GET_URL) . '">NODES</a></div>';
+        $html .= '<div><a href="' . TermCrudController::termsListAction(\OLOG\Router::GET_URL) . '">TERMS</a></div>';
+
+        LayoutTemplate::render($html);
     }
 }

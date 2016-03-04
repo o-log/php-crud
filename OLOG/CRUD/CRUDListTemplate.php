@@ -32,8 +32,7 @@ class CRUDListTemplate
         $obj = FieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr);
         $obj->save();
 
-        // TODO: keep get form
-        \OLOG\Redirects::redirectToSelfNoGetForm();
+        \OLOG\Redirects::redirectToSelf();
     }
 
     static public function render($model_class_name, $element_config_arr, $context_arr = array())
@@ -56,23 +55,6 @@ class CRUDListTemplate
         $objs_ids_arr = self::getObjIdsArrForClassName($model_class_name, $context_arr, $filter);
 
         //
-        // готовим список полей, которые будем выводить в таблицу
-        //
-
-        // TODO
-        /*
-        $crud_table_fields_arr = array();
-
-        if (property_exists($model_class_name, 'crud_table_fields_arr') && (count($model_class_name::$crud_table_fields_arr) > 0)) {
-            foreach ($props_arr as $delta => $property_obj) {
-                if (!in_array($property_obj->getName(), $model_class_name::$crud_table_fields_arr)) {
-                    unset($props_arr[$delta]);
-                }
-            }
-        }
-        */
-
-        //
         // вывод таблицы
         //
 
@@ -82,8 +64,12 @@ class CRUDListTemplate
         $create_form_config_arr = CRUDConfigReader::getOptionalSubkey($element_config_arr, 'CREATE_FORM', []);
 
         if (!empty($create_form_config_arr)) {
-            // TODO: get form may be needed here? think over
-            echo '<form id="form" class="form-horizontal" role="form" method="post" action="' . \OLOG\Url::getCurrentUrlNoGetForm() . '">';
+            $collapse_id = 'collapse_' . rand(0, 999999); // to enable multiple forms on one page
+            echo '<div><a class="btn btn-default" role="button" data-toggle="collapse" href="#' . $collapse_id . '" aria-expanded="false">форма создания</a></div>';
+
+            echo '<div class="collapse" id="' . $collapse_id . '">';
+
+            echo '<form style="background-color: #ddd; padding: 10px;" id="form" class="form-horizontal" role="form" method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
             echo Operations::operationCodeHiddenField(self::OPERATION_ADD_MODEL);
             echo '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue($model_class_name) . '">';
 
@@ -92,7 +78,6 @@ class CRUDListTemplate
             // заполняем поля объекта со значениями по умолчанию из контекста
             FieldsAccess::setObjectFieldsFromArray($context_obj, $context_arr);
 
-            // TODO: форма должна быть в попапе?
             // русуем форму создания, поля формы заполняются из объекта со значениями по умолчанию
             $elements_arr = CRUDConfigReader::getRequiredSubkey($create_form_config_arr, 'ELEMENTS');
             foreach ($elements_arr as $element_key => $element_config) {
@@ -106,6 +91,8 @@ class CRUDListTemplate
             echo '</div>';
 
             echo '</form>';
+
+            echo '</div>';
         }
 
         echo '</div>';
@@ -151,7 +138,7 @@ class CRUDListTemplate
                 echo '<td>';
 
                 $widget_config_arr = CRUDConfigReader::getRequiredSubkey($column_config, 'WIDGET');
-                echo Widgets::renderListWidget($widget_config_arr, $obj_obj);
+                echo CRUDWidgets::renderListWidget($widget_config_arr, $obj_obj);
 
                 echo '</td>';
 
@@ -177,10 +164,7 @@ class CRUDListTemplate
      */
     static public function getObjIdsArrForClassName($model_class_name, $context_arr, $title_filter = '')
     {
-        $page_size = 100;
-        $start = 0;
-
-        // TODO: check interfaceLoad
+        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
 
         $page_size = Pager::getPageSize();
         $start = Pager::getPageOffset();

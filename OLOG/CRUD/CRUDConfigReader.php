@@ -45,7 +45,7 @@ class CRUDConfigReader
     */
 
     static public function getRequiredSubkey(array $config_arr, $key){
-        \OLOG\Assert::assert(array_key_exists($key, $config_arr));
+        \OLOG\Assert::assert(array_key_exists($key, $config_arr), 'Missing required subkey ' . $key);
         return $config_arr[$key];
     }
 

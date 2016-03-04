@@ -1,7 +1,17 @@
 <?php
 
 /*
- * create table term (id int not null auto_increment primary key, title varchar(250) not null default '') engine InnoDB default charset utf8;
+
+create table term (
+id int not null auto_increment primary key,
+title varchar(250) not null default ''
+)
+engine InnoDB default charset utf8;
+
+alter table term add column parent_id int null;
+
+alter table term add foreign key (parent_id) references term(id);
+
  */
 
 namespace CRUDDemo;
@@ -20,6 +30,7 @@ class Term implements
 
     protected $id;
     protected $title = '';
+    protected $parent_id;
 
     /**
      * @return int
@@ -51,5 +62,21 @@ class Term implements
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parent_id;
+    }
+
+    /**
+     * @param mixed $parent_id
+     */
+    public function setParentId($parent_id)
+    {
+        $this->parent_id = $parent_id;
     }
 }

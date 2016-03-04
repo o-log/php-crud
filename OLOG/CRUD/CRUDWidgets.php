@@ -3,8 +3,9 @@
 namespace OLOG\CRUD;
 
 
-class Widgets {
+class CRUDWidgets {
     const WIDGET_CHECKBOX = 'WIDGET_CHECKBOX';
+    const WIDGET_TEXT_WITH_LINK = 'TEXT_WITH_LINK';
 
     static public function renderListWidget($widget_config_arr, $row_obj){
         $widget_type = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'WIDGET_TYPE');
@@ -13,7 +14,7 @@ class Widgets {
             case 'TEXT':
                 return self::widgetText($widget_config_arr, $row_obj);
 
-            case 'TEXT_WITH_LINK':
+            case self::WIDGET_TEXT_WITH_LINK:
                 return self::widgetTextWithLink($widget_config_arr, $row_obj);
 
             default:
@@ -21,35 +22,55 @@ class Widgets {
         }
     }
 
+    /**
+     * компиляция строки: разворачивание обращений к полям объектов
+     * @param $str
+     * @param array $data
+     * @return mixed
+     * @throws \Exception
+     */
     public static function compile($str, array $data){
 
         // TODO: clean and finish
 
         $matches = [];
+
+        // сначала подставляем значения в самых внутренних фигурных скобках, потом которые снаружи, и так пока все скобки не будут заменены
+        // поддерживается два вида выражений:
+        // - {obj->field} заменяется на значение поля field объекта obj. obj - это ключ массива data, т.е. здесь можно использовать такие строки, которые передаются сюда вызывающими функциями
+        // -- обычно виджеты передают объект, который показывается в виджете, с именем this
+        // - {class_name.id->field} заменяется на значение поля field объекта класса class_name с идентификатором id
         while (preg_match('@{([^}{]+)}@', $str, $matches)){
-            $magic = $matches[1];
-            $magic_replacement = 'UNKNOWN_MAGIC';
+            $expression = $matches[1];
+            $replacement = 'UNKNOWN_EXPRESSION';
 
             $magic_matches = [];
-            if (preg_match('@^(\w+)\->(\w+)$@', $magic, $magic_matches)){
-                $obj_name_in_data = $magic_matches[1];
+            if (preg_match('@^(\w+)\->(\w+)$@', $expression, $magic_matches)){
+                $obj_key_in_data = $magic_matches[1];
                 $obj_field_name = $magic_matches[2];
 
-                \OLOG\Assert::assert($data[$obj_name_in_data]);
+                \OLOG\Assert::assert($data[$obj_key_in_data]);
+                $replacement = FieldsAccess::getObjectFieldValue($data[$obj_key_in_data], $obj_field_name);
 
-                $magic_replacement = FieldsAccess::getObjectFieldValue($data[$obj_name_in_data], $obj_field_name);
+                if (is_null($replacement)){
+                    $replacement = 'NULL'; // TODO: review?
+                }
             }
 
-            if (preg_match('@^([\w\\\\]+)\.(\w+)->(\w+)$@', $magic, $magic_matches)){
+            if (preg_match('@^([\w\\\\]+)\.(\w+)->(\w+)$@', $expression, $magic_matches)){
                 $class_name = $magic_matches[1];
                 $obj_id = $magic_matches[2];
                 $obj_field_name = $magic_matches[3];
 
-                $obj = ObjectLoader::createAndLoadObject($class_name, $obj_id);
-                $magic_replacement = FieldsAccess::getObjectFieldValue($obj, $obj_field_name);
+                if ($obj_id != 'NULL') { // TODO: review?
+                    $obj = ObjectLoader::createAndLoadObject($class_name, $obj_id);
+                    $replacement = FieldsAccess::getObjectFieldValue($obj, $obj_field_name);
+                } else {
+                    $replacement = '';
+                }
             }
 
-            $str = preg_replace('@{([^}{]+)}@', $magic_replacement, $str);
+            $str = preg_replace('@{([^}{]+)}@', $replacement, $str);
         }
 
         return $str;
@@ -83,8 +104,6 @@ class Widgets {
     public static function renderEditorFieldWithWidget($widget_config_arr, $field_name, $obj = null)
     {
         $widget_name = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'WIDGET_TYPE');
-        // TODO
-        //$widget_name = self::getFieldWidgetName($field_name, $obj);
 
         $field_value = '';
         if ($obj) {
@@ -110,10 +129,13 @@ class Widgets {
                 $o = self::widgetOptions($field_name, $field_value, $options_arr);
                 break;
             */
+
             case 'WIDGET_TEXTAREA':
                 return self::widgetTextarea($field_name, $field_value);
+
             case 'WIDGET_INPUT':
                 return self::widgetInput($field_name, $field_value);
+
             default:
                 throw new \Exception('unknown widget type: ' . $widget_name);
         }

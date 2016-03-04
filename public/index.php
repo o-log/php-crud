@@ -11,3 +11,6 @@ use \OLOG\Router;
 Router::match3(\CRUDDemo\NodeCrudController::nodesListAction(Router::GET_METHOD), 0);
 Router::match3(\CRUDDemo\NodeCrudController::nodeEditAction(Router::GET_METHOD), 0);
 Router::match3(\CRUDDemo\NodeCrudController::nodeTermsAction(Router::GET_METHOD), 0);
+
+Router::match3(\CRUDDemo\TermCrudController::termsListAction(Router::GET_METHOD), 0);
+Router::match3(\CRUDDemo\TermCrudController::termEditAction(Router::GET_METHOD), 0);

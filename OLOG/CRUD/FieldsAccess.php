@@ -26,7 +26,7 @@ class FieldsAccess
             }
         }
 
-        \OLOG\Helpers::assert($field_prop_obj);
+        \OLOG\Assert::assert($field_prop_obj);
 
         $field_prop_obj->setAccessible(true);
         return $field_prop_obj->getValue($obj);
@@ -44,22 +44,4 @@ class FieldsAccess
 
         return $obj;
     }
-
-    /*
-    static public function getTitleForField($model_class_name, $field_name)
-    {
-        $title = $field_name;
-
-        // TODO
-        //if (property_exists($model_class_name, 'crud_field_titles_arr')) {
-        //    $crud_field_titles_arr = $model_class_name::$crud_field_titles_arr;
-        //    if (array_key_exists($field_name, $crud_field_titles_arr)) {
-        //        $title = $crud_field_titles_arr[$field_name];
-        //    }
-        //}
-
-        return $title;
-    }
-    */
-
 }

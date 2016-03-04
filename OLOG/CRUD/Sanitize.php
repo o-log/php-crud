@@ -11,8 +11,7 @@ class Sanitize
     }
 
     static public function sanitizeUrl($url){
-        //return filter_var(FILTER_SANITIZE_URL, $url);
-        return $url; // TODO: sanitize
+        return filter_var($url, FILTER_SANITIZE_URL);
     }
 
     static public function sanitizeAttrValue($value){

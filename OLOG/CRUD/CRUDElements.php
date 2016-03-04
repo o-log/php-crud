@@ -7,6 +7,8 @@ class CRUDElements
     const ELEMENT_FORM_ROW = 'ELEMENT_FORM_ROW';
     const OPERATION_SAVE_EDITOR_FORM = 'OPERATION_SAVE_EDITOR_FORM';
     const KEY_ELEMENT_TYPE = 'ELEMENT_TYPE';
+    const KEY_FORM_ROW_FIELD_NAME = 'FORM_ROW_FIELD_NAME';
+    const KEY_FORM_ROW_TITLE = 'FORM_ROW_TITLE';
 
     /*
     static public function renderElements($elements_arr){
@@ -17,7 +19,7 @@ class CRUDElements
     */
 
     /**
-     * Элемент формы рисуется для объекта, чтобы ему можно было передать или редактируемый объект для формф редактирования, или объект со значениями полей по умолчанию для формы создания.
+     * Элемент формы рисуется для объекта (а не для пары класс-идентификатор), чтобы ему можно было передать или редактируемый объект для формы редактирования, или объект со значениями полей по умолчанию для формы создания.
      * @param $config_arr
      * @param $obj
      * @throws \Exception
@@ -27,7 +29,7 @@ class CRUDElements
 
         switch ($element_type){
             case self::ELEMENT_FORM_ROW:
-                self::renderElementFormRow($config_arr, $obj);
+                self::renderFormRow($config_arr, $obj);
                 break;
 
             default:
@@ -36,7 +38,7 @@ class CRUDElements
 
     }
 
-    static protected function saveEditorFormOperation($model_class_name, $object_id, $config_arr){
+    static protected function saveEditorFormOperation($model_class_name, $object_id){
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
 
         $new_prop_values_arr = array();
@@ -60,22 +62,21 @@ class CRUDElements
         $obj = FieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr);
         $obj->save();
 
-        /* TODO
+        /* TODO: внести логирование в save?
         \Sportbox\Logger\Logger::logObjectEvent($obj, 'CRUD сохранение');
         $redirect_url = \Sportbox\CRUD\ControllerCRUD::getEditUrlForObj($obj);
         */
 
-        // TODO: get form may be used? think over
-        \OLOG\Redirects::redirectToSelfNoGetForm();
+        // keep get form
+        \OLOG\Redirects::redirectToSelf();
     }
 
     static public function renderEditorForm($class_name, $obj_id, $config_arr){
         Operations::matchOperation(self::OPERATION_SAVE_EDITOR_FORM, function() use($class_name, $obj_id, $config_arr) {
-            self::saveEditorFormOperation($class_name, $obj_id, $config_arr);
+            self::saveEditorFormOperation($class_name, $obj_id);
         });
 
-        // TODO: get form may be needed here? think over
-        echo '<form id="form" class="form-horizontal" role="form" method="post" action="' . Sanitize::sanitizeUrl(\OLOG\Url::getCurrentUrlNoGetForm()) . '">';
+        echo '<form id="form" class="form-horizontal" role="form" method="post" action="' . Sanitize::sanitizeUrl(\OLOG\Url::getCurrentUrl()) . '">';
 
         echo Operations::operationCodeHiddenField(self::OPERATION_SAVE_EDITOR_FORM);
         echo '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue($class_name) . '">';
@@ -97,7 +98,7 @@ class CRUDElements
         echo '</form>';
     }
 
-    static public function renderElementFormRow($element_config_arr, $obj){
+    static public function renderFormRow($element_config_arr, $obj){
         $required = false;
         // TODO
         //$required = \Sportbox\CRUD\Helpers::isRequiredField($model_class_name, $prop_obj->getName());
@@ -108,18 +109,16 @@ class CRUDElements
 
         //$editor_context_obj = CRUDController::getEditorContext();
 
-        // TODO introduce constant
-        $field_name = $element_config_arr['FIELD_NAME'];
-
-        // TODO: read title from config
-        $field_title = $field_name;
+        //$field_name = $element_config_arr[self::KEY_FORM_ROW_FIELD_NAME];
+        $field_name = CRUDConfigReader::getRequiredSubkey($element_config_arr, self::KEY_FORM_ROW_FIELD_NAME);
+        $field_title = CRUDConfigReader::getOptionalSubkey($element_config_arr, self::KEY_FORM_ROW_TITLE, $field_name);
 
         echo '<div class="form-group ' . ($required ? 'required' : '') . '">';
         echo '<label class="col-sm-4 text-right control-label" for="' . $field_name . '">' . $field_title . '</label>';
 
         echo '<div class="col-sm-8">';
         $widget_config_arr = CRUDConfigReader::getRequiredSubkey($element_config_arr, 'WIDGET');
-        echo \OLOG\CRUD\Widgets::renderEditorFieldWithWidget($widget_config_arr, $field_name, $obj);
+        echo \OLOG\CRUD\CRUDWidgets::renderEditorFieldWithWidget($widget_config_arr, $field_name, $obj);
 
         if ($editor_description) {
             echo '<span class="help-block">' . $editor_description . '</span>';
