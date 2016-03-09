@@ -1,4 +1,5 @@
 {
+	"name": "o-log/php-model",
 	"repositories" : [
 		{
 			"type" : "git",
