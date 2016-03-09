@@ -2,8 +2,6 @@
 
 namespace CRUDDemo;
 
-use OLOG\CRUD\CRUDConfigReader;
-
 class Config
 {
     const DB_NAME_PHPCRUDDEMO = 'phpcrud';

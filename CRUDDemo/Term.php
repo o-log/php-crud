@@ -1,19 +1,5 @@
 <?php
 
-/*
-
-create table term (
-id int not null auto_increment primary key,
-title varchar(250) not null default ''
-)
-engine InnoDB default charset utf8;
-
-alter table term add column parent_id int null;
-
-alter table term add foreign key (parent_id) references term(id);
-
- */
-
 namespace CRUDDemo;
 
 class Term implements

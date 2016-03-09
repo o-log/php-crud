@@ -1,21 +1,5 @@
 <?php
 
-/*
-
-create table termtonode (
-id int not null auto_increment primary key,
-node_id int not null,
-term_id int not null,
-foreign key(node_id) references node(id),
-foreign key(term_id) references term(id)
-)
-engine InnoDB
-default charset utf8;
-
-alter table termtonode add unique key (term_id, node_id);
-
- */
-
 namespace CRUDDemo;
 
 class TermToNode implements

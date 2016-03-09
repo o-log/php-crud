@@ -1,9 +1,5 @@
 <?php
 
-/*
- * create table node (id int not null auto_increment primary key, title varchar(250) not null default '') engine InnoDB default charset utf8;
- */
-
 namespace CRUDDemo;
 
 use OLOG\CRUD\CRUDConfigReader;
