@@ -1,5 +1,5 @@
 {
-	"name": "o-log/php-model",
+	"name": "o-log/php-crud",
 	"repositories" : [
 		{
 			"type" : "git",
