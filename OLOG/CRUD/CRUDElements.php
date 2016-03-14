@@ -5,6 +5,7 @@ namespace OLOG\CRUD;
 class CRUDElements
 {
     const ELEMENT_FORM_ROW = 'ELEMENT_FORM_ROW';
+    const ELEMENT_VERTICAL_FORM_ROW = 'ELEMENT_VERTICAL_FORM_ROW';
     const OPERATION_SAVE_EDITOR_FORM = 'OPERATION_SAVE_EDITOR_FORM';
     const KEY_ELEMENT_TYPE = 'ELEMENT_TYPE';
     const KEY_FORM_ROW_FIELD_NAME = 'FORM_ROW_FIELD_NAME';
@@ -30,6 +31,10 @@ class CRUDElements
         switch ($element_type){
             case self::ELEMENT_FORM_ROW:
                 self::renderFormRow($config_arr, $obj);
+                break;
+
+            case self::ELEMENT_VERTICAL_FORM_ROW:
+                self::renderVerticalFormRow($config_arr, $obj);
                 break;
 
             default:
@@ -123,6 +128,21 @@ class CRUDElements
         if ($editor_description) {
             echo '<span class="help-block">' . $editor_description . '</span>';
         }
+
+        echo '</div>';
+        echo '</div>';
+    }
+
+    static public function renderVerticalFormRow($element_config_arr, $obj){
+        $field_name = CRUDConfigReader::getRequiredSubkey($element_config_arr, self::KEY_FORM_ROW_FIELD_NAME);
+        $field_title = CRUDConfigReader::getOptionalSubkey($element_config_arr, self::KEY_FORM_ROW_TITLE, $field_name);
+
+        echo '<div class="form-group">';
+        echo '<div class="col-sm-12" style="font-weight: bold;">' . $field_title . '</div>';
+
+        echo '<div class="col-sm-12">';
+        $widget_config_arr = CRUDConfigReader::getRequiredSubkey($element_config_arr, 'WIDGET');
+        echo \OLOG\CRUD\CRUDWidgets::renderEditorFieldWithWidget($widget_config_arr, $field_name, $obj);
 
         echo '</div>';
         echo '</div>';

@@ -19,6 +19,7 @@ class Node implements
     const DB_TABLE_NAME = 'node';
 
     protected $id;
+    protected $body;
     protected $title = '';
 
     /**

@@ -85,6 +85,13 @@ class NodeCrudController
                 'ELEMENTS' => [
                     [
                         CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
+                        CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'id',
+                        'WIDGET' => [
+                            'WIDGET_TYPE' => 'WIDGET_INPUT'
+                        ]
+                    ],
+                    [
+                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
                         CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'title',
                         CRUDElements::KEY_FORM_ROW_TITLE => 'Название',
                         'WIDGET' => [
@@ -92,10 +99,11 @@ class NodeCrudController
                         ]
                     ],
                     [
-                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                        CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'id',
+                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_VERTICAL_FORM_ROW,
+                        CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'body',
+                        CRUDElements::KEY_FORM_ROW_TITLE => 'Текст',
                         'WIDGET' => [
-                            'WIDGET_TYPE' => 'WIDGET_INPUT'
+                            'WIDGET_TYPE' => 'WIDGET_ACE_TEXTAREA'
                         ]
                     ]
                 ]
@@ -136,7 +144,7 @@ class NodeCrudController
                         'COLUMN_TITLE' => 'Edit',
                         'WIDGET' => [
                             'WIDGET_TYPE' => 'TEXT',
-                            'TEXT' => '{this.title}'
+                            'TEXT' => '{this->title}'
                         ]
                     ],
                     [
