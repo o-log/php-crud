@@ -284,9 +284,8 @@ class CRUDWidgets {
         $html .= '<div id="' . $editor_element_id . '" class="form-control">' . Sanitize::sanitizeTagContent($field_value) . '</div>';
         $html .= '<textarea id="' . $editor_element_id . '_target" name="' . Sanitize::sanitizeAttrValue($field_name) . '" style="display: none;">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
 
-
-            $html .= '
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
+        // TODO: multiple insertion!!!!
+            $html .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
             <script>
             //var editor_element = document.getElementById("' . $editor_element_id . '");
             //editor_element.parentElement.style.height = "500px";
