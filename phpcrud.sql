@@ -12,4 +12,5 @@ array (
   11 => 'alter table termtonode add foreign key(term_id) references term(id);',
   12 => 'alter table termtonode add unique key (term_id, node_id);',
   13 => 'alter table node add column body text  not null   default "";',
+  14 => 'alter table node add column state_code int  not null   default 0;',
 )

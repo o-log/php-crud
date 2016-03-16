@@ -3,7 +3,7 @@
 namespace CRUDDemo;
 
 use OLOG\CRUD\CRUDElements;
-use \OLOG\CRUD\CRUDListTemplate;
+use OLOG\CRUD\CRUDListTemplate;
 use OLOG\CRUD\Sanitize;
 
 class NodeCrudController
@@ -36,7 +36,9 @@ class NodeCrudController
                             CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
                             CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'term_id',
                             'WIDGET' => [
-                                'WIDGET_TYPE' => 'WIDGET_INPUT'
+                                'WIDGET_TYPE' => 'WIDGET_REFERENCE',
+                                'REFERENCED_CLASS' => \CRUDDemo\Term::class,
+                                'REFERENCED_CLASS_TITLE_FIELD' => 'title'
                             ]
                         ]
                     ]
@@ -96,6 +98,20 @@ class NodeCrudController
                         CRUDElements::KEY_FORM_ROW_TITLE => 'Название',
                         'WIDGET' => [
                             'WIDGET_TYPE' => 'WIDGET_TEXTAREA'
+                        ]
+                    ],
+                    [
+                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
+                        CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'state_code',
+                        CRUDElements::KEY_FORM_ROW_TITLE => 'State code',
+                        'WIDGET' => [
+                            'WIDGET_TYPE' => 'WIDGET_OPTIONS',
+                            'OPTIONS' => [
+                                0 => 'unknown',
+                                1 => 'LIVE',
+                                2 => 'ARCHIVE',
+                                3 => 'ANNOUNCE'
+                            ]
                         ]
                     ],
                     [

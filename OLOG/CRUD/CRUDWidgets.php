@@ -139,6 +139,12 @@ class CRUDWidgets {
             case 'WIDGET_INPUT':
                 return self::widgetInput($field_name, $field_value);
 
+            case 'WIDGET_OPTIONS':
+                return self::widgetOptions($field_name, $field_value, $widget_config_arr);
+
+            case 'WIDGET_REFERENCE':
+                return self::widgetReference($field_name, $field_value, $widget_config_arr);
+
             default:
                 throw new \Exception('unknown widget type: ' . $widget_name);
         }
@@ -328,9 +334,54 @@ class CRUDWidgets {
     }
     */
 
-    public static function widgetOptions($field_name, $field_value, $options_arr)
+    /*
+'WIDGET' => [
+'WIDGET_TYPE' => 'WIDGET_REFERENCE',
+'REFERENCED_CLASS' => \CRUDDemo\Term::class,
+'REFERENCED_CLASS_TITLE_FIELD' => 'title'
+]
+    */
+
+    public static function widgetReference($field_name, $field_value, $widget_config_arr)
     {
         $options = '<option></option>';
+
+        $referenced_class_name = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'REFERENCED_CLASS');
+        $referenced_class_title_field = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'REFERENCED_CLASS_TITLE_FIELD');
+
+        // TODO: check referenced class interfaces
+
+        $referenced_obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
+            $referenced_class_name::DB_ID, // TODO: use common method
+            'select ID from ' . $referenced_class_name::DB_TABLE_NAME . ' order by ID' // TODO: respect custom ID fields
+            );
+
+        $options_arr = [];
+        foreach ($referenced_obj_ids_arr as $id){
+            $obj = ObjectLoader::createAndLoadObject($referenced_class_name, $id);
+            $options_arr[$id] = FieldsAccess::getObjectFieldValue($obj, $referenced_class_title_field);
+        }
+
+        // TODO: send to common options widget?
+
+        foreach($options_arr as $value => $title)
+        {
+            $selected_html_attr = '';
+            if ($field_value == $value) {
+                $selected_html_attr = ' selected';
+            }
+
+            $options .= '<option value="' .  $value . '"' . $selected_html_attr . '>' . $title . '</option>';
+        }
+
+        return '<select name="' . $field_name . '" class="form-control">' . $options . '</select>';
+    }
+
+    public static function widgetOptions($field_name, $field_value, $widget_config_arr)
+    {
+        $options = '<option></option>';
+
+        $options_arr = $widget_config_arr['OPTIONS'];
 
         foreach($options_arr as $value => $title)
         {
