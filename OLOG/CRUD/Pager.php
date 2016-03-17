@@ -30,7 +30,7 @@ class Pager
         return $page_number;
     }
 
-    static public function getPageSize($default_page_size = 30)
+    static public function getPageSize($default_page_size = 100)
     {
         $page_size = $default_page_size;
         if (array_key_exists('page_size', $_GET)) {
