@@ -147,12 +147,19 @@ class TermCrudController
                         ]
                     ],
                     [
-                    'COLUMN_TITLE' => 'parent',
+                        'COLUMN_TITLE' => 'parent',
                         'WIDGET' => [
                             'WIDGET_TYPE' => 'TEXT',
                             'TEXT' => '{\CRUDDemo\Term.{this->parent_id}->title}'
                         ]
+                    ],
+                    [
+                    'COLUMN_TITLE' => 'delete',
+                    'WIDGET' => [
+                        'WIDGET_TYPE' => 'DELETE',
+                        'TEXT' => 'X'
                     ]
+                ]
                 ]
             ]
             );

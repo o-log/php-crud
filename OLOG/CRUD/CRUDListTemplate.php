@@ -6,9 +6,12 @@ class CRUDListTemplate
 {
     const KEY_LIST_COLUMNS = 'LIST_COLUMNS';
     const OPERATION_ADD_MODEL = 'OPERATION_ADD_MODEL';
+    const OPERATION_DELETE_MODEL = 'OPERATION_DELETE_MODEL';
 
     static protected function addModelOperation($model_class_name, $element_config_arr, $context_arr){
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
+
+        // TODO: must read class_name from form!!!
 
         $new_prop_values_arr = array();
         $reflect = new \ReflectionClass($model_class_name);
@@ -35,10 +38,42 @@ class CRUDListTemplate
         \OLOG\Redirects::redirectToSelf();
     }
 
+    // TODO: move to library
+    static public function getRequiredPostValue($key){
+        $value = '';
+
+        if (array_key_exists($key, $_POST)){
+            $value = $_POST[$key];
+        }
+
+        \OLOG\Assert::assert($value != '', 'Missing required POST field ' . $key);
+
+        return $value;
+    }
+
+    static protected function deleteModelOperation($model_class_name, $element_config_arr, $context_arr){
+        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
+
+        $model_class_name = self::getRequiredPostValue('_class_name'); // TODO: constant for field name
+        $model_id = self::getRequiredPostValue('_id'); // TODO: constant for field name
+
+        $obj = ObjectLoader::createAndLoadObject($model_class_name, $model_id);
+        $obj->delete();
+
+        \OLOG\Redirects::redirectToSelf();
+    }
+
     static public function render($model_class_name, $element_config_arr, $context_arr = array())
     {
+
+        // TODO: transactions??
+
         Operations::matchOperation(self::OPERATION_ADD_MODEL, function() use($model_class_name, $element_config_arr, $context_arr) {
             self::addModelOperation($model_class_name, $element_config_arr, $context_arr);
+        });
+
+        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function() use($model_class_name, $element_config_arr, $context_arr) {
+            self::deleteModelOperation($model_class_name, $element_config_arr, $context_arr);
         });
 
         //
@@ -69,6 +104,7 @@ class CRUDListTemplate
 
             echo '<div class="collapse" id="' . $collapse_id . '">';
 
+            // todo: sanitize url
             echo '<form style="background-color: #ddd; padding: 10px;" id="form" class="form-horizontal" role="form" method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
             echo Operations::operationCodeHiddenField(self::OPERATION_ADD_MODEL);
             echo '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue($model_class_name) . '">';

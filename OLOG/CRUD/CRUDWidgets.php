@@ -17,6 +17,9 @@ class CRUDWidgets {
             case self::WIDGET_TEXT_WITH_LINK:
                 return self::widgetTextWithLink($widget_config_arr, $row_obj);
 
+            case 'DELETE':
+                return self::widgetDelete($widget_config_arr, $row_obj);
+
             default:
                 throw new \Exception('unknown list widget: ' . $widget_type);
         }
@@ -97,6 +100,32 @@ class CRUDWidgets {
         }
 
         $o = '<a href="' . Sanitize::sanitizeUrl($url) . '">' . Sanitize::sanitizeTagContent($text) . '</a>';
+
+        return $o;
+    }
+
+    public static function widgetDelete($widget_config_arr, $obj){
+        $text = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'TEXT');
+        $text = self::compile($text, ['this' => $obj]);
+
+        if (trim($text) == ''){
+            $text = '#EMPTY#';
+        }
+
+        $o = '';
+
+        $obj_class_name = get_class($obj);
+        $obj_id_field_name = FieldsAccess::getIdFieldName($obj_class_name);
+        $obj_id = FieldsAccess::getObjectFieldValue($obj, $obj_id_field_name);
+
+        echo '<form method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
+        echo Operations::operationCodeHiddenField(CRUDListTemplate::OPERATION_DELETE_MODEL);
+        echo '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue($obj_class_name) . '">';
+        echo '<input type="hidden" name="_id" value="' . Sanitize::sanitizeAttrValue($obj_id) . '">';
+
+        echo '<button type="submit">' . $text . '</button>';
+
+        echo '</form>';
 
         return $o;
     }
