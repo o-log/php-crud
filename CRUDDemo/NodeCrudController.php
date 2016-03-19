@@ -82,60 +82,34 @@ class NodeCrudController
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 
         $html = self::getTabsHtml($node_id);
-        
+
         $node_obj = Node::factory($node_id);
 
         $html .= \OLOG\CRUD\CRUDEditorForm::getHtml(
             Node::class, $node_id,
             [
-                        /*
-                        CRUDElements::KEY_ELEMENT_CLASS => CRUDElementFormRow::class,
-                        CRUDElementFormRow::KEY_FORM_ROW_FIELD_NAME => 'id',
-                        'WIDGET' => [
-                            'WIDGET_TYPE' => 'WIDGET_INPUT'
-                        ]
-                        */
-                        CRUDElementFormRow::getHtml(
-                            CRUDWidgetTextarea::getHtml('id', $node_obj->getId()),
-                            'id'
-                        ),
-                        /*
-                        CRUDElements::KEY_ELEMENT_CLASS => CRUDElementFormRow::class,
-                        CRUDElementFormRow::KEY_FORM_ROW_FIELD_NAME => 'title',
-                        CRUDElementFormRow::KEY_FORM_ROW_TITLE => 'Название',
-                        'WIDGET' => [
-                            'WIDGET_TYPE' => 'WIDGET_TEXTAREA'
-                        ]*/
-                        CRUDElementFormRow::getHtml(
-                            CRUDWidgetTextarea::getHtml('title', $node_obj->getTitle()),
-                            'title'
-                        ),/*
-                        CRUDElements::KEY_ELEMENT_CLASS => CRUDElementFormRow::class,
-                        CRUDElementFormRow::KEY_FORM_ROW_FIELD_NAME => 'state_code',
-                        CRUDElementFormRow::KEY_FORM_ROW_TITLE => 'State code',
-                        'WIDGET' => [
-                            'WIDGET_TYPE' => 'WIDGET_OPTIONS',
-                            'OPTIONS' => [
-                                0 => 'unknown',
-                                1 => 'LIVE',
-                                2 => 'ARCHIVE',
-                                3 => 'ANNOUNCE'
-                            ]
-                        */
-                    CRUDElementFormRow::getHtml(
-                        CRUDWidgetTextarea::getHtml('state_code', $node_obj->getStateCode()),
-                        'state_code'
-                    ),
-                    /*
-                    ],
-                    [
-                        CRUDElements::KEY_ELEMENT_CLASS => CRUDElementVerticalFormRow::class,
-                        CRUDElementVerticalFormRow::KEY_FORM_ROW_FIELD_NAME => 'body',
-                        CRUDElementVerticalFormRow::KEY_FORM_ROW_TITLE => 'Текст',
-                        'WIDGET' => [
-                            'WIDGET_TYPE' => 'WIDGET_ACE_TEXTAREA'
-                        ]
-                    ]*/
+                CRUDElementFormRow::getHtml(
+                    CRUDWidgetTextarea::getHtml('id', $node_obj->getId()),
+                    'Id'
+                ),
+                CRUDElementFormRow::getHtml(
+                    CRUDWidgetTextarea::getHtml('title', $node_obj->getTitle()),
+                    'Title'
+                ),
+                CRUDElementFormRow::getHtml(
+                    CRUDWidgetTextarea::getHtml('state_code', $node_obj->getStateCode()),
+                    'State code'
+                ),
+                /*
+                ],
+                [
+                    CRUDElements::KEY_ELEMENT_CLASS => CRUDElementVerticalFormRow::class,
+                    CRUDElementVerticalFormRow::KEY_FORM_ROW_FIELD_NAME => 'body',
+                    CRUDElementVerticalFormRow::KEY_FORM_ROW_TITLE => 'Текст',
+                    'WIDGET' => [
+                        'WIDGET_TYPE' => 'WIDGET_ACE_TEXTAREA'
+                    ]
+                ]*/
             ]
         );
 
@@ -213,7 +187,8 @@ class NodeCrudController
         echo '</ul>';
     }
 
-    static public function getTabsHtml($node_id){
+    static public function getTabsHtml($node_id)
+    {
         ob_start();
         self::renderTabs(
             [
