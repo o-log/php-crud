@@ -26,6 +26,39 @@ class Node implements
     /**
      * @return int
      */
+    public function getStateCode()
+    {
+        return $this->state_code;
+    }
+
+    /**
+     * @param int $state_code
+     */
+    public function setStateCode($state_code)
+    {
+        $this->state_code = $state_code;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    /**
+     * @param int $body
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
+    }
+
+    
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;

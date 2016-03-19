@@ -2,8 +2,11 @@
 
 namespace CRUDDemo;
 
+use OLOG\CRUD\CRUDElementFormRow;
+use OLOG\CRUD\CRUDElementVerticalFormRow;
 use OLOG\CRUD\CRUDElements;
 use OLOG\CRUD\CRUDListTemplate;
+use OLOG\CRUD\CRUDWidgetTextarea;
 use OLOG\CRUD\Sanitize;
 
 class NodeCrudController
@@ -26,15 +29,15 @@ class NodeCrudController
                 'CREATE_FORM' => [
                     'ELEMENTS' => [
                         [
-                            CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                            CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'node_id',
+                            CRUDElements::KEY_ELEMENT_CLASS => \OLOG\CRUD\CRUDElementFormRow::class,
+                            CRUDElementFormRow::KEY_FORM_ROW_FIELD_NAME => 'node_id',
                             'WIDGET' => [
                                 'WIDGET_TYPE' => 'WIDGET_INPUT'
                             ]
                         ],
                         [
-                            CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                            CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'term_id',
+                            CRUDElements::KEY_ELEMENT_CLASS => \OLOG\CRUD\CRUDElementFormRow::class,
+                            CRUDElementFormRow::KEY_FORM_ROW_FIELD_NAME => 'term_id',
                             'WIDGET' => [
                                 'WIDGET_TYPE' => 'WIDGET_REFERENCE',
                                 'REFERENCED_CLASS' => \CRUDDemo\Term::class,
@@ -79,31 +82,37 @@ class NodeCrudController
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 
         $html = self::getTabsHtml($node_id);
+        
+        $node_obj = Node::factory($node_id);
 
-        ob_start();
-        \OLOG\CRUD\CRUDElements::renderEditorForm(
+        $html .= \OLOG\CRUD\CRUDEditorForm::getHtml(
             Node::class, $node_id,
             [
-                'ELEMENTS' => [
-                    [
-                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                        CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'id',
+                        /*
+                        CRUDElements::KEY_ELEMENT_CLASS => CRUDElementFormRow::class,
+                        CRUDElementFormRow::KEY_FORM_ROW_FIELD_NAME => 'id',
                         'WIDGET' => [
                             'WIDGET_TYPE' => 'WIDGET_INPUT'
                         ]
-                    ],
-                    [
-                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                        CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'title',
-                        CRUDElements::KEY_FORM_ROW_TITLE => 'Название',
+                        */
+                        CRUDElementFormRow::getHtml(
+                            CRUDWidgetTextarea::getHtml('id', $node_obj->getId()),
+                            'id'
+                        ),
+                        /*
+                        CRUDElements::KEY_ELEMENT_CLASS => CRUDElementFormRow::class,
+                        CRUDElementFormRow::KEY_FORM_ROW_FIELD_NAME => 'title',
+                        CRUDElementFormRow::KEY_FORM_ROW_TITLE => 'Название',
                         'WIDGET' => [
                             'WIDGET_TYPE' => 'WIDGET_TEXTAREA'
-                        ]
-                    ],
-                    [
-                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                        CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'state_code',
-                        CRUDElements::KEY_FORM_ROW_TITLE => 'State code',
+                        ]*/
+                        CRUDElementFormRow::getHtml(
+                            CRUDWidgetTextarea::getHtml('title', $node_obj->getTitle()),
+                            'title'
+                        ),/*
+                        CRUDElements::KEY_ELEMENT_CLASS => CRUDElementFormRow::class,
+                        CRUDElementFormRow::KEY_FORM_ROW_FIELD_NAME => 'state_code',
+                        CRUDElementFormRow::KEY_FORM_ROW_TITLE => 'State code',
                         'WIDGET' => [
                             'WIDGET_TYPE' => 'WIDGET_OPTIONS',
                             'OPTIONS' => [
@@ -112,20 +121,23 @@ class NodeCrudController
                                 2 => 'ARCHIVE',
                                 3 => 'ANNOUNCE'
                             ]
-                        ]
+                        */
+                    CRUDElementFormRow::getHtml(
+                        CRUDWidgetTextarea::getHtml('state_code', $node_obj->getStateCode()),
+                        'state_code'
+                    ),
+                    /*
                     ],
                     [
-                        CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_VERTICAL_FORM_ROW,
-                        CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'body',
-                        CRUDElements::KEY_FORM_ROW_TITLE => 'Текст',
+                        CRUDElements::KEY_ELEMENT_CLASS => CRUDElementVerticalFormRow::class,
+                        CRUDElementVerticalFormRow::KEY_FORM_ROW_FIELD_NAME => 'body',
+                        CRUDElementVerticalFormRow::KEY_FORM_ROW_TITLE => 'Текст',
                         'WIDGET' => [
                             'WIDGET_TYPE' => 'WIDGET_ACE_TEXTAREA'
                         ]
-                    ]
-                ]
+                    ]*/
             ]
         );
-        $html .= ob_get_clean();
 
         LayoutTemplate::render($html, '<a href="' . self::nodesListAction(\OLOG\Router::GET_URL) . '">Nodes</a> / Node ' . $node_id);
     }
@@ -146,9 +158,9 @@ class NodeCrudController
                 'CREATE_FORM' => [
                     'ELEMENTS' => [
                         [
-                            CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                            CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'title',
-                            CRUDElements::KEY_FORM_ROW_TITLE => 'Название',
+                            CRUDElements::KEY_ELEMENT_CLASS => CRUDElementFormRow::class,
+                            CRUDElementFormRow::KEY_FORM_ROW_FIELD_NAME => 'title',
+                            CRUDElementFormRow::KEY_FORM_ROW_TITLE => 'Название',
                             'WIDGET' => [
                                 'WIDGET_TYPE' => 'WIDGET_INPUT'
                             ]
