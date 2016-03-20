@@ -4,7 +4,6 @@ namespace CRUDDemo;
 
 use OLOG\CRUD\CRUDEditorForm;
 use OLOG\CRUD\CRUDFormRow;
-use OLOG\CRUD\CRUDElements;
 use OLOG\CRUD\CRUDList;
 use OLOG\CRUD\CRUDWidgetReference;
 use OLOG\CRUD\CRUDWidgetTextarea;
@@ -21,9 +20,6 @@ class NodeTermsAction
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 
         $html = NodeEditAction::tabsHtml($node_id);
-
-        $context_obj = new \stdClass();
-        $context_obj->node_id = $node_id;
 
         ob_start();
         CRUDList::render(
@@ -65,7 +61,7 @@ class NodeTermsAction
                     ]
                 ]
             ],
-            $context_obj
+            ['node_id' => $node_id]
         );
         $html .= ob_get_clean();
 
