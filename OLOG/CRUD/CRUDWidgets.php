@@ -2,6 +2,7 @@
 
 namespace OLOG\CRUD;
 
+// TODO: вынести все виджеты отдельными классами
 
 class CRUDWidgets {
     const WIDGET_CHECKBOX = 'WIDGET_CHECKBOX';
@@ -119,220 +120,20 @@ class CRUDWidgets {
         $obj_id = FieldsAccess::getObjectFieldValue($obj, $obj_id_field_name);
 
         echo '<form method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
-        echo Operations::operationCodeHiddenField(CRUDListTemplate::OPERATION_DELETE_MODEL);
+        echo Operations::operationCodeHiddenField(CRUDList::OPERATION_DELETE_MODEL);
         echo '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue($obj_class_name) . '">';
         echo '<input type="hidden" name="_id" value="' . Sanitize::sanitizeAttrValue($obj_id) . '">';
 
-        echo '<button type="submit">' . $text . '</button>';
+        echo '<button type="submit" onclick="return window.confirm(\'Delete?\');">' . $text . '</button>';
 
         echo '</form>';
 
         return $o;
     }
 
-    public static function renderEditorFieldWithWidget($widget_config_arr, $field_name, $obj = null)
-    {
-        $widget_name = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'WIDGET_TYPE');
-
-        $field_value = '';
-        if ($obj) {
-            $field_value = \OLOG\CRUD\FieldsAccess::getObjectFieldValue($obj, $field_name);
-        }
-
-        /* TODO
-        if (is_callable($widget_name)){
-
-            $widget_options = self::getWidgetSettings($field_name, $obj);
-
-            return call_user_func_array($widget_name, array($field_name, $field_value, $widget_options));
-        }
-        */
-
-        switch($widget_name){
-            /*
-            case self::WIDGET_CHECKBOX:
-                $o = self::widgetCheckbox($field_name, $field_value);
-                break;
-            case 'options':
-                $options_arr = self::getFieldWidgetOptionsArr($field_name, $obj);
-                $o = self::widgetOptions($field_name, $field_value, $options_arr);
-                break;
-            */
-
-            //case 'WIDGET_TEXTAREA':
-                //return self::widgetTextarea($field_name, $field_value, $widget_config_arr);
-
-            case 'WIDGET_ACE_TEXTAREA':
-                return self::widgetAceTextarea($field_name, $field_value, $widget_config_arr);
-
-            case 'WIDGET_INPUT':
-                return self::widgetInput($field_name, $field_value);
-
-            case 'WIDGET_OPTIONS':
-                return self::widgetOptions($field_name, $field_value, $widget_config_arr);
-
-            case 'WIDGET_REFERENCE':
-                return self::widgetReference($field_name, $field_value, $widget_config_arr);
-
-            default:
-                throw new \Exception('unknown widget type: ' . $widget_name);
-        }
-    }
-
-    /*
-    public static function renderListFieldWithWidget($field_name, $obj, $field_value = '')
-    {
-        $widget_name = self::getListWidgetName($field_name, $obj);
-
-        if (!$field_value) {
-            $field_value = \OLOG\CRUD\Helpers::getObjectFieldValue($obj, $field_name);
-        }
-
-        if ($widget_name) {
-            \OLOG\Helpers::assert(is_callable($widget_name));
-            $widget_options = self::getWidgetSettings($field_name, $obj);
-
-            return call_user_func_array($widget_name, array($field_name, $field_value, $widget_options));
-        }
-
-        return $field_value;
-
-    }
-    */
-
-    /*
-    public static function getFieldWidgetName($field_name, $obj)
-    {
-        $crud_editor_fields_arr = \OLOG\CRUD\Helpers::getCrudEditorFieldsArrForObj($obj);
-
-        if(!$crud_editor_fields_arr){
-            return '';
-        }
-
-        if(!array_key_exists($field_name, $crud_editor_fields_arr)){
-            return '';
-        }
-
-        if(!array_key_exists('widget', $crud_editor_fields_arr[$field_name])){
-            return '';
-        }
-
-        return $crud_editor_fields_arr[$field_name]['widget'];
-
-    }
-    */
-
-    /*
-    public static function getListWidgetName($field_name, $obj)
-    {
-        $crud_editor_fields_arr = \OLOG\CRUD\Helpers::getCrudEditorFieldsArrForObj($obj);
-
-        if(!$crud_editor_fields_arr){
-            return '';
-        }
-
-        if(!array_key_exists($field_name, $crud_editor_fields_arr)){
-            return '';
-        }
-
-        if(!array_key_exists('list_widget', $crud_editor_fields_arr[$field_name])){
-            return '';
-        }
-
-        return $crud_editor_fields_arr[$field_name]['list_widget'];
-
-    }
-    */
-
-    /*
-    public static function getWidgetSettings($field_name, $obj)
-    {
-        $crud_editor_fields_arr = \OLOG\CRUD\Helpers::getCrudEditorFieldsArrForObj($obj);
-
-        if(!$crud_editor_fields_arr){
-            return array();
-        }
-
-        if(!array_key_exists($field_name, $crud_editor_fields_arr)){
-            return array();
-        }
-
-        if(!array_key_exists('widget_settings', $crud_editor_fields_arr[$field_name])){
-            return array();
-        }
-
-        return $crud_editor_fields_arr[$field_name]['widget_settings'];
-
-    }
-    */
-
-    /*
-    public static function getFieldWidgetOptionsArr($field_name, $obj)
-    {
-        $crud_editor_fields_arr = \OLOG\CRUD\Helpers::getCrudEditorFieldsArrForObj($obj);
-
-        if (!$crud_editor_fields_arr){
-            return array();
-        }
-
-        if (!array_key_exists($field_name, $crud_editor_fields_arr)){
-            return array();
-        }
-
-        if (!array_key_exists('options_arr', $crud_editor_fields_arr[$field_name])){
-            return array();
-        }
-
-        return $crud_editor_fields_arr[$field_name]['options_arr'];
-    }
-    */
-
     public static function widgetInput($field_name, $field_value)
     {
         return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" rows="1">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
-    }
-
-    public static function widgetAceTextarea($field_name, $field_value, $config_arr)
-    {
-        $editor_element_id = 'editor_' . time() . '_' . rand(1, 999999);
-        $html = '';
-
-            $html .= '
-            <style>
-             #' . $editor_element_id . ' {
-                position: relative;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        height: 500px;
-            }
-            </style>
-            ';
-
-        // TODO: is form-control needed?
-        $html .= '<div id="' . $editor_element_id . '" class="form-control">' . Sanitize::sanitizeTagContent($field_value) . '</div>';
-        $html .= '<textarea id="' . $editor_element_id . '_target" name="' . Sanitize::sanitizeAttrValue($field_name) . '" style="display: none;">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
-
-        // TODO: multiple insertion!!!!
-            $html .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
-            <script>
-            //var editor_element = document.getElementById("' . $editor_element_id . '");
-            //editor_element.parentElement.style.height = "500px";
-            var editor = ace.edit("' . $editor_element_id . '");
-
-            // TODO: enable another modes
-            editor.getSession().setMode("ace/mode/html");
-
-            editor.getSession().on("change", function() {
-                var target = document.getElementById("' . $editor_element_id . '_target");
-                //var editor_element = document.getElementById("' . $editor_element_id . '");
-                target.innerHTML = editor.getSession().getValue();
-            });
-            </script>
-            ';
-
-        return $html;
     }
 
     /*
@@ -366,40 +167,6 @@ class CRUDWidgets {
 ]
     */
 
-    public static function widgetReference($field_name, $field_value, $widget_config_arr)
-    {
-        $options = '<option></option>';
-
-        $referenced_class_name = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'REFERENCED_CLASS');
-        $referenced_class_title_field = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'REFERENCED_CLASS_TITLE_FIELD');
-
-        // TODO: check referenced class interfaces
-
-        $referenced_obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
-            $referenced_class_name::DB_ID, // TODO: use common method
-            'select ID from ' . $referenced_class_name::DB_TABLE_NAME . ' order by ID' // TODO: respect custom ID fields
-            );
-
-        $options_arr = [];
-        foreach ($referenced_obj_ids_arr as $id){
-            $obj = ObjectLoader::createAndLoadObject($referenced_class_name, $id);
-            $options_arr[$id] = FieldsAccess::getObjectFieldValue($obj, $referenced_class_title_field);
-        }
-
-        // TODO: send to common options widget?
-
-        foreach($options_arr as $value => $title)
-        {
-            $selected_html_attr = '';
-            if ($field_value == $value) {
-                $selected_html_attr = ' selected';
-            }
-
-            $options .= '<option value="' .  $value . '"' . $selected_html_attr . '>' . $title . '</option>';
-        }
-
-        return '<select name="' . $field_name . '" class="form-control">' . $options . '</select>';
-    }
 
     public static function widgetOptions($field_name, $field_value, $widget_config_arr)
     {

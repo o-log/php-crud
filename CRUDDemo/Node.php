@@ -2,10 +2,6 @@
 
 namespace CRUDDemo;
 
-use OLOG\CRUD\CRUDConfigReader;
-use OLOG\CRUD\CRUDElements;
-use CRUDDemo\Config;
-
 class Node implements
     \OLOG\Model\InterfaceFactory,
     \OLOG\Model\InterfaceLoad,

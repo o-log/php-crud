@@ -32,7 +32,13 @@ class FieldsAccess
         return $field_prop_obj->getValue($obj);
     }
 
-    public static function setObjectFieldsFromArray($obj, $values_arr)
+    /**
+     * @param $obj
+     * @param $values_arr
+     * @param array $null_fields_arr список полей объекта, в которые надо внести NULL
+     * @return mixed
+     */
+    public static function setObjectFieldsFromArray($obj, $values_arr, $null_fields_arr = [])
     {
         $reflect = new \ReflectionClass($obj);
 
@@ -40,6 +46,12 @@ class FieldsAccess
             $property_obj = $reflect->getProperty($key);
             $property_obj->setAccessible(true);
             $property_obj->setValue($obj, $value);
+        }
+
+        foreach ($null_fields_arr as $key => $value) {
+            $property_obj = $reflect->getProperty($key);
+            $property_obj->setAccessible(true);
+            $property_obj->setValue($obj, null);
         }
 
         return $obj;

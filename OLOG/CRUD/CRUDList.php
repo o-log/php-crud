@@ -2,16 +2,17 @@
 
 namespace OLOG\CRUD;
 
-class CRUDListTemplate
+class CRUDList
 {
     const KEY_LIST_COLUMNS = 'LIST_COLUMNS';
     const OPERATION_ADD_MODEL = 'OPERATION_ADD_MODEL';
     const OPERATION_DELETE_MODEL = 'OPERATION_DELETE_MODEL';
 
-    static protected function addModelOperation($model_class_name, $element_config_arr, $context_arr){
+    /*
+    static protected function addModelOperation($model_class_name){
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
 
-        // TODO: must read class_name from form!!!
+        // TODO: must read class_name from form!!! form may be placed on the other object page or any page
 
         $new_prop_values_arr = array();
         $reflect = new \ReflectionClass($model_class_name);
@@ -37,6 +38,7 @@ class CRUDListTemplate
 
         \OLOG\Redirects::redirectToSelf();
     }
+    */
 
     // TODO: move to library
     static public function getRequiredPostValue($key){
@@ -51,7 +53,22 @@ class CRUDListTemplate
         return $value;
     }
 
-    static protected function deleteModelOperation($model_class_name, $element_config_arr, $context_arr){
+    // TODO: move to library
+    static public function getOptionalPostValue($key, $default = ''){
+        $value = '';
+        
+        if (array_key_exists($key, $_POST)){
+            $value = $_POST[$key];
+        }
+        
+        if ($value == ''){
+            $value = $default;
+        }
+
+        return $value;
+    }
+
+    static protected function deleteModelOperation($model_class_name){
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
 
         $model_class_name = self::getRequiredPostValue('_class_name'); // TODO: constant for field name
@@ -63,17 +80,27 @@ class CRUDListTemplate
         \OLOG\Redirects::redirectToSelf();
     }
 
-    static public function render($model_class_name, $element_config_arr, $context_arr = array())
+    /**
+     * @param $model_class_name
+     * @param $creation_form_html
+     * @param $columns_arr
+     * @param $element_config_arr
+     * @param array $context_arr
+     * @throws \Exception
+     */
+    static public function render($model_class_name, $creation_form_html, $columns_config_arr, $context_arr = array())
     {
 
         // TODO: transactions??
 
-        Operations::matchOperation(self::OPERATION_ADD_MODEL, function() use($model_class_name, $element_config_arr, $context_arr) {
-            self::addModelOperation($model_class_name, $element_config_arr, $context_arr);
+        /*
+        Operations::matchOperation(self::OPERATION_ADD_MODEL, function() use($model_class_name) {
+            self::addModelOperation($model_class_name);
         });
+        */
 
-        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function() use($model_class_name, $element_config_arr, $context_arr) {
-            self::deleteModelOperation($model_class_name, $element_config_arr, $context_arr);
+        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function() use($model_class_name) {
+            self::deleteModelOperation($model_class_name);
         });
 
         //
@@ -96,37 +123,13 @@ class CRUDListTemplate
         // LIST TOOLBAR
         echo '<div>';
 
-        $create_form_config_arr = CRUDConfigReader::getOptionalSubkey($element_config_arr, 'CREATE_FORM', []);
-
-        if (!empty($create_form_config_arr)) {
+        if ($creation_form_html){
             $collapse_id = 'collapse_' . rand(0, 999999); // to enable multiple forms on one page
             echo '<div><a class="btn btn-default" role="button" data-toggle="collapse" href="#' . $collapse_id . '" aria-expanded="false">форма создания</a></div>';
 
             echo '<div class="collapse" id="' . $collapse_id . '">';
 
-            // todo: sanitize url
-            echo '<form style="background-color: #ddd; padding: 10px;" id="form" class="form-horizontal" role="form" method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
-            echo Operations::operationCodeHiddenField(self::OPERATION_ADD_MODEL);
-            echo '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue($model_class_name) . '">';
-
-            // создаем объект со значениями по умолчанию, который уйдет в форму создания. этот объект сохраняться не будет.
-            $context_obj = new $model_class_name();
-            // заполняем поля объекта со значениями по умолчанию из контекста
-            FieldsAccess::setObjectFieldsFromArray($context_obj, $context_arr);
-
-            // русуем форму создания, поля формы заполняются из объекта со значениями по умолчанию
-            $elements_arr = CRUDConfigReader::getRequiredSubkey($create_form_config_arr, 'ELEMENTS');
-            foreach ($elements_arr as $element_key => $element_config) {
-                CRUDElements::renderFormElement($element_config, $context_obj);
-            }
-
-            echo '<div class="row">';
-            echo '<div class="col-sm-8 col-sm-offset-4">';
-            echo '<button style="width: 100%" type="submit" class="btn btn-primary">Создать</button>';
-            echo '</div>';
-            echo '</div>';
-
-            echo '</form>';
+            echo  $creation_form_html;
 
             echo '</div>';
         }
@@ -142,12 +145,6 @@ class CRUDListTemplate
             }
         }
         */
-
-        if (count($objs_ids_arr) == 0) {
-            return;
-        }
-
-        $columns_config_arr = CRUDConfigReader::getRequiredSubkey($element_config_arr, self::KEY_LIST_COLUMNS);
 
         echo '<table class="table table-hover">';
         echo '<thead>';

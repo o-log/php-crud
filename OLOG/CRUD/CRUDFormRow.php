@@ -2,9 +2,9 @@
 
 namespace OLOG\CRUD;
 
-class CRUDElementFormRow
+class CRUDFormRow
 {
-    static public function getHtml($widget_html, $field_title){
+    static public function html($widget_html, $field_title){
         $html = '';
         
         $required = false;

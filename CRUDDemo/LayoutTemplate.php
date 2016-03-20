@@ -4,7 +4,7 @@ namespace CRUDDemo;
 
 class LayoutTemplate
 {
-    static public function render($content_html, $h1_str = ''){
+    static public function render($content_html, $h1_str = '', $breadcrumbs_arr = []){
         ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +26,11 @@ class LayoutTemplate
 </head>
 <body>
 <div class="container">
+    <?php
+
+    echo BT::breadcrumbs($breadcrumbs_arr);
+
+    ?>
     <h1><?= $h1_str ?></h1>
     <?= $content_html ?>
 </div>

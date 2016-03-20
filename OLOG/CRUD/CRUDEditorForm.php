@@ -6,28 +6,50 @@ class CRUDEditorForm
 {
     const OPERATION_SAVE_EDITOR_FORM = 'OPERATION_SAVE_EDITOR_FORM';
 
-    static protected function saveEditorFormOperation($model_class_name, $object_id){
+    const FIELD_CLASS_NAME = '_FIELD_CLASS_NAME';
+    const FIELD_OBJECT_ID = '_FIELD_OBJECT_ID';
+
+    static protected function saveEditorFormOperation(){
+        $model_class_name = CRUDList::getRequiredPostValue(self::FIELD_CLASS_NAME);
+        $object_id = CRUDList::getOptionalPostValue(self::FIELD_OBJECT_ID);
+
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
 
-        $new_prop_values_arr = array();
+        $new_prop_values_arr = [];
+        $null_fields_arr = [];
         $reflect = new \ReflectionClass($model_class_name);
 
         foreach ($reflect->getProperties() as $prop_obj) {
             if (!$prop_obj->isStatic()) { // игнорируем статические свойства класса - они относятся не к объекту, а только к классу (http://www.php.net/manual/en/language.oop5.static.php), и в них хранятся настройки ActiveRecord и CRUD
                 $prop_name = $prop_obj->getName();
+
+                // сейчас если поля нет в форме - оно не будет изменено в объекте. это позволяет показывать в форме только часть полей, на остальные форма не повлияет
                 if (array_key_exists($prop_name, $_POST)) {
                     // Проверка на заполнение обязательных полей делается на уровне СУБД, через нот нулл в таблице
                     $new_prop_values_arr[$prop_name] = $_POST[$prop_name];
+                }
+
+                // чтение возможных NULL
+                if (array_key_exists($prop_name . "___is_null", $_POST)) {
+                    if ($_POST[$prop_name . "___is_null"]){
+                        $null_fields_arr[$prop_name] = 1;
+                    }
                 }
             }
         }
 
         //
-        // сохранение
+        // сохранение или создание
         //
 
-        $obj = ObjectLoader::createAndLoadObject($model_class_name, $object_id);
-        $obj = FieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr);
+        $obj = null;
+        if ($object_id) {
+            $obj = ObjectLoader::createAndLoadObject($model_class_name, $object_id);
+        } else {
+            $obj = new $model_class_name;
+        }
+
+        $obj = FieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr, $null_fields_arr);
         $obj->save();
 
         /* TODO: внести логирование в save?
@@ -39,24 +61,31 @@ class CRUDEditorForm
         \OLOG\Redirects::redirectToSelf();
     }
 
-    static public function getHtml($class_name, $obj_id, $elements_arr){
+    /**
+     * почему принимает не объект, а именно пару класс - ид? из соображений уменьшения связанности?
+     * ид объекта может быть пустым - тогда при сохранении формы создаст новый объект
+     * @param $class_name
+     * @param $obj_id
+     * @param $elements_html_arr
+     * @return string html-код формы редактирования
+     */
+    static public function html($class_name, $obj_id, $elements_html_arr){
         $html = '';
-        
-        Operations::matchOperation(self::OPERATION_SAVE_EDITOR_FORM, function() use($class_name, $obj_id) {
-            self::saveEditorFormOperation($class_name, $obj_id);
+
+        // TODO: transactions??
+
+        Operations::matchOperation(self::OPERATION_SAVE_EDITOR_FORM, function() {
+            self::saveEditorFormOperation();
         });
 
         $html .= '<form id="form" class="form-horizontal" role="form" method="post" action="' . Sanitize::sanitizeUrl(\OLOG\Url::getCurrentUrl()) . '">';
 
         $html .= Operations::operationCodeHiddenField(self::OPERATION_SAVE_EDITOR_FORM);
-        $html .= '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue($class_name) . '">';
-        $html .= '<input type="hidden" name="_obj_id" value="' . Sanitize::sanitizeAttrValue($obj_id) . '">';
 
-        $obj = ObjectLoader::createAndLoadObject($class_name, $obj_id);
+        $html .= '<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . Sanitize::sanitizeAttrValue($class_name) . '">';
+        $html .= '<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue($obj_id) . '">';
 
-        //$elements_arr = CRUDConfigReader::getRequiredSubkey($config_arr, 'ELEMENTS');
-        foreach ($elements_arr as $element_html){
-            //self::renderFormElement($element_config, $obj);
+        foreach ($elements_html_arr as $element_html){
             $html .= $element_html;
         }
 

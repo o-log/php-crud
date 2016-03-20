@@ -5,7 +5,8 @@ namespace CRUDDemo;
 class TermToNode implements
     \OLOG\Model\InterfaceFactory,
     \OLOG\Model\InterfaceLoad,
-    \OLOG\Model\InterfaceSave
+    \OLOG\Model\InterfaceSave,
+    \OLOG\Model\InterfaceDelete
 {
     use \OLOG\Model\FactoryTrait;
     use \OLOG\Model\ActiveRecord;
