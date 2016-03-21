@@ -2,6 +2,9 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\Assert;
+use OLOG\Sanitize;
+
 class CRUDList
 {
     const KEY_LIST_COLUMNS = 'LIST_COLUMNS';
@@ -41,10 +44,11 @@ class CRUDList
     */
 
     // TODO: move to library
-    static public function getRequiredPostValue($key){
+    static public function getRequiredPostValue($key)
+    {
         $value = '';
 
-        if (array_key_exists($key, $_POST)){
+        if (array_key_exists($key, $_POST)) {
             $value = $_POST[$key];
         }
 
@@ -54,21 +58,26 @@ class CRUDList
     }
 
     // TODO: move to library
-    static public function getOptionalPostValue($key, $default = ''){
+    static public function getOptionalPostValue($key, $default = '')
+    {
         $value = '';
-        
-        if (array_key_exists($key, $_POST)){
+
+        if (array_key_exists($key, $_POST)) {
             $value = $_POST[$key];
         }
-        
-        if ($value == ''){
+
+        if ($value == '') {
             $value = $default;
         }
 
         return $value;
     }
 
-    static protected function deleteModelOperation($model_class_name){
+    static protected function deleteModelOperation($model_class_name)
+    {
+
+        // TODO: transactions??
+
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
 
         $model_class_name = self::getRequiredPostValue('_class_name'); // TODO: constant for field name
@@ -88,18 +97,9 @@ class CRUDList
      * @param array $context_arr
      * @throws \Exception
      */
-    static public function render($model_class_name, $creation_form_html, $columns_config_arr, $context_arr = array())
+    static public function html($model_class_name, $column_obj_arr, $context_arr = array())
     {
-
-        // TODO: transactions??
-
-        /*
-        Operations::matchOperation(self::OPERATION_ADD_MODEL, function() use($model_class_name) {
-            self::addModelOperation($model_class_name);
-        });
-        */
-
-        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function() use($model_class_name) {
+        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
             self::deleteModelOperation($model_class_name);
         });
 
@@ -120,22 +120,6 @@ class CRUDList
         // вывод таблицы
         //
 
-        // LIST TOOLBAR
-        echo '<div>';
-
-        if ($creation_form_html){
-            $collapse_id = 'collapse_' . rand(0, 999999); // to enable multiple forms on one page
-            echo '<div><a class="btn btn-default" role="button" data-toggle="collapse" href="#' . $collapse_id . '" aria-expanded="false">форма создания</a></div>';
-
-            echo '<div class="collapse" id="' . $collapse_id . '">';
-
-            echo  $creation_form_html;
-
-            echo '</div>';
-        }
-
-        echo '</div>';
-
         /* TODO
         if (isset($model_class_name::$crud_model_title_field)) {
             if (isset($model_class_name::$crud_allow_search)) {
@@ -146,44 +130,56 @@ class CRUDList
         }
         */
 
-        echo '<table class="table table-hover">';
-        echo '<thead>';
-        echo '<tr>';
+        $html = '';
 
-            foreach ($columns_config_arr as $column_config) {
-                $col_title = CRUDConfigReader::getOptionalSubkey($column_config, 'COLUMN_TITLE', '');
-                echo '<th>' . Sanitize::sanitizeTagContent($col_title) . '</th>';
-            }
+        $html .= '<table class="table table-hover">';
+        $html .= '<thead>';
+        $html .= '<tr>';
 
-        echo '<th>';
-        echo '</th>';
-        echo '</tr>';
-        echo '</thead>';
+        foreach ($column_obj_arr as $column_obj) {
 
-        echo '<tbody>';
+            // TODO: check column_obj intaerfaceCol
+
+            $html .= '<th>' . Sanitize::sanitizeTagContent($column_obj->getTitle()) . '</th>';
+        }
+
+        $html .= '</tr>';
+        $html .= '</thead>';
+
+        $html .= '<tbody>';
 
         foreach ($objs_ids_arr as $obj_id) {
             $obj_obj = ObjectLoader::createAndLoadObject($model_class_name, $obj_id);
 
-            echo '<tr>';
+            $html .= '<tr>';
 
-            foreach ($columns_config_arr as $column_config){
-                echo '<td>';
+            foreach ($column_obj_arr as $column_obj) {
 
-                $widget_config_arr = CRUDConfigReader::getRequiredSubkey($column_config, 'WIDGET');
-                echo CRUDWidgets::renderListWidget($widget_config_arr, $obj_obj);
+                // TODO: check column_obj intaerfaceCol
 
-                echo '</td>';
+                $html .= '<td>';
+
+                $widget_obj = $column_obj->getWidgetObj();
+                Assert::assert($widget_obj);
+                //$html .= CRUDWidgets::renderListWidget($widget_config_arr, $obj_obj);
+
+                // TODO: check widget obj interface
+
+                $html .= $widget_obj->html($obj_obj);
+
+                $html .= '</td>';
 
             }
 
-            echo '</tr>';
+            $html .= '</tr>';
         }
 
-        echo '</tbody>';
-        echo '</table>';
+        $html .= '</tbody>';
+        $html .= '</table>';
 
-        echo Pager::renderPager(count($objs_ids_arr));
+        $html .= Pager::renderPager(count($objs_ids_arr));
+
+        return $html;
     }
 
     /**

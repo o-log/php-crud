@@ -2,6 +2,8 @@
 
 namespace OLOG\CRUD;
 
+// TODO: remove whole class
+
 class CRUDConfigReader
 {
     //const KEY_ROOT = 'PHPCRUD';

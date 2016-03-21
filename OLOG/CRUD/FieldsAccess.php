@@ -2,8 +2,20 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\Assert;
+
 class FieldsAccess
 {
+    static public function getObjId($obj)
+    {
+        Assert::assert($obj);
+        
+        $obj_class_name = get_class($obj);
+        $obj_id_field_name = FieldsAccess::getIdFieldName($obj_class_name);
+        return FieldsAccess::getObjectFieldValue($obj, $obj_id_field_name);
+        
+    }
+    
     public static function getIdFieldName($model_class_name)
     {
         if (defined($model_class_name . '::DB_ID_FIELD_NAME')) {

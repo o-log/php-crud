@@ -2,6 +2,8 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\Sanitize;
+
 class CRUDEditorForm
 {
     const OPERATION_SAVE_EDITOR_FORM = 'OPERATION_SAVE_EDITOR_FORM';
@@ -62,14 +64,13 @@ class CRUDEditorForm
     }
 
     /**
-     * почему принимает не объект, а именно пару класс - ид? из соображений уменьшения связанности?
      * ид объекта может быть пустым - тогда при сохранении формы создаст новый объект
      * @param $class_name
      * @param $obj_id
      * @param $elements_html_arr
      * @return string html-код формы редактирования
      */
-    static public function html($class_name, $obj_id, $elements_html_arr){
+    static public function html($obj, $element_obj_arr){
         $html = '';
 
         // TODO: transactions??
@@ -82,11 +83,14 @@ class CRUDEditorForm
 
         $html .= Operations::operationCodeHiddenField(self::OPERATION_SAVE_EDITOR_FORM);
 
-        $html .= '<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . Sanitize::sanitizeAttrValue($class_name) . '">';
-        $html .= '<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue($obj_id) . '">';
+        $html .= '<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
+        $html .= '<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue(FieldsAccess::getObjId($obj)) . '">';
 
-        foreach ($elements_html_arr as $element_html){
-            $html .= $element_html;
+        foreach ($element_obj_arr as $element_obj){
+            
+            // TODO: check element interfaces
+
+            $html .= $element_obj->html($obj);
         }
 
         $html .= '<div class="row">';

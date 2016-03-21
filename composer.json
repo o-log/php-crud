@@ -8,6 +8,10 @@
 		{
 			"type" : "git",
 			"url" : "https://github.com/o-log/php-model"
+		},
+		{
+			"type" : "git",
+			"url" : "https://github.com/o-log/php-bt"
 		}
 	],
 	"require-dev" : {
@@ -15,7 +19,8 @@
 	},
 	"require" : {
 		"o-log/php-router" : "dev-master",
-		"o-log/php-model" : "dev-master"
+		"o-log/php-model" : "dev-master",
+		"o-log/php-bt" : "dev-master"
 	},
 	"autoload" : {
 		"psr-0" : {

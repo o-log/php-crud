@@ -2,6 +2,8 @@
 
 namespace CRUDDemo;
 
+use OLOG\BT;
+
 class LayoutTemplate
 {
     static public function render($content_html, $h1_str = '', $breadcrumbs_arr = []){

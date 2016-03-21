@@ -2,9 +2,15 @@
 
 namespace CRUDDemo;
 
+use OLOG\BT;
 use OLOG\CRUD\CRUDEditorForm;
 use OLOG\CRUD\CRUDFormRow;
-use OLOG\CRUD\CRUDWidgetTextarea;
+use OLOG\CRUD\CRUDTableColumn;
+use OLOG\CRUD\CRUDTableWidgetDelete;
+use OLOG\CRUD\CRUDTableWidgetText;
+use OLOG\CRUD\CRUDTableWidgetTextWithLink;
+use OLOG\CRUD\CRUDWidgetInput;
+use OLOG\CRUD\CRUDEditorWidgetTextarea;
 
 class TermsListAction
 {
@@ -17,53 +23,40 @@ class TermsListAction
     {
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 
-        ob_start();
-        \OLOG\CRUD\CRUDList::render(
-            \CRUDDemo\Term::class,
-            CRUDEditorForm::html(
-                Term::class,
-                null,
-                [
-                    CRUDFormRow::html(
-                        CRUDWidgetTextarea::html('title'),
-                        'Title'
-                    )
-                ]
-            ),
+        $html = '';
+
+        $html .= CRUDEditorForm::html(
+            new Term,
             [
-                [
-                    'COLUMN_TITLE' => 'id',
-                    'WIDGET' => [
-                        'WIDGET_TYPE' => 'TEXT',
-                        'TEXT' => '{this->id}'
-                    ]
-                ],
-                [
-                    'COLUMN_TITLE' => 'title',
-                    'WIDGET' => [
-                        'WIDGET_TYPE' => \OLOG\CRUD\CRUDWidgets::WIDGET_TEXT_WITH_LINK,
-                        'LINK_URL' => TermEditAction::getUrl('{this->id}'),
-                        'TEXT' => '{this->title}'
-                    ]
-                ],
-                [
-                    'COLUMN_TITLE' => 'parent',
-                    'WIDGET' => [
-                        'WIDGET_TYPE' => 'TEXT',
-                        'TEXT' => '{\CRUDDemo\Term.{this->parent_id}->title}'
-                    ]
-                ],
-                [
-                    'COLUMN_TITLE' => 'delete',
-                    'WIDGET' => [
-                        'WIDGET_TYPE' => 'DELETE',
-                        'TEXT' => 'X'
-                    ]
-                ]
+                new CRUDFormRow(
+                    'Title',
+                    new CRUDWidgetInput('title')
+                )
             ]
         );
 
-        $html = ob_get_clean();
+        $html .= \OLOG\CRUD\CRUDList::html(
+            \CRUDDemo\Term::class,
+            [
+                new CRUDTableColumn(
+                    'Edit',
+                    new CRUDTableWidgetTextWithLink(
+                        '{this->title}',
+                        TermEditAction::getUrl('{this->id}')
+                        )
+                ),
+                new CRUDTableColumn(
+                    'Edit',
+                    new CRUDTableWidgetText(
+                        '{\CRUDDemo\Term.{this->parent_id}->title}'
+                    )
+                ),
+                new CRUDTableColumn(
+                    'Edit',
+                    new CRUDTableWidgetDelete()
+                )
+            ]
+        );
 
         LayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());
     }

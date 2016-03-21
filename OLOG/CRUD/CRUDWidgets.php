@@ -3,11 +3,13 @@
 namespace OLOG\CRUD;
 
 // TODO: вынести все виджеты отдельными классами
+// TODO: rename this class to CRUDCompiler
 
 class CRUDWidgets {
-    const WIDGET_CHECKBOX = 'WIDGET_CHECKBOX';
-    const WIDGET_TEXT_WITH_LINK = 'TEXT_WITH_LINK';
+    //const WIDGET_CHECKBOX = 'WIDGET_CHECKBOX';
+    //const WIDGET_TEXT_WITH_LINK = 'TEXT_WITH_LINK';
 
+    /*
     static public function renderListWidget($widget_config_arr, $row_obj){
         $widget_type = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'WIDGET_TYPE');
 
@@ -25,6 +27,7 @@ class CRUDWidgets {
                 throw new \Exception('unknown list widget: ' . $widget_type);
         }
     }
+    */
 
     /**
      * компиляция строки: разворачивание обращений к полям объектов
@@ -80,6 +83,7 @@ class CRUDWidgets {
         return $str;
     }
 
+    /*
     public static function widgetText($widget_config_arr, $obj){
         $text = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'TEXT');
         $text = self::compile($text, ['this' => $obj]);
@@ -88,7 +92,9 @@ class CRUDWidgets {
 
         return $o;
     }
+    */
 
+    /*
     public static function widgetTextWithLink($widget_config_arr, $obj){
         $url = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'LINK_URL');
         $url = self::compile($url, ['this' => $obj]);
@@ -104,7 +110,9 @@ class CRUDWidgets {
 
         return $o;
     }
+    */
 
+    /*
     public static function widgetDelete($widget_config_arr, $obj){
         $text = CRUDConfigReader::getRequiredSubkey($widget_config_arr, 'TEXT');
         $text = self::compile($text, ['this' => $obj]);
@@ -119,22 +127,18 @@ class CRUDWidgets {
         $obj_id_field_name = FieldsAccess::getIdFieldName($obj_class_name);
         $obj_id = FieldsAccess::getObjectFieldValue($obj, $obj_id_field_name);
 
-        echo '<form method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
-        echo Operations::operationCodeHiddenField(CRUDList::OPERATION_DELETE_MODEL);
-        echo '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue($obj_class_name) . '">';
-        echo '<input type="hidden" name="_id" value="' . Sanitize::sanitizeAttrValue($obj_id) . '">';
+        $o .= '<form method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
+        $o .= Operations::operationCodeHiddenField(CRUDList::OPERATION_DELETE_MODEL);
+        $o .='<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue($obj_class_name) . '">';
+        $o .='<input type="hidden" name="_id" value="' . Sanitize::sanitizeAttrValue($obj_id) . '">';
 
-        echo '<button type="submit" onclick="return window.confirm(\'Delete?\');">' . $text . '</button>';
+        $o .='<button type="submit" onclick="return window.confirm(\'Delete?\');">' . $text . '</button>';
 
-        echo '</form>';
+        $o .='</form>';
 
         return $o;
     }
-
-    public static function widgetInput($field_name, $field_value)
-    {
-        return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" rows="1">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
-    }
+    */
 
     /*
     public static function widgetCheckbox($field_name, $field_value)

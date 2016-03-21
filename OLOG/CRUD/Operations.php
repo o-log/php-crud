@@ -4,6 +4,8 @@ namespace OLOG\CRUD;
 
 // TODO должно уехать в роутер?
 
+use OLOG\Sanitize;
+
 class Operations
 {
     const FIELD_NAME_OPERATION_CODE = '_OPERATION_CODE';

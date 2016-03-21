@@ -5,8 +5,12 @@ namespace CRUDDemo;
 use OLOG\CRUD\CRUDEditorForm;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDList;
+use OLOG\CRUD\CRUDTableColumn;
+use OLOG\CRUD\CRUDTableWidgetDelete;
+use OLOG\CRUD\CRUDTableWidgetText;
+use OLOG\CRUD\CRUDWidgetInput;
 use OLOG\CRUD\CRUDWidgetReference;
-use OLOG\CRUD\CRUDWidgetTextarea;
+use OLOG\CRUD\CRUDEditorWidgetTextarea;
 
 class NodeTermsAction
 {
@@ -21,49 +25,31 @@ class NodeTermsAction
 
         $html = NodeEditAction::tabsHtml($node_id);
 
-        ob_start();
-        CRUDList::render(
-            TermToNode::class,
-            CRUDEditorForm::html(
-                TermToNode::class,
-                '',
-                [
-                    CRUDFormRow::html(
-                        CRUDWidgetTextarea::html('node_id', $node_id),
-                        'Node id'
-                    ),
-                    CRUDFormRow::html(
-                        CRUDWidgetReference::html('term_id', '', Term::class, 'title'),
-                        'Term id'
-                    )
-                ]
-            ),
+        $new_term_to_node = new TermToNode();
+        $new_term_to_node->setNodeId($node_id);
+
+        $html .= CRUDEditorForm::html(
+            $new_term_to_node,
             [
-                [
-                    'COLUMN_TITLE' => 'node',
-                    'WIDGET' => [
-                        'WIDGET_TYPE' => 'TEXT',
-                        'TEXT' => '{\CRUDDemo\Node.{this->node_id}->title}'
-                    ]
-                ],
-                [
-                    'COLUMN_TITLE' => 'term',
-                    'WIDGET' => [
-                        'WIDGET_TYPE' => 'TEXT',
-                        'TEXT' => '{\CRUDDemo\Term.{this->term_id}->title}'
-                    ]
-                ],
-                [
-                    'COLUMN_TITLE' => 'term',
-                    'WIDGET' => [
-                        'WIDGET_TYPE' => 'DELETE',
-                        'TEXT' => 'X'
-                    ]
-                ]
+                new CRUDFormRow(
+                    'Node id',
+                    new CRUDWidgetInput('node_id')
+                ),
+                new CRUDFormRow(
+                    'Term id',
+                    new CRUDWidgetReference('term_id', Term::class, 'title')
+                )
+            ]
+        );
+
+        $html .= CRUDList::html(
+            TermToNode::class,
+            [
+                new CRUDTableColumn('Term', new CRUDTableWidgetText('{\CRUDDemo\Term.{this->term_id}->title}')),
+                new CRUDTableColumn('Delete', new CRUDTableWidgetDelete())
             ],
             ['node_id' => $node_id]
         );
-        $html .= ob_get_clean();
 
         LayoutTemplate::render($html, 'Node ' . $node_id, NodeEditAction::breadcrumbsArr($node_id));
     }

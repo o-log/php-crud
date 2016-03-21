@@ -4,8 +4,25 @@ namespace OLOG\CRUD;
 
 class CRUDWidgetReference
 {
-    public static function html($field_name, $field_value, $referenced_class_name, $referenced_class_title_field)
+    protected $field_name;
+    protected $referenced_class_name;
+    protected $referenced_class_title_field;
+
+    public function __construct($field_name, $referenced_class_name, $referenced_class_title_field)
     {
+        $this->setFieldName($field_name);
+        $this->setReferencedClassName($referenced_class_name);
+        $this->setReferencedClassTitleField($referenced_class_title_field);
+    }
+
+    public function html($obj)
+    {
+        $field_name = $this->getFieldName();
+        $referenced_class_name = $this->getReferencedClassName();
+        $referenced_class_title_field = $this->getReferencedClassTitleField();
+
+        $field_value = FieldsAccess::getObjectFieldValue($obj, $field_name);
+
         $options_html_arr = ['<option value=""></option>'];
 
         // TODO: check referenced class interfaces
@@ -69,4 +86,54 @@ class CRUDWidgetReference
 
         return $html;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFieldName()
+    {
+        return $this->field_name;
+    }
+
+    /**
+     * @param mixed $field_name
+     */
+    public function setFieldName($field_name)
+    {
+        $this->field_name = $field_name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferencedClassName()
+    {
+        return $this->referenced_class_name;
+    }
+
+    /**
+     * @param mixed $referenced_class_name
+     */
+    public function setReferencedClassName($referenced_class_name)
+    {
+        $this->referenced_class_name = $referenced_class_name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferencedClassTitleField()
+    {
+        return $this->referenced_class_title_field;
+    }
+
+    /**
+     * @param mixed $referenced_class_title_field
+     */
+    public function setReferencedClassTitleField($referenced_class_title_field)
+    {
+        $this->referenced_class_title_field = $referenced_class_title_field;
+    }
+
+
 }

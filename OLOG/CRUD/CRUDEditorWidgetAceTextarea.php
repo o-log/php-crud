@@ -2,10 +2,22 @@
 
 namespace OLOG\CRUD;
 
-class CRUDWidgetAceTextarea
+use OLOG\Sanitize;
+
+class CRUDEditorWidgetAceTextarea
 {
-    public static function generateHtml($field_name, $field_value)
+    protected $field_name;
+
+    public function __construct($field_name)
     {
+        $this->setFieldName($field_name);
+    }
+
+    public function html($obj)
+    {
+        $field_name = $this->getFieldName();
+        $field_value = FieldsAccess::getObjectFieldValue($obj, $field_name);
+
         $editor_element_id = 'editor_' . time() . '_' . rand(1, 999999);
         $html = '';
 
@@ -45,6 +57,22 @@ class CRUDWidgetAceTextarea
             ';
 
         return $html;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFieldName()
+    {
+        return $this->field_name;
+    }
+
+    /**
+     * @param mixed $field_name
+     */
+    public function setFieldName($field_name)
+    {
+        $this->field_name = $field_name;
     }
 
 

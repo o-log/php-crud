@@ -2,11 +2,12 @@
 
 namespace CRUDDemo;
 
-use OLOG\CRUD\Sanitize;
+use OLOG\BT;
+use OLOG\Sanitize;
 use OLOG\CRUD\CRUDFormRow;
-use OLOG\CRUD\CRUDWidgetTextarea;
+use OLOG\CRUD\CRUDEditorWidgetTextarea;
 use OLOG\CRUD\CRUDElementVerticalFormRow;
-use OLOG\CRUD\CRUDWidgetAceTextarea;
+use OLOG\CRUD\CRUDEditorWidgetAceTextarea;
 
 class NodeEditAction
 {
@@ -23,24 +24,23 @@ class NodeEditAction
         $node_obj = Node::factory($node_id);
 
         $html .= \OLOG\CRUD\CRUDEditorForm::html(
-            Node::class,
-            $node_id,
+            $node_obj,
             [
-                CRUDFormRow::html(
-                    CRUDWidgetTextarea::html('id', $node_obj->getId()),
-                    'Id'
+                new CRUDFormRow(
+                    'Id',
+                    new CRUDEditorWidgetTextarea('id')
                 ),
-                CRUDFormRow::html(
-                    CRUDWidgetTextarea::html('title', $node_obj->getTitle()),
-                    'Title'
+                new CRUDFormRow(
+                    'Title',
+                    new CRUDEditorWidgetTextarea('title')
                 ),
-                CRUDFormRow::html(
-                    CRUDWidgetTextarea::html('state_code', $node_obj->getStateCode()),
-                    'State code'
+                new CRUDFormRow(
+                    'State code',
+                    new CRUDEditorWidgetTextarea('state_code')
                 ),
-                CRUDElementVerticalFormRow::generateHtml(
-                    CRUDWidgetAceTextarea::generateHtml('body', $node_obj->getBody()),
-                    'Body'
+                new CRUDElementVerticalFormRow(
+                    'Body',
+                    new CRUDEditorWidgetAceTextarea('body')
                 )
             ]
         );
