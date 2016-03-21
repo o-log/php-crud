@@ -4,6 +4,7 @@ namespace CRUDDemo;
 
 use OLOG\BT;
 use OLOG\CRUD\CRUDFormRow;
+use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilter;
 use OLOG\CRUD\CRUDTableWidgetDelete;
@@ -31,7 +32,7 @@ class DemoTermEditAction
             [
                 new CRUDFormRow(
                     'Title',
-                    new CRUDFormWidgetTextarea('title')
+                    new CRUDFormWidgetInput('title')
                 ),
                 new CRUDFormRow(
                     'Parent id',
@@ -52,7 +53,7 @@ class DemoTermEditAction
                 [
                     new CRUDFormRow(
                         'Title',
-                        new CRUDFormWidgetTextarea('title')
+                        new CRUDFormWidgetInput('title')
                     ),
                     new CRUDFormRow(
                         'Parent id',

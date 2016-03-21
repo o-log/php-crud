@@ -18,7 +18,8 @@ class CRUDFormWidgetInput
         $field_name = $this->getFieldName();
         $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
-        return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" rows="1">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
+        //return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" rows="1">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
+        return '<input name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" value="' . Sanitize::sanitizeAttrValue($field_value) . '"/>';
     }
 
     /**
