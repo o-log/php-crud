@@ -3,7 +3,7 @@
 namespace CRUDDemo;
 
 use OLOG\BT;
-use OLOG\CRUD\CRUDList;
+use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableWidgetDelete;
@@ -34,7 +34,7 @@ class NodesListAction
             ]
         );
 
-        $html .= CRUDList::html(
+        $html .= CRUDTable::html(
             Node::class,
             [
                 new CRUDTableColumn(

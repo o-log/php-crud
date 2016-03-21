@@ -30,7 +30,7 @@ class Pager
         return $page_number;
     }
 
-    static public function getPageSize($default_page_size = 100)
+    static public function getPageSize($default_page_size = 30)
     {
         $page_size = $default_page_size;
         if (array_key_exists('page_size', $_GET)) {
@@ -93,6 +93,8 @@ class Pager
         }
 
         $html = "<ul class='pagination'>";
+
+        // TODO: looses existing get form
         $page_url = \OLOG\Url::getCurrentUrlNoGetForm();
 
         if (self::hasPrevPage()) {
@@ -117,7 +119,7 @@ class Pager
     }
 
     /**
-     * @param $elements_count Количество элементов на текущей странице. Если меньше размера страницы - значит, следующей страницы нет. Если null - значит оно не передано (т.е. неизвестно), при этом считаем что следующая страница есть.
+     * @param $elements_count int Количество элементов на текущей странице. Если меньше размера страницы - значит, следующей страницы нет. Если null - значит оно не передано (т.е. неизвестно), при этом считаем что следующая страница есть.
      * @return bool
      */
     static public function hasNextPage($elements_count)

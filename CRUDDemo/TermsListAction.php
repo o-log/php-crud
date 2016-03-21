@@ -35,7 +35,7 @@ class TermsListAction
             ]
         );
 
-        $html .= \OLOG\CRUD\CRUDList::html(
+        $html .= \OLOG\CRUD\CRUDTable::html(
             \CRUDDemo\Term::class,
             [
                 new CRUDTableColumn(
@@ -46,13 +46,13 @@ class TermsListAction
                         )
                 ),
                 new CRUDTableColumn(
-                    'Edit',
+                    'Parent',
                     new CRUDTableWidgetText(
                         '{\CRUDDemo\Term.{this->parent_id}->title}'
                     )
                 ),
                 new CRUDTableColumn(
-                    'Edit',
+                    'Delete',
                     new CRUDTableWidgetDelete()
                 )
             ]

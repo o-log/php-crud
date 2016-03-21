@@ -4,7 +4,7 @@ namespace CRUDDemo;
 
 use OLOG\CRUD\CRUDEditorForm;
 use OLOG\CRUD\CRUDFormRow;
-use OLOG\CRUD\CRUDList;
+use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
@@ -42,7 +42,7 @@ class NodeTermsAction
             ]
         );
 
-        $html .= CRUDList::html(
+        $html .= CRUDTable::html(
             TermToNode::class,
             [
                 new CRUDTableColumn('Term', new CRUDTableWidgetText('{\CRUDDemo\Term.{this->term_id}->title}')),

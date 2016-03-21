@@ -58,7 +58,7 @@ class TermEditAction
             ]
         );
 
-        $html .= \OLOG\CRUD\CRUDList::html(
+        $html .= \OLOG\CRUD\CRUDTable::html(
             \CRUDDemo\Term::class,
             [
                 new CRUDTableColumn('Title', new CRUDTableWidgetText('{this->title}')),

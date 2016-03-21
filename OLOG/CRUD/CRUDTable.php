@@ -3,9 +3,10 @@
 namespace OLOG\CRUD;
 
 use OLOG\Assert;
+use OLOG\POSTAccess;
 use OLOG\Sanitize;
 
-class CRUDList
+class CRUDTable
 {
     const KEY_LIST_COLUMNS = 'LIST_COLUMNS';
     const OPERATION_ADD_MODEL = 'OPERATION_ADD_MODEL';
@@ -43,36 +44,6 @@ class CRUDList
     }
     */
 
-    // TODO: move to library
-    static public function getRequiredPostValue($key)
-    {
-        $value = '';
-
-        if (array_key_exists($key, $_POST)) {
-            $value = $_POST[$key];
-        }
-
-        \OLOG\Assert::assert($value != '', 'Missing required POST field ' . $key);
-
-        return $value;
-    }
-
-    // TODO: move to library
-    static public function getOptionalPostValue($key, $default = '')
-    {
-        $value = '';
-
-        if (array_key_exists($key, $_POST)) {
-            $value = $_POST[$key];
-        }
-
-        if ($value == '') {
-            $value = $default;
-        }
-
-        return $value;
-    }
-
     static protected function deleteModelOperation($model_class_name)
     {
 
@@ -80,8 +51,8 @@ class CRUDList
 
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
 
-        $model_class_name = self::getRequiredPostValue('_class_name'); // TODO: constant for field name
-        $model_id = self::getRequiredPostValue('_id'); // TODO: constant for field name
+        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
+        $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
 
         $obj = ObjectLoader::createAndLoadObject($model_class_name, $model_id);
         $obj->delete();

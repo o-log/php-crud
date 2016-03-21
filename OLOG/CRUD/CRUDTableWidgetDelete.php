@@ -14,7 +14,7 @@ class CRUDTableWidgetDelete
 
         $o = '';
         $o .= '<form method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
-        $o .= Operations::operationCodeHiddenField(CRUDList::OPERATION_DELETE_MODEL);
+        $o .= Operations::operationCodeHiddenField(CRUDTable::OPERATION_DELETE_MODEL);
         $o .='<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
         $o .='<input type="hidden" name="_id" value="' . Sanitize::sanitizeAttrValue(FieldsAccess::getObjId($obj)) . '">';
 

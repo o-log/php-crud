@@ -2,6 +2,7 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\POSTAccess;
 use OLOG\Sanitize;
 
 class CRUDEditorForm
@@ -12,8 +13,8 @@ class CRUDEditorForm
     const FIELD_OBJECT_ID = '_FIELD_OBJECT_ID';
 
     static protected function saveEditorFormOperation(){
-        $model_class_name = CRUDList::getRequiredPostValue(self::FIELD_CLASS_NAME);
-        $object_id = CRUDList::getOptionalPostValue(self::FIELD_OBJECT_ID);
+        $model_class_name = POSTAccess::getRequiredPostValue(self::FIELD_CLASS_NAME);
+        $object_id = POSTAccess::getOptionalPostValue(self::FIELD_OBJECT_ID);
 
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
 
