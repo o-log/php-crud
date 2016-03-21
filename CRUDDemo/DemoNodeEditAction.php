@@ -5,11 +5,11 @@ namespace CRUDDemo;
 use OLOG\BT;
 use OLOG\Sanitize;
 use OLOG\CRUD\CRUDFormRow;
-use OLOG\CRUD\CRUDEditorWidgetTextarea;
-use OLOG\CRUD\CRUDElementVerticalFormRow;
-use OLOG\CRUD\CRUDEditorWidgetAceTextarea;
+use OLOG\CRUD\CRUDFormWidgetTextarea;
+use OLOG\CRUD\CRUDFormVerticalRow;
+use OLOG\CRUD\CRUDFormWidgetAceTextarea;
 
-class NodeEditAction
+class DemoNodeEditAction
 {
     static public function getUrl($node_id = '(\d+)'){
         return '/node/' . $node_id;
@@ -21,31 +21,31 @@ class NodeEditAction
 
         $html = self::tabsHtml($node_id);
 
-        $node_obj = Node::factory($node_id);
+        $node_obj = DemoNode::factory($node_id);
 
-        $html .= \OLOG\CRUD\CRUDEditorForm::html(
+        $html .= \OLOG\CRUD\CRUDForm::html(
             $node_obj,
             [
                 new CRUDFormRow(
                     'Id',
-                    new CRUDEditorWidgetTextarea('id')
+                    new CRUDFormWidgetTextarea('id')
                 ),
                 new CRUDFormRow(
                     'Title',
-                    new CRUDEditorWidgetTextarea('title')
+                    new CRUDFormWidgetTextarea('title')
                 ),
                 new CRUDFormRow(
                     'State code',
-                    new CRUDEditorWidgetTextarea('state_code')
+                    new CRUDFormWidgetTextarea('state_code')
                 ),
-                new CRUDElementVerticalFormRow(
+                new CRUDFormVerticalRow(
                     'Body',
-                    new CRUDEditorWidgetAceTextarea('body')
+                    new CRUDFormWidgetAceTextarea('body')
                 )
             ]
         );
 
-        LayoutTemplate::render($html, 'Node ' . $node_id, self::breadcrumbsArr($node_id));
+        DemoLayoutTemplate::render($html, 'Node ' . $node_id, self::breadcrumbsArr($node_id));
     }
 
     // TODO: move to library
@@ -79,13 +79,13 @@ class NodeEditAction
             [
                 [
                     'TITLE' => 'edit',
-                    'MATCH_URL' => NodeEditAction::getUrl(),
-                    'LINK_URL' => NodeEditAction::getUrl($node_id),
+                    'MATCH_URL' => DemoNodeEditAction::getUrl(),
+                    'LINK_URL' => DemoNodeEditAction::getUrl($node_id),
                 ],
                 [
                     'TITLE' => 'terms',
-                    'MATCH_URL' => NodeTermsAction::getUrl(),
-                    'LINK_URL' => NodeTermsAction::getUrl($node_id)
+                    'MATCH_URL' => DemoNodeTermsAction::getUrl(),
+                    'LINK_URL' => DemoNodeTermsAction::getUrl($node_id)
                 ]
             ]
         );
@@ -93,6 +93,6 @@ class NodeEditAction
     }
 
     static public function breadcrumbsArr($node_id){
-        return array_merge(NodesListAction::getBreadcrumbsArr(), [BT::a(self::getUrl($node_id), 'Node ' . $node_id)]);
+        return array_merge(DemoNodesListAction::getBreadcrumbsArr(), [BT::a(self::getUrl($node_id), 'Node ' . $node_id)]);
     }
 }

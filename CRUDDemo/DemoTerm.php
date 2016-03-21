@@ -2,7 +2,7 @@
 
 namespace CRUDDemo;
 
-class Node implements
+class DemoTerm implements
     \OLOG\Model\InterfaceFactory,
     \OLOG\Model\InterfaceLoad,
     \OLOG\Model\InterfaceSave,
@@ -12,47 +12,13 @@ class Node implements
     use \OLOG\Model\ActiveRecord;
     use \OLOG\Model\ProtectProperties;
 
-    const DB_ID = \CRUDDemo\Config::DB_NAME_PHPCRUDDEMO;
-    const DB_TABLE_NAME = 'node';
+    const DB_ID = 'phpcrud';
+    const DB_TABLE_NAME = 'term';
 
     protected $id;
-    protected $state_code = 0;
-    protected $body = 0;
     protected $title = '';
+    protected $parent_id;
 
-    /**
-     * @return int
-     */
-    public function getStateCode()
-    {
-        return $this->state_code;
-    }
-
-    /**
-     * @param int $state_code
-     */
-    public function setStateCode($state_code)
-    {
-        $this->state_code = $state_code;
-    }
-
-    /**
-     * @return int
-     */
-    public function getBody()
-    {
-        return $this->body;
-    }
-
-    /**
-     * @param int $body
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
-    }
-
-    
     /**
      * @return int
      */
@@ -83,5 +49,21 @@ class Node implements
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parent_id;
+    }
+
+    /**
+     * @param mixed $parent_id
+     */
+    public function setParentId($parent_id)
+    {
+        $this->parent_id = $parent_id;
     }
 }

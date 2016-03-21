@@ -2,7 +2,7 @@
 
 namespace CRUDDemo;
 
-class TermToNode implements
+class DemoTermToNode implements
     \OLOG\Model\InterfaceFactory,
     \OLOG\Model\InterfaceLoad,
     \OLOG\Model\InterfaceSave,

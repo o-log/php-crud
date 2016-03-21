@@ -4,7 +4,7 @@ namespace OLOG\CRUD;
 
 use OLOG\Sanitize;
 
-class CRUDEditorWidgetAceTextarea
+class CRUDFormWidgetAceTextarea
 {
     protected $field_name;
 
@@ -16,7 +16,7 @@ class CRUDEditorWidgetAceTextarea
     public function html($obj)
     {
         $field_name = $this->getFieldName();
-        $field_value = FieldsAccess::getObjectFieldValue($obj, $field_name);
+        $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
         $editor_element_id = 'editor_' . time() . '_' . rand(1, 999999);
         $html = '';

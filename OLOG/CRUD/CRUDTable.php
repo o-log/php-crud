@@ -54,7 +54,7 @@ class CRUDTable
         $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
         $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
 
-        $obj = ObjectLoader::createAndLoadObject($model_class_name, $model_id);
+        $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
         $obj->delete();
 
         \OLOG\Redirects::redirectToSelf();
@@ -120,7 +120,7 @@ class CRUDTable
         $html .= '<tbody>';
 
         foreach ($objs_ids_arr as $obj_id) {
-            $obj_obj = ObjectLoader::createAndLoadObject($model_class_name, $obj_id);
+            $obj_obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $obj_id);
 
             $html .= '<tr>';
 
@@ -172,7 +172,7 @@ class CRUDTable
         $db_table_name = $model_class_name::DB_TABLE_NAME;
         $db_id = $model_class_name::DB_ID;
 
-        $db_id_field_name = FieldsAccess::getIdFieldName($model_class_name);
+        $db_id_field_name = CRUDFieldsAccess::getIdFieldName($model_class_name);
 
         // selecting ids by params from context
         $query_param_values_arr = array();

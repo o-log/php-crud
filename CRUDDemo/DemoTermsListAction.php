@@ -3,16 +3,16 @@
 namespace CRUDDemo;
 
 use OLOG\BT;
-use OLOG\CRUD\CRUDEditorForm;
+use OLOG\CRUD\CRUDForm;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
-use OLOG\CRUD\CRUDWidgetInput;
-use OLOG\CRUD\CRUDEditorWidgetTextarea;
+use OLOG\CRUD\CRUDFormWidgetInput;
+use OLOG\CRUD\CRUDFormWidgetTextarea;
 
-class TermsListAction
+class DemoTermsListAction
 {
     static public function getUrl()
     {
@@ -25,30 +25,30 @@ class TermsListAction
 
         $html = '';
 
-        $html .= CRUDEditorForm::html(
-            new Term,
+        $html .= CRUDForm::html(
+            new DemoTerm,
             [
                 new CRUDFormRow(
                     'Title',
-                    new CRUDWidgetInput('title')
+                    new CRUDFormWidgetInput('title')
                 )
             ]
         );
 
         $html .= \OLOG\CRUD\CRUDTable::html(
-            \CRUDDemo\Term::class,
+            \CRUDDemo\DemoTerm::class,
             [
                 new CRUDTableColumn(
                     'Edit',
                     new CRUDTableWidgetTextWithLink(
                         '{this->title}',
-                        TermEditAction::getUrl('{this->id}')
+                        DemoTermEditAction::getUrl('{this->id}')
                         )
                 ),
                 new CRUDTableColumn(
                     'Parent',
                     new CRUDTableWidgetText(
-                        '{\CRUDDemo\Term.{this->parent_id}->title}'
+                        '{' . DemoTerm::class . '.{this->parent_id}->title}'
                     )
                 ),
                 new CRUDTableColumn(
@@ -58,11 +58,11 @@ class TermsListAction
             ]
         );
 
-        LayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());
+        DemoLayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());
     }
     
     static public function breadcrumbsArr(){
-        return array_merge(MainPageAction::breadcrumbsArr(), [BT::a(self::getUrl(), 'Terms')]);
+        return array_merge(DemoMainPageAction::breadcrumbsArr(), [BT::a(self::getUrl(), 'Terms')]);
     } 
 
 }

@@ -5,7 +5,7 @@ namespace OLOG\CRUD;
 use OLOG\POSTAccess;
 use OLOG\Sanitize;
 
-class CRUDEditorForm
+class CRUDForm
 {
     const OPERATION_SAVE_EDITOR_FORM = 'OPERATION_SAVE_EDITOR_FORM';
 
@@ -47,12 +47,12 @@ class CRUDEditorForm
 
         $obj = null;
         if ($object_id) {
-            $obj = ObjectLoader::createAndLoadObject($model_class_name, $object_id);
+            $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $object_id);
         } else {
             $obj = new $model_class_name;
         }
 
-        $obj = FieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr, $null_fields_arr);
+        $obj = CRUDFieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr, $null_fields_arr);
         $obj->save();
 
         /* TODO: внести логирование в save?
@@ -85,7 +85,7 @@ class CRUDEditorForm
         $html .= Operations::operationCodeHiddenField(self::OPERATION_SAVE_EDITOR_FORM);
 
         $html .= '<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
-        $html .= '<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue(FieldsAccess::getObjId($obj)) . '">';
+        $html .= '<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue(CRUDFieldsAccess::getObjId($obj)) . '">';
 
         foreach ($element_obj_arr as $element_obj){
             

@@ -9,9 +9,9 @@ use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
-use OLOG\CRUD\CRUDWidgetInput;
+use OLOG\CRUD\CRUDFormWidgetInput;
 
-class NodesListAction
+class DemoNodesListAction
 {
     static public function getUrl()
     {
@@ -24,18 +24,18 @@ class NodesListAction
 
         $html = '';
 
-        $html .= \OLOG\CRUD\CRUDEditorForm::html(
-            new Node(),
+        $html .= \OLOG\CRUD\CRUDForm::html(
+            new DemoNode(),
             [
                 new CRUDFormRow(
                     'Title',
-                    new CRUDWidgetInput('title')
+                    new CRUDFormWidgetInput('title')
                 )
             ]
         );
 
         $html .= CRUDTable::html(
-            Node::class,
+            DemoNode::class,
             [
                 new CRUDTableColumn(
                     'Edit',
@@ -44,8 +44,8 @@ class NodesListAction
                 new CRUDTableColumn(
                     'Edit',
                     new CRUDTableWidgetTextWithLink(
-                        '{\CRUDDemo\Node.{this->id}->title}',
-                        NodeEditAction::getUrl('{this->id}')
+                        '{' . DemoNode::class . '.{this->id}->title}',
+                        DemoNodeEditAction::getUrl('{this->id}')
                     )
                 ),
                 new CRUDTableColumn(
@@ -55,11 +55,11 @@ class NodesListAction
             ]
         );
 
-        LayoutTemplate::render($html, 'Nodes', self::getBreadcrumbsArr());
+        DemoLayoutTemplate::render($html, 'Nodes', self::getBreadcrumbsArr());
     }
 
     static public function getBreadcrumbsArr()
     {
-        return array_merge(MainPageAction::breadcrumbsArr(), [BT::a(self::getUrl(), 'Nodes')]);
+        return array_merge(DemoMainPageAction::breadcrumbsArr(), [BT::a(self::getUrl(), 'Nodes')]);
     }
 }

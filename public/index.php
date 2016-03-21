@@ -6,11 +6,11 @@ use \OLOG\Router;
 
 \OLOG\ConfWrapper::assignConfig(\CRUDDemo\Config::get());
 
-Router::matchClass(\CRUDDemo\MainPageAction::class);
+Router::matchClass(\CRUDDemo\DemoMainPageAction::class);
 
-Router::matchClass(\CRUDDemo\NodesListAction::class, 0);
-Router::matchClass(\CRUDDemo\NodeEditAction::class, 0);
-Router::matchClass(\CRUDDemo\NodeTermsAction::class, 0);
+Router::matchClass(\CRUDDemo\DemoNodesListAction::class, 0);
+Router::matchClass(\CRUDDemo\DemoNodeEditAction::class, 0);
+Router::matchClass(\CRUDDemo\DemoNodeTermsAction::class, 0);
 
-Router::matchClass(\CRUDDemo\TermsListAction::class, 0);
-Router::matchClass(\CRUDDemo\TermEditAction::class, 0);
+Router::matchClass(\CRUDDemo\DemoTermsListAction::class, 0);
+Router::matchClass(\CRUDDemo\DemoTermEditAction::class, 0);

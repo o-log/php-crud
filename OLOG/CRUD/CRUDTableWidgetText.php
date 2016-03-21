@@ -14,7 +14,7 @@ class CRUDTableWidgetText
      * @return mixed
      */
     public function html($obj){
-        $html = CRUDWidgets::compile($this->getText(), ['this' => $obj]);
+        $html = CRUDCompiler::compile($this->getText(), ['this' => $obj]);
         return Sanitize::sanitizeTagContent($html);
     }
 

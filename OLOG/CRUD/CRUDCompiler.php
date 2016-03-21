@@ -5,7 +5,7 @@ namespace OLOG\CRUD;
 // TODO: вынести все виджеты отдельными классами
 // TODO: rename this class to CRUDCompiler
 
-class CRUDWidgets {
+class CRUDCompiler {
     //const WIDGET_CHECKBOX = 'WIDGET_CHECKBOX';
     //const WIDGET_TEXT_WITH_LINK = 'TEXT_WITH_LINK';
 
@@ -57,7 +57,7 @@ class CRUDWidgets {
                 $obj_field_name = $magic_matches[2];
 
                 \OLOG\Assert::assert($data[$obj_key_in_data]);
-                $replacement = FieldsAccess::getObjectFieldValue($data[$obj_key_in_data], $obj_field_name);
+                $replacement = CRUDFieldsAccess::getObjectFieldValue($data[$obj_key_in_data], $obj_field_name);
 
                 if (is_null($replacement)){
                     $replacement = 'NULL'; // TODO: review?
@@ -70,8 +70,8 @@ class CRUDWidgets {
                 $obj_field_name = $magic_matches[3];
 
                 if ($obj_id != 'NULL') { // TODO: review?
-                    $obj = ObjectLoader::createAndLoadObject($class_name, $obj_id);
-                    $replacement = FieldsAccess::getObjectFieldValue($obj, $obj_field_name);
+                    $obj = CRUDObjectLoader::createAndLoadObject($class_name, $obj_id);
+                    $replacement = CRUDFieldsAccess::getObjectFieldValue($obj, $obj_field_name);
                 } else {
                     $replacement = '';
                 }

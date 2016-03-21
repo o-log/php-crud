@@ -10,9 +10,9 @@ class CRUDTableWidgetTextWithLink
     protected $link;
     
     public function html($obj){
-        $url = CRUDWidgets::compile($this->getLink(), ['this' => $obj]);
+        $url = CRUDCompiler::compile($this->getLink(), ['this' => $obj]);
 
-        $text = CRUDWidgets::compile($this->getText(), ['this' => $obj]);
+        $text = CRUDCompiler::compile($this->getText(), ['this' => $obj]);
 
         if (trim($text) == ''){
             $text = '#EMPTY#';

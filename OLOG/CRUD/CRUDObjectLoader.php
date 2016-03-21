@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-class ObjectLoader
+class CRUDObjectLoader
 {
 
     public static function createAndLoadObject($model_class_name, $obj_id)

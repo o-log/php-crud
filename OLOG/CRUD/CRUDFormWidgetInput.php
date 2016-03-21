@@ -4,7 +4,7 @@ namespace OLOG\CRUD;
 
 use OLOG\Sanitize;
 
-class CRUDWidgetInput
+class CRUDFormWidgetInput
 {
     protected $field_name;
 
@@ -16,7 +16,7 @@ class CRUDWidgetInput
     public function html($obj)
     {
         $field_name = $this->getFieldName();
-        $field_value = FieldsAccess::getObjectFieldValue($obj, $field_name);
+        $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
         return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" rows="1">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
     }

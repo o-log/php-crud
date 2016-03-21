@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-class CRUDWidgetReference
+class CRUDFormWidgetReference
 {
     protected $field_name;
     protected $referenced_class_name;
@@ -21,7 +21,7 @@ class CRUDWidgetReference
         $referenced_class_name = $this->getReferencedClassName();
         $referenced_class_title_field = $this->getReferencedClassTitleField();
 
-        $field_value = FieldsAccess::getObjectFieldValue($obj, $field_name);
+        $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
         $options_html_arr = ['<option value=""></option>'];
 
@@ -34,8 +34,8 @@ class CRUDWidgetReference
 
         $options_arr = [];
         foreach ($referenced_obj_ids_arr as $id){
-            $obj = ObjectLoader::createAndLoadObject($referenced_class_name, $id);
-            $options_arr[$id] = FieldsAccess::getObjectFieldValue($obj, $referenced_class_title_field);
+            $obj = CRUDObjectLoader::createAndLoadObject($referenced_class_name, $id);
+            $options_arr[$id] = CRUDFieldsAccess::getObjectFieldValue($obj, $referenced_class_title_field);
         }
 
         // TODO: send to common options widget?

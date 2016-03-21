@@ -2,17 +2,17 @@
 
 namespace CRUDDemo;
 
-use OLOG\CRUD\CRUDEditorForm;
+use OLOG\CRUD\CRUDForm;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
-use OLOG\CRUD\CRUDWidgetInput;
-use OLOG\CRUD\CRUDWidgetReference;
-use OLOG\CRUD\CRUDEditorWidgetTextarea;
+use OLOG\CRUD\CRUDFormWidgetInput;
+use OLOG\CRUD\CRUDFormWidgetReference;
+use OLOG\CRUD\CRUDFormWidgetTextarea;
 
-class NodeTermsAction
+class DemoNodeTermsAction
 {
     static public function getUrl($node_id = '(\d+)')
     {
@@ -23,34 +23,34 @@ class NodeTermsAction
     {
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 
-        $html = NodeEditAction::tabsHtml($node_id);
+        $html = DemoNodeEditAction::tabsHtml($node_id);
 
-        $new_term_to_node = new TermToNode();
+        $new_term_to_node = new DemoTermToNode();
         $new_term_to_node->setNodeId($node_id);
 
-        $html .= CRUDEditorForm::html(
+        $html .= CRUDForm::html(
             $new_term_to_node,
             [
                 new CRUDFormRow(
                     'Node id',
-                    new CRUDWidgetInput('node_id')
+                    new CRUDFormWidgetInput('node_id')
                 ),
                 new CRUDFormRow(
                     'Term id',
-                    new CRUDWidgetReference('term_id', Term::class, 'title')
+                    new CRUDFormWidgetReference('term_id', DemoTerm::class, 'title')
                 )
             ]
         );
 
         $html .= CRUDTable::html(
-            TermToNode::class,
+            DemoTermToNode::class,
             [
-                new CRUDTableColumn('Term', new CRUDTableWidgetText('{\CRUDDemo\Term.{this->term_id}->title}')),
+                new CRUDTableColumn('Term', new CRUDTableWidgetText('{' . DemoTerm::class . '.{this->term_id}->title}')),
                 new CRUDTableColumn('Delete', new CRUDTableWidgetDelete())
             ],
             ['node_id' => $node_id]
         );
 
-        LayoutTemplate::render($html, 'Node ' . $node_id, NodeEditAction::breadcrumbsArr($node_id));
+        DemoLayoutTemplate::render($html, 'Node ' . $node_id, DemoNodeEditAction::breadcrumbsArr($node_id));
     }
 }

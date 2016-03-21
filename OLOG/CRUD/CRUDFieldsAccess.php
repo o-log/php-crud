@@ -4,15 +4,15 @@ namespace OLOG\CRUD;
 
 use OLOG\Assert;
 
-class FieldsAccess
+class CRUDFieldsAccess
 {
     static public function getObjId($obj)
     {
         Assert::assert($obj);
         
         $obj_class_name = get_class($obj);
-        $obj_id_field_name = FieldsAccess::getIdFieldName($obj_class_name);
-        return FieldsAccess::getObjectFieldValue($obj, $obj_id_field_name);
+        $obj_id_field_name = CRUDFieldsAccess::getIdFieldName($obj_class_name);
+        return CRUDFieldsAccess::getObjectFieldValue($obj, $obj_id_field_name);
         
     }
     

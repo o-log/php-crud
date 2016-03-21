@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-class CRUDElementVerticalFormRow
+class CRUDFormVerticalRow
 {
     protected $title;
     protected $widget_obj;
