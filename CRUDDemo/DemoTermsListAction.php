@@ -6,6 +6,7 @@ use OLOG\BT;
 use OLOG\CRUD\CRUDForm;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTableColumn;
+use OLOG\CRUD\CRUDTableFilter;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
@@ -25,18 +26,17 @@ class DemoTermsListAction
 
         $html = '';
 
-        $html .= CRUDForm::html(
-            new DemoTerm,
-            [
-                new CRUDFormRow(
-                    'Title',
-                    new CRUDFormWidgetInput('title')
-                )
-            ]
-        );
-
         $html .= \OLOG\CRUD\CRUDTable::html(
             \CRUDDemo\DemoTerm::class,
+            CRUDForm::html(
+                new DemoTerm,
+                [
+                    new CRUDFormRow(
+                        'Title',
+                        new CRUDFormWidgetInput('title')
+                    )
+                ]
+            ),
             [
                 new CRUDTableColumn(
                     'Edit',
@@ -55,6 +55,9 @@ class DemoTermsListAction
                     'Delete',
                     new CRUDTableWidgetDelete()
                 )
+            ],
+            [
+                new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL)
             ]
         );
 

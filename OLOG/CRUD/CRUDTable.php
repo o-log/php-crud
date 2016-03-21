@@ -12,38 +12,6 @@ class CRUDTable
     const OPERATION_ADD_MODEL = 'OPERATION_ADD_MODEL';
     const OPERATION_DELETE_MODEL = 'OPERATION_DELETE_MODEL';
 
-    /*
-    static protected function addModelOperation($model_class_name){
-        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
-
-        // TODO: must read class_name from form!!! form may be placed on the other object page or any page
-
-        $new_prop_values_arr = array();
-        $reflect = new \ReflectionClass($model_class_name);
-
-        foreach ($reflect->getProperties() as $prop_obj) {
-            if (!$prop_obj->isStatic()) {
-                $prop_name = $prop_obj->getName();
-                if (array_key_exists($prop_name, $_POST)) {
-                    // Проверка на заполнение обязательных полей делается на уровне СУБД, через нот нулл в таблице
-                    $new_prop_values_arr[$prop_name] = $_POST[$prop_name];
-                }
-            }
-        }
-
-        //
-        // сохранение
-        //
-
-        $obj = new $model_class_name;
-
-        $obj = FieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr);
-        $obj->save();
-
-        \OLOG\Redirects::redirectToSelf();
-    }
-    */
-
     static protected function deleteModelOperation($model_class_name)
     {
 
@@ -68,7 +36,7 @@ class CRUDTable
      * @param array $context_arr
      * @throws \Exception
      */
-    static public function html($model_class_name, $column_obj_arr, $context_arr = array())
+    static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [])
     {
         Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
             self::deleteModelOperation($model_class_name);
@@ -78,30 +46,15 @@ class CRUDTable
         // готовим список ID объектов для вывода
         //
 
-        $filter = '';
-        /* TODO
-        if (isset($_GET['filter'])){
-            $filter = $_GET['filter'];
-        }
-        */
-
-        $objs_ids_arr = self::getObjIdsArrForClassName($model_class_name, $context_arr, $filter);
+        $objs_ids_arr = self::getObjIdsArrForClassName($model_class_name, $filters_arr);
 
         //
         // вывод таблицы
         //
 
-        /* TODO
-        if (isset($model_class_name::$crud_model_title_field)) {
-            if (isset($model_class_name::$crud_allow_search)) {
-                if ($model_class_name::$crud_allow_search == true) {
-                    echo '<div class="pull-right" style="margin-top: 25px;"><form action="' . \Sportbox\Helpers::uri_no_getform() . '"><input name="filter" value="' . $filter . '"><input type="submit" value="искать"></form></div>';
-                }
-            }
-        }
-        */
-
         $html = '';
+
+        $html .= self::toolbarHtml($create_form_html, $filters_arr);
 
         $html .= '<table class="table table-hover">';
         $html .= '<thead>';
@@ -132,7 +85,6 @@ class CRUDTable
 
                 $widget_obj = $column_obj->getWidgetObj();
                 Assert::assert($widget_obj);
-                //$html .= CRUDWidgets::renderListWidget($widget_config_arr, $obj_obj);
 
                 // TODO: check widget obj interface
 
@@ -153,6 +105,50 @@ class CRUDTable
         return $html;
     }
 
+    static protected function toolbarHtml($create_form_html, $filters_arr)
+    {
+        $html = '';
+
+        $create_form_element_id = 'collapse_' . rand(1, 999999);
+        $filters_element_id = 'collapse_' . rand(1, 999999);
+
+        $html .= '<div class="btn-group" role="group">';
+        if ($create_form_html) {
+            $html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $create_form_element_id . '">Форма создания</button>';
+        }
+        if ($filters_arr) {
+            $html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $filters_element_id . '">Фильтры</button>';
+        }
+        $html .= '</div>';
+
+        if ($create_form_html) {
+            $html .= '<div class="collapse" id="' . $create_form_element_id . '">';
+            $html .= '<div class="well">';
+
+            $html .= $create_form_html;
+
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+
+        if ($filters_arr) {
+            $html .= '<div class="collapse" id="' . $filters_element_id . '">';
+            $html .= '<div class="well">';
+
+            //$html .= $create_form_html;
+            /** @var CRUDTableFilter $filter_obj */
+            foreach ($filters_arr as $filter_obj){
+                // TODO: finish
+                $html .= '<div>' . $filter_obj->getFieldName() . ': ' . $filter_obj->getValue() . '</div>';
+            }
+
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+
+        return $html;
+    }
+
     /**
      * Возвращает одну страницу списка объектов указанного класса.
      * Сортировка: TODO.
@@ -162,7 +158,7 @@ class CRUDTable
      * @param $context_arr array Массив пар "имя поля" - "значение поля"
      * @return array Массив идентикаторов объектов.
      */
-    static public function getObjIdsArrForClassName($model_class_name, $context_arr, $title_filter = '')
+    static public function getObjIdsArrForClassName($model_class_name, $filters_arr)
     {
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
 
@@ -182,23 +178,31 @@ class CRUDTable
         // контекст, а не отдельный параметр
 
         $where = ' 1 = 1 ';
-        foreach ($context_arr as $column_name => $value) {
-            // чистим имя поля, возможно пришедшее из запроса
+
+        /** @var CRUDTableFilter $filter_obj */
+        foreach ($filters_arr as $filter_obj) {
+            // TODO: check filter interface
+
+            $column_name = $filter_obj->getFieldName();
+            $operation_code = $filter_obj->getOperationCode();
+            $value = $filter_obj->getValue();
+
             $column_name = preg_replace("/[^a-zA-Z0-9_]+/", "", $column_name);
 
-            $where .= ' and ' . $column_name . ' = ?';
-            $query_param_values_arr[] = $value;
-        }
+            switch ($operation_code) {
+                case CRUDTableFilter::FILTER_EQUAL:
+                    $where .= ' and ' . $column_name . ' = ?';
+                    $query_param_values_arr[] = $value;
+                    break;
 
-        /* TODO
-        if (isset($model_class_name::$crud_model_title_field)){
-            $title_field_name = $model_class_name::$crud_model_title_field;
-            if ($title_filter != ''){
-                $where .= ' and ' . $title_field_name . ' like ?';
-                $query_param_values_arr[] = '%' . $title_filter . '%';
+                case CRUDTableFilter::FILTER_IS_NULL:
+                    $where .= ' and ' . $column_name . ' is null ';
+                    break;
+
+                default:
+                    throw new \Exception('unknown filter code');
             }
         }
-        */
 
         $order_field_name = $db_id_field_name;
 

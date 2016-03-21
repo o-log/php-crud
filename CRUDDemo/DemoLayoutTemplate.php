@@ -33,7 +33,9 @@ class DemoLayoutTemplate
     echo BT::breadcrumbs($breadcrumbs_arr);
 
     ?>
+    <div class="page-header">
     <h1><?= $h1_str ?></h1>
+        </div>
     <?= $content_html ?>
 </div>
 

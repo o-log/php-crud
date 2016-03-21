@@ -24,18 +24,17 @@ class DemoNodesListAction
 
         $html = '';
 
-        $html .= \OLOG\CRUD\CRUDForm::html(
-            new DemoNode(),
-            [
-                new CRUDFormRow(
-                    'Title',
-                    new CRUDFormWidgetInput('title')
-                )
-            ]
-        );
-
         $html .= CRUDTable::html(
             DemoNode::class,
+            \OLOG\CRUD\CRUDForm::html(
+                new DemoNode(),
+                [
+                    new CRUDFormRow(
+                        'Title',
+                        new CRUDFormWidgetInput('title')
+                    )
+                ]
+            ),
             [
                 new CRUDTableColumn(
                     'Edit',

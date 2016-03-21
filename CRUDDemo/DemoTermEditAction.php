@@ -5,6 +5,7 @@ namespace CRUDDemo;
 use OLOG\BT;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTableColumn;
+use OLOG\CRUD\CRUDTableFilter;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDFormWidgetReference;
@@ -44,42 +45,28 @@ class DemoTermEditAction
         $new_term_obj = new DemoTerm();
         $new_term_obj->setParentId($term_id);
 
-        $html .= \OLOG\CRUD\CRUDForm::html(
-            $new_term_obj,
-            [
-                new CRUDFormRow(
-                    'Title',
-                    new CRUDFormWidgetTextarea('title')
-                ),
-                new CRUDFormRow(
-                    'Parent id',
-                    new CRUDFormWidgetReference('parent_id', DemoTerm::class, 'title')
-                )
-            ]
-        );
-
         $html .= \OLOG\CRUD\CRUDTable::html(
             \CRUDDemo\DemoTerm::class,
+            \OLOG\CRUD\CRUDForm::html(
+                $new_term_obj,
+                [
+                    new CRUDFormRow(
+                        'Title',
+                        new CRUDFormWidgetTextarea('title')
+                    ),
+                    new CRUDFormRow(
+                        'Parent id',
+                        new CRUDFormWidgetReference('parent_id', DemoTerm::class, 'title')
+                    )
+                ]
+            ),
             [
                 new CRUDTableColumn('Title', new CRUDTableWidgetText('{this->title}')),
                 new CRUDTableColumn('Delete', new CRUDTableWidgetDelete())
             ],
-            /*
-                [
-                    'CREATE_FORM' => [
-                        'ELEMENTS' => [
-                            [
-                                CRUDElements::KEY_ELEMENT_TYPE => \OLOG\CRUD\CRUDElements::ELEMENT_FORM_ROW,
-                                CRUDElements::KEY_FORM_ROW_FIELD_NAME => 'title',
-                                CRUDElements::KEY_FORM_ROW_TITLE => 'Название',
-                                'WIDGET' => [
-                                    'WIDGET_TYPE' => 'WIDGET_INPUT'
-                                ]
-                            ]
-                        ]
-                    ],
-            */
-            ['parent_id' => $term_id]
+            [
+                new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_EQUAL, $term_id)
+            ]
         );
 
         DemoLayoutTemplate::render($html, 'Term ' . $term_id, self::breadcrumbsArr($term_id));

@@ -2,6 +2,8 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\Sanitize;
+
 class CRUDFormWidgetReference
 {
     protected $field_name;
@@ -54,11 +56,8 @@ class CRUDFormWidgetReference
 
         $select_element_id = 'js_select_' . rand(1, 999999);
 
-        // TODO: sanitize field name
-        $html .= '<select id="' . $select_element_id . '" name="' . $field_name . '" class="form-control">' . implode('', $options_html_arr) . '</select>';
-
-        // TODO: sanitize field name
-        $html .= '<input type="hidden" id="' . $select_element_id . '_is_null" name="' . $field_name . '___is_null"/>';
+        $html .= '<select id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control">' . implode('', $options_html_arr) . '</select>';
+        $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null"/>';
 
         ob_start();?>
         <script>
