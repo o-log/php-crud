@@ -3,6 +3,7 @@
 namespace CRUDDemo;
 
 use OLOG\BT;
+use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\Sanitize;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDFormWidgetTextarea;
@@ -36,7 +37,13 @@ class DemoNodeEditAction
                 ),
                 new CRUDFormRow(
                     'State code',
-                    new CRUDFormWidgetTextarea('state_code')
+                    new CRUDFormWidgetOptions('state_code',
+                        [
+                            1 => 'announce',
+                            2 => 'live',
+                            3 => 'archive'
+                        ]
+                        )
                 ),
                 new CRUDFormVerticalRow(
                     'Body',

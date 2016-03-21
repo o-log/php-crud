@@ -6,7 +6,7 @@ use \OLOG\Router;
 
 \OLOG\ConfWrapper::assignConfig(\CRUDDemo\Config::get());
 
-Router::matchClass(\CRUDDemo\DemoMainPageAction::class);
+Router::matchClass(\CRUDDemo\DemoMainPageAction::class, 0);
 
 Router::matchClass(\CRUDDemo\DemoNodesListAction::class, 0);
 Router::matchClass(\CRUDDemo\DemoNodeEditAction::class, 0);

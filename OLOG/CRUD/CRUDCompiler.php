@@ -171,23 +171,4 @@ class CRUDCompiler {
 ]
     */
 
-
-    public static function widgetOptions($field_name, $field_value, $widget_config_arr)
-    {
-        $options = '<option></option>';
-
-        $options_arr = $widget_config_arr['OPTIONS'];
-
-        foreach($options_arr as $value => $title)
-        {
-            $selected_html_attr = '';
-            if ($field_value == $value) {
-                $selected_html_attr = ' selected';
-            }
-
-            $options .= '<option value="' .  $value . '"' . $selected_html_attr . '>' . $title . '</option>';
-        }
-
-        return '<select name="' . $field_name . '" class="form-control">' . $options . '</select>';
-    }
 }
