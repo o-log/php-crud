@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-class CRUDTableColumn
+class CRUDTableColumn implements InterfaceCRUDTableColumn
 {
     protected $title;
     protected $widget_obj;

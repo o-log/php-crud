@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-class CRUDTableFilter
+class CRUDTableFilter implements InterfaceCRUDTableFilter
 {
     const FILTER_IS_NULL = 'FILTER_IS_NULL';
     const FILTER_EQUAL = 'FILTER_EQUAL';

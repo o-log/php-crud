@@ -4,7 +4,7 @@ namespace OLOG\CRUD;
 
 use OLOG\Sanitize;
 
-class CRUDTableWidgetText
+class CRUDTableWidgetText implements InterfaceCRUDTableWidget
 {
     protected $text;
 

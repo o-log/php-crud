@@ -48,7 +48,7 @@ class DemoNodesListAction
                     )
                 ),
                 new CRUDTableColumn(
-                    'Edit',
+                    'Delete',
                     new CRUDTableWidgetDelete()
                 ),
             ]

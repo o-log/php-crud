@@ -60,10 +60,9 @@ class CRUDTable
         $html .= '<thead>';
         $html .= '<tr>';
 
+        /** @var InterfaceCRUDTableColumn $column_obj */
         foreach ($column_obj_arr as $column_obj) {
-
-            // TODO: check column_obj intaerfaceCol
-
+            Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
             $html .= '<th>' . Sanitize::sanitizeTagContent($column_obj->getTitle()) . '</th>';
         }
 
@@ -77,16 +76,17 @@ class CRUDTable
 
             $html .= '<tr>';
 
+            /** @var InterfaceCRUDTableColumn $column_obj */
             foreach ($column_obj_arr as $column_obj) {
-
-                // TODO: check column_obj intaerfaceCol
+                Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
 
                 $html .= '<td>';
 
+                /** @var InterfaceCRUDTableWidget $widget_obj */
                 $widget_obj = $column_obj->getWidgetObj();
-                Assert::assert($widget_obj);
 
-                // TODO: check widget obj interface
+                Assert::assert($widget_obj);
+                Assert::assert($widget_obj instanceof InterfaceCRUDTableWidget);
 
                 $html .= $widget_obj->html($obj_obj);
 
@@ -138,6 +138,8 @@ class CRUDTable
             //$html .= $create_form_html;
             /** @var CRUDTableFilter $filter_obj */
             foreach ($filters_arr as $filter_obj){
+                Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
+                
                 // TODO: finish
                 $html .= '<div>' . $filter_obj->getFieldName() . ': ' . $filter_obj->getValue() . '</div>';
             }
@@ -179,9 +181,9 @@ class CRUDTable
 
         $where = ' 1 = 1 ';
 
-        /** @var CRUDTableFilter $filter_obj */
+        /** @var InterfaceCRUDTableFilter $filter_obj */
         foreach ($filters_arr as $filter_obj) {
-            // TODO: check filter interface
+            Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
 
             $column_name = $filter_obj->getFieldName();
             $operation_code = $filter_obj->getOperationCode();

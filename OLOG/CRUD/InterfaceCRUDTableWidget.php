@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-interface InterfaceCRUDFormRow
+interface InterfaceCRUDTableWidget
 {
     public function html($obj);
 }
