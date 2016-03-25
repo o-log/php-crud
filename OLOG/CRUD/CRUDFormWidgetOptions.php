@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-class CRUDFormWidgetOptions
+class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
 {
     protected $field_name;
     protected $options_arr;

@@ -12,8 +12,10 @@ class DemoMainPageAction
     
     static public function action(){
         $html = '';
-        $html .= '<div><a href="' . DemoNodesListAction::getUrl() . '">NODES</a></div>';
-        $html .= '<div><a href="' . DemoTermsListAction::getUrl() . '">TERMS</a></div>';
+        $html .= '<div>';
+        $html .= '<a class="btn btn-default" href="' . DemoNodesListAction::getUrl() . '">NODES</a> ';
+        $html .= '<a class="btn btn-default" href="' . DemoTermsListAction::getUrl() . '">TERMS</a>';
+        $html .= '</div>';
 
         DemoLayoutTemplate::render($html, 'Main page', self::breadcrumbsArr());
     }

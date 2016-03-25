@@ -2,6 +2,7 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\Assert;
 use OLOG\POSTAccess;
 use OLOG\Sanitize;
 
@@ -87,10 +88,9 @@ class CRUDForm
         $html .= '<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
         $html .= '<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue(CRUDFieldsAccess::getObjId($obj)) . '">';
 
+        /** @var InterfaceCRUDFormRow $element_obj */
         foreach ($element_obj_arr as $element_obj){
-            
-            // TODO: check element interfaces
-
+            Assert::assert($element_obj instanceof InterfaceCRUDFormRow);
             $html .= $element_obj->html($obj);
         }
 

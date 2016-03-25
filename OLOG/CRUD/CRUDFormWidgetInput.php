@@ -4,7 +4,7 @@ namespace OLOG\CRUD;
 
 use OLOG\Sanitize;
 
-class CRUDFormWidgetInput
+class CRUDFormWidgetInput implements InterfaceCRUDFormWidget
 {
     protected $field_name;
 

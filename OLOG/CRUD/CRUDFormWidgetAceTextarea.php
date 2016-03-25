@@ -4,7 +4,7 @@ namespace OLOG\CRUD;
 
 use OLOG\Sanitize;
 
-class CRUDFormWidgetAceTextarea
+class CRUDFormWidgetAceTextarea implements InterfaceCRUDFormWidget
 {
     protected $field_name;
 

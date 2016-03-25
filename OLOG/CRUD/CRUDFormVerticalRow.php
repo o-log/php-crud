@@ -2,12 +2,12 @@
 
 namespace OLOG\CRUD;
 
-class CRUDFormVerticalRow
+class CRUDFormVerticalRow implements InterfaceCRUDFormRow
 {
     protected $title;
     protected $widget_obj;
 
-    public function __construct($title, $widget_obj)
+    public function __construct($title, InterfaceCRUDFormWidget $widget_obj)
     {
         $this->setTitle($title);
         $this->setWidgetObj($widget_obj);
