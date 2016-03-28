@@ -15,7 +15,17 @@ class DemoNode implements
     const DB_ID = \CRUDDemo\Config::DB_NAME_PHPCRUDDEMO;
     const DB_TABLE_NAME = 'node';
 
+    protected $created_at_ts = 0;
     protected $id;
+
+    public function getCreatedAtTs(){
+        return $this->getcreated_at_ts;
+    }
+
+    public function setCreatedAtTs($value){
+        $this->created_at_ts = $value;
+    }
+
     protected $state_code = 0;
     protected $body = '';
     protected $title = '';
