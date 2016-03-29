@@ -7,6 +7,7 @@ use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\Sanitize;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDFormWidgetTextarea;
+use OLOG\CRUD\CRUDFormWidgetTimestamp;
 use OLOG\CRUD\CRUDFormVerticalRow;
 use OLOG\CRUD\CRUDFormWidgetAceTextarea;
 
@@ -34,6 +35,10 @@ class DemoNodeEditAction
                 new CRUDFormRow(
                     'Title',
                     new CRUDFormWidgetTextarea('title')
+                ),
+                new CRUDFormRow(
+                    'Date',
+                    new CRUDFormWidgetTimestamp('created_at_ts')
                 ),
                 new CRUDFormRow(
                     'State code',
