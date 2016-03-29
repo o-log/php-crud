@@ -34,17 +34,20 @@ class CRUDFormWidgetTimestamp implements InterfaceCRUDFormWidget
         }
         
         return $script . '
+        	<input type="hidden" id="' . $uniqid . '_input" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . Sanitize::sanitizeTagContent($field_value) . '">
         	<div class="input-group date" id="' . $uniqid . '">
-        		<input type="text" class="form-control" value="' . date('d-m-Y H:m:s', $field_value) . '">
+        		<input type="text" class="form-control" value="' . date('d-m-Y H:i:s', $field_value) . '">
     			<span class="input-group-addon">
     				<span class="glyphicon glyphicon-calendar"></span>
     			</span>
         	</div>
         	<script>
-        	
         	$("#' . $uniqid . '").datetimepicker({
 			    format: "DD-MM-YYYY HH:mm:ss",
-                sideBySide: true
+                sideBySide: true,
+                showTodayButton: true
+            }).on("dp.change", function(obj){
+	            $("#' . $uniqid . '_input").val(obj.date.unix());
             });
         	</script>
         	';
