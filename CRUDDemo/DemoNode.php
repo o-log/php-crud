@@ -16,7 +16,17 @@ class DemoNode implements
     const DB_TABLE_NAME = 'node';
 
     protected $created_at_ts = 0;
+    protected $is_published = 0;
     protected $id;
+
+    public function getIsPublished(){
+        return $this->is_published;
+    }
+
+    public function setIsPublished($value){
+        $this->is_published = $value;
+    }
+
 
     public function getCreatedAtTs(){
         return $this->getcreated_at_ts;

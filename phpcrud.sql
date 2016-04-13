@@ -14,4 +14,5 @@ array(
 'alter table node add column body text  not null   default "";',
 'alter table node add column state_code int  not null   default 0;',
 'alter table node add column created_at_ts int  not null   default 0  /* rand311047 */;',
+'alter table node add column is_published int  not null   default 0  /* rand693032 */;',
 )

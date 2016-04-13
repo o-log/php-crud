@@ -3,6 +3,8 @@
 namespace CRUDDemo;
 
 use OLOG\BT;
+use OLOG\CRUD\CRUDFormWidgetCheckbox;
+use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\Sanitize;
 use OLOG\CRUD\CRUDFormRow;
@@ -30,7 +32,7 @@ class DemoNodeEditAction
             [
                 new CRUDFormRow(
                     'Id',
-                    new CRUDFormWidgetTextarea('id')
+                    new CRUDFormWidgetInput('id')
                 ),
                 new CRUDFormRow(
                     'Title',
@@ -39,6 +41,10 @@ class DemoNodeEditAction
                 new CRUDFormRow(
                     'Date',
                     new CRUDFormWidgetTimestamp('created_at_ts')
+                ),
+                new CRUDFormRow(
+                    'is_published',
+                    new CRUDFormWidgetCheckbox('is_published')
                 ),
                 new CRUDFormRow(
                     'State code',
