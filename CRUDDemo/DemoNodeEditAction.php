@@ -6,6 +6,7 @@ use OLOG\BT;
 use OLOG\CRUD\CRUDFormWidgetCheckbox;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDFormWidgetOptions;
+use OLOG\CRUD\CRUDFormWidgetRadios;
 use OLOG\Sanitize;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDFormWidgetTextarea;
@@ -44,7 +45,7 @@ class DemoNodeEditAction
                 ),
                 new CRUDFormRow(
                     'is_published',
-                    new CRUDFormWidgetCheckbox('is_published')
+                    new CRUDFormWidgetRadios('is_published', [0 => 'no', 1 => 'yes'])
                 ),
                 new CRUDFormRow(
                     'State code',
