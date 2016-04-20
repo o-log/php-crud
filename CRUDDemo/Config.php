@@ -9,11 +9,13 @@ class Config
 
     public static function get()
     {
+        date_default_timezone_set('Europe/Moscow');
+
         $conf['return_false_if_no_route'] = true; // for local php server
 
         $conf['db'] = [
             self::DB_NAME_PHPCRUDDEMO => [
-                'host' => 'localhost',
+                'host' => '127.0.0.1',
                 'db_name' => 'phpcrud',
                 'user' => 'root',
                 'pass' => '1'

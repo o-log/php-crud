@@ -11,7 +11,7 @@ array(
 'alter table termtonode add foreign key(node_id) references node(id);',
 'alter table termtonode add foreign key(term_id) references term(id);',
 'alter table termtonode add unique key (term_id, node_id);',
-'alter table node add column body text  not null   default "";',
+'alter table node add column body text  not null;',
 'alter table node add column state_code int  not null   default 0;',
 'alter table node add column created_at_ts int  not null   default 0  /* rand311047 */;',
 'alter table node add column is_published int  not null   default 0  /* rand693032 */;',

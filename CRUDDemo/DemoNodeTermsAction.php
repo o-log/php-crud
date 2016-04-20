@@ -3,6 +3,7 @@
 namespace CRUDDemo;
 
 use OLOG\CRUD\CRUDForm;
+use OLOG\CRUD\CRUDFormInvisibleRow;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
@@ -34,13 +35,13 @@ class DemoNodeTermsAction
             CRUDForm::html(
                 $new_term_to_node,
                 [
-                    new CRUDFormRow(
-                        'Node id',
+                    new CRUDFormInvisibleRow(
                         new CRUDFormWidgetInput('node_id')
                     ),
                     new CRUDFormRow(
                         'Term id',
-                        new CRUDFormWidgetReference('term_id', DemoTerm::class, 'title')
+                        new CRUDFormWidgetReference('term_id', DemoTerm::class, 'title'),
+                        'Рубрика, с которой должен быть связан материал'
                     )
                 ]
             ),

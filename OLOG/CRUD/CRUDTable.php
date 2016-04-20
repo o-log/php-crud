@@ -116,9 +116,11 @@ class CRUDTable
         if ($create_form_html) {
             $html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $create_form_element_id . '">Форма создания</button>';
         }
+        /* TODO: think over
         if ($filters_arr) {
             $html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $filters_element_id . '">Фильтры</button>';
         }
+        */
         $html .= '</div>';
 
         if ($create_form_html) {
@@ -131,12 +133,13 @@ class CRUDTable
             $html .= '</div>';
         }
 
+        /* TODO: think over
         if ($filters_arr) {
             $html .= '<div class="collapse" id="' . $filters_element_id . '">';
             $html .= '<div class="well">';
 
             //$html .= $create_form_html;
-            /** @var CRUDTableFilter $filter_obj */
+            // @var CRUDTableFilter $filter_obj
             foreach ($filters_arr as $filter_obj){
                 Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
                 
@@ -147,6 +150,7 @@ class CRUDTable
             $html .= '</div>';
             $html .= '</div>';
         }
+        */
 
         return $html;
     }
