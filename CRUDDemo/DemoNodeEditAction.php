@@ -4,6 +4,7 @@ namespace CRUDDemo;
 
 use OLOG\BT;
 use OLOG\CRUD\CRUDFormWidgetCheckbox;
+use OLOG\CRUD\CRUDFormWidgetDateTime;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDFormWidgetRadios;
@@ -49,7 +50,7 @@ class DemoNodeEditAction
                 ),
                 new CRUDFormRow(
                     'published_at_datetime_str',
-                    new CRUDFormWidgetInput('published_at_datetime_str')
+                    new CRUDFormWidgetDateTime('published_at_datetime_str')
                 ),
                 new CRUDFormRow(
                     'State code',
