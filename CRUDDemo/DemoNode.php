@@ -17,7 +17,21 @@ class DemoNode implements
 
     protected $created_at_ts = 0;
     protected $is_published = 0;
+    protected $published_at_datetime_str = "0001-01-01";
     protected $id;
+
+    public function getPublishedAtDatetimeStr(){
+        return $this->published_at_datetime_str;
+    }
+
+    public function setPublishedAtDatetimeStr($value){
+        $this->published_at_datetime_str = $value;
+    }
+
+    protected $state_code = 0;
+    protected $body = '';
+    protected $title = '';
+
 
     public function getIsPublished(){
         return $this->is_published;
@@ -35,10 +49,6 @@ class DemoNode implements
     public function setCreatedAtTs($value){
         $this->created_at_ts = $value;
     }
-
-    protected $state_code = 0;
-    protected $body = '';
-    protected $title = '';
 
     /**
      * @return int

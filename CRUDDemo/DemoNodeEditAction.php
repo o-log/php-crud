@@ -48,6 +48,10 @@ class DemoNodeEditAction
                     new CRUDFormWidgetRadios('is_published', [0 => 'no', 1 => 'yes'])
                 ),
                 new CRUDFormRow(
+                    'published_at_datetime_str',
+                    new CRUDFormWidgetInput('published_at_datetime_str')
+                ),
+                new CRUDFormRow(
                     'State code',
                     new CRUDFormWidgetOptions('state_code',
                         [
