@@ -18,9 +18,9 @@
 		"phpunit/phpunit" : "5.2.*"
 	},
 	"require" : {
-		"o-log/php-router" : "dev-master",
-		"o-log/php-model" : "dev-master",
-		"o-log/php-bt" : "dev-master"
+		"o-log/php-router" : "0.3",
+		"o-log/php-model" : "0.3",
+		"o-log/php-bt" : "0.3"
 	},
 	"autoload" : {
 		"psr-0" : {
