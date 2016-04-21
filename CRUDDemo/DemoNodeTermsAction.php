@@ -21,7 +21,7 @@ class DemoNodeTermsAction
         return '/node/' . $node_id . '/terms';
     }
 
-    static public function action($node_id)
+    public function action($node_id)
     {
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 

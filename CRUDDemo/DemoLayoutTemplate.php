@@ -41,7 +41,7 @@ class DemoLayoutTemplate
     ?>
     <div class="page-header">
     <h1><?= $h1_str ?></h1>
-        </div>
+    </div>
     <?= $content_html ?>
 </div>
 

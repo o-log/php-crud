@@ -20,7 +20,7 @@ class DemoTermEditAction
         return '/admin/term/' . $term_id;
     }
 
-    static public function action($term_id)
+    public function action($term_id)
     {
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 

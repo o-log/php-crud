@@ -20,7 +20,7 @@ class DemoTermsListAction
         return '/terms';
     }
 
-    static public function action()
+    public function action()
     {
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 

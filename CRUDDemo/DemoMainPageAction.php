@@ -10,7 +10,7 @@ class DemoMainPageAction
         return '/';
     }
     
-    static public function action(){
+    public function action(){
         $html = '';
         $html .= '<div>';
         $html .= '<a class="btn btn-default" href="' . DemoNodesListAction::getUrl() . '">NODES</a> ';

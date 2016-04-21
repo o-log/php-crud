@@ -18,7 +18,7 @@ class DemoNodesListAction
         return '/nodes';
     }
 
-    static public function action()
+    public function action()
     {
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 
