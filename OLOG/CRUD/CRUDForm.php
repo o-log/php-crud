@@ -3,6 +3,7 @@
 namespace OLOG\CRUD;
 
 use OLOG\Assert;
+use OLOG\Operations;
 use OLOG\POSTAccess;
 use OLOG\Sanitize;
 

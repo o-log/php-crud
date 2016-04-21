@@ -2,11 +2,12 @@
 	"name": "o-log/php-crud",
 	"require-dev" : {
 		"phpunit/phpunit" : "4.8.*",
-		"o-log/php-router" : "0.4"
+		"o-log/php-router" : "1"
 	},
 	"require" : {
-		"o-log/php-model" : "0.3",
-		"o-log/php-bt" : "0.3"
+		"o-log/php-model" : "2",
+		"o-log/php-bt" : "1",
+		"o-log/php-lib" : "1"
 	},
 	"autoload" : {
 		"psr-0" : {

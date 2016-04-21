@@ -3,6 +3,7 @@
 namespace OLOG\CRUD;
 
 use OLOG\Assert;
+use OLOG\Operations;
 use OLOG\Sanitize;
 
 class CRUDTableWidgetDelete implements InterfaceCRUDTableWidget
