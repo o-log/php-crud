@@ -3,6 +3,7 @@
 namespace CRUDDemo;
 
 use OLOG\BT;
+use OLOG\CRUD\CRUDFormInvisibleRow;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDTableColumn;
@@ -55,8 +56,7 @@ class DemoTermEditAction
                         'Title',
                         new CRUDFormWidgetInput('title')
                     ),
-                    new CRUDFormRow(
-                        'Parent id',
+                    new CRUDFormInvisibleRow(
                         new CRUDFormWidgetReference('parent_id', DemoTerm::class, 'title')
                     )
                 ]

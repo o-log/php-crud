@@ -81,7 +81,7 @@ class CRUDForm
             self::saveEditorFormOperation();
         });
 
-        $html .= '<form id="form" class="form-horizontal" role="form" method="post" action="' . Sanitize::sanitizeUrl(\OLOG\Url::getCurrentUrl()) . '">';
+        $html .= '<form class="form-horizontal" role="form" method="post" action="' . Sanitize::sanitizeUrl(\OLOG\Url::getCurrentUrl()) . '">';
 
         $html .= Operations::operationCodeHiddenField(self::OPERATION_SAVE_EDITOR_FORM);
 

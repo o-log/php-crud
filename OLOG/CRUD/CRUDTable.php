@@ -114,7 +114,8 @@ class CRUDTable
 
         $html .= '<div class="btn-group" role="group">';
         if ($create_form_html) {
-            $html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $create_form_element_id . '">Форма создания</button>';
+            //$html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $create_form_element_id . '">Форма создания</button>';
+            $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
         }
         /* TODO: think over
         if ($filters_arr) {
@@ -124,13 +125,31 @@ class CRUDTable
         $html .= '</div>';
 
         if ($create_form_html) {
-            $html .= '<div class="collapse" id="' . $create_form_element_id . '">';
-            $html .= '<div class="well">';
+            //$html .= '<div class="collapse" id="' . $create_form_element_id . '">';
+            //$html .= '<div class="well">';
+            $html .= '<div class="modal fade" id="' . $create_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gridSystemModalLabel">Форма создания</h4>
+      </div>
+      <div class="modal-body">';
 
             $html .= $create_form_html;
 
-            $html .= '</div>';
-            $html .= '</div>';
+            //$html .= '</div>';
+            //$html .= '</div>';
+            $html .= '      </div>';
+            /*
+            $html .= '<div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>';
+            */
+            $html .= '</div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->';
         }
 
         /* TODO: think over

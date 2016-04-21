@@ -26,6 +26,7 @@ class DemoNodeTermsAction
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 
         $html = DemoNodeEditAction::tabsHtml($node_id);
+        $html .= '<div>&nbsp;</div>';
 
         $new_term_to_node = new DemoTermToNode();
         $new_term_to_node->setNodeId($node_id);

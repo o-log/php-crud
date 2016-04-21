@@ -3,8 +3,8 @@
 namespace CRUDDemo;
 
 use OLOG\BT;
-use OLOG\CRUD\CRUDFormWidgetCheckbox;
 use OLOG\CRUD\CRUDFormWidgetDateTime;
+use OLOG\CRUD\CRUDFormWidgetHtml;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDFormWidgetRadios;
@@ -26,6 +26,7 @@ class DemoNodeEditAction
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 
         $html = self::tabsHtml($node_id);
+        $html .= '<div>&nbsp;</div>';
 
         $node_obj = DemoNode::factory($node_id);
 
@@ -60,7 +61,11 @@ class DemoNodeEditAction
                             2 => 'live',
                             3 => 'archive'
                         ]
-                        )
+                    )
+                ),
+                new CRUDFormRow(
+                    'State code',
+                    new CRUDFormWidgetHtml('<ul><li>html widget - line 1</li><li>html widget - line 2</li></ul>')
                 ),
                 new CRUDFormVerticalRow(
                     'Body',
