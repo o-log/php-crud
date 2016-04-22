@@ -38,12 +38,17 @@ class CRUDFormWidgetDateTime implements InterfaceCRUDFormWidget
             $is_null_checked = ' checked ';
         }
 
+        $field_value_attr = '';
+        if ($field_value) {
+            $field_value_attr = date('d-m-Y', strtotime($field_value));
+        }
+
         return $script . '
             <input type="hidden" id="' . $uniqid . '_input" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . Sanitize::sanitizeTagContent($field_value) . '">
             <div class="row">
                 <div class="col-sm-10">
                     <div class="input-group date" id="' . $uniqid . '">
-                        <input type="text" class="form-control" value="' . date('d-m-Y H:i:s', strtotime($field_value)) . '">
+                        <input type="text" class="form-control" value="' . $field_value_attr . '">
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
