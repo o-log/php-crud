@@ -32,7 +32,12 @@ class CRUDFormWidgetDateTime implements InterfaceCRUDFormWidget
 			';
 	        $CRUDFormWidgetDateTime_include_script = false;
         }
-        
+
+        $is_null_checked = '';
+        if (is_null($field_value)){
+            $is_null_checked = ' checked ';
+        }
+
         return $script . '
         	<input type="hidden" id="' . $uniqid . '_input" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . Sanitize::sanitizeTagContent($field_value) . '">
         	<div class="input-group date" id="' . $uniqid . '">
@@ -41,6 +46,10 @@ class CRUDFormWidgetDateTime implements InterfaceCRUDFormWidget
     				<span class="glyphicon glyphicon-calendar"></span>
     			</span>
         	</div>
+        	    			<div>
+                <input type="checkbox" value="1" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" ' . $is_null_checked . ' /> NULL
+        	    			</div>
+
         	<script>
         	$("#' . $uniqid . '").datetimepicker({
 			    format: "DD-MM-YYYY HH:mm:ss",
@@ -72,3 +81,4 @@ class CRUDFormWidgetDateTime implements InterfaceCRUDFormWidget
 
 
 }
+

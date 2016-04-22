@@ -54,6 +54,10 @@ class DemoNodeEditAction
                     new CRUDFormWidgetDateTime('published_at_datetime_str')
                 ),
                 new CRUDFormRow(
+                    'expiration_date nullable',
+                    new CRUDFormWidgetDateTime('expiration_date')
+                ),
+                new CRUDFormRow(
                     'State code',
                     new CRUDFormWidgetOptions('state_code',
                         [

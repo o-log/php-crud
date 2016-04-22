@@ -18,7 +18,17 @@ class DemoNode implements
     protected $created_at_ts = 0;
     protected $is_published = 0;
     protected $published_at_datetime_str = "0001-01-01";
+    protected $expiration_date;
     protected $id;
+
+    public function getExpirationDate(){
+        return $this->expiration_date;
+    }
+
+    public function setExpirationDate($value){
+        $this->expiration_date = $value;
+    }
+
 
     public function getPublishedAtDatetimeStr(){
         return $this->published_at_datetime_str;
