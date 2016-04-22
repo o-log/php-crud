@@ -40,7 +40,7 @@ class CRUDFormWidgetDateTime implements InterfaceCRUDFormWidget
 
         $field_value_attr = '';
         if ($field_value) {
-            $field_value_attr = date('d-m-Y', strtotime($field_value));
+            $field_value_attr = date('d-m-Y H:i:s', strtotime($field_value));
         }
 
         return $script . '
