@@ -37,7 +37,7 @@ class CRUDTable
      * @param array $context_arr
      * @throws \Exception
      */
-    static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [])
+    static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '')
     {
         Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
             self::deleteModelOperation($model_class_name);
@@ -47,7 +47,7 @@ class CRUDTable
         // готовим список ID объектов для вывода
         //
 
-        $objs_ids_arr = self::getObjIdsArrForClassName($model_class_name, $filters_arr);
+        $objs_ids_arr = self::getObjIdsArrForClassName($model_class_name, $filters_arr, $order_by);
 
         //
         // вывод таблицы
@@ -180,7 +180,7 @@ class CRUDTable
      * @param $context_arr array Массив пар "имя поля" - "значение поля"
      * @return array Массив идентикаторов объектов.
      */
-    static public function getObjIdsArrForClassName($model_class_name, $filters_arr)
+    static public function getObjIdsArrForClassName($model_class_name, $filters_arr, $order_by = '')
     {
         \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
 
@@ -192,12 +192,7 @@ class CRUDTable
 
         $db_id_field_name = CRUDFieldsAccess::getIdFieldName($model_class_name);
 
-        // selecting ids by params from context
         $query_param_values_arr = array();
-
-        // TODO
-        // внести в контекст кроме имени поля и значения еще и оператор, чтобы можно было делать поиск лайком через
-        // контекст, а не отдельный параметр
 
         $where = ' 1 = 1 ';
 
@@ -226,11 +221,13 @@ class CRUDTable
             }
         }
 
-        $order_field_name = $db_id_field_name;
+        if ($order_by == '') {
+            $order_by = $db_id_field_name;
+        }
 
         $obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
             $db_id,
-            "select " . $db_id_field_name . " from " . $db_table_name . ' where ' . $where . ' order by ' . $order_field_name . ' desc limit ' . intval($page_size) . ' offset ' . intval($start),
+            "select " . $db_id_field_name . " from " . $db_table_name . ' where ' . $where . ' order by ' . $order_by . ' limit ' . intval($page_size) . ' offset ' . intval($start),
             $query_param_values_arr
         );
 

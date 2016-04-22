@@ -51,7 +51,9 @@ class DemoNodesListAction
                     'Delete',
                     new CRUDTableWidgetDelete()
                 ),
-            ]
+            ],
+            [],
+            'title'
         );
 
         DemoLayoutTemplate::render($html, 'Nodes', self::getBreadcrumbsArr());
