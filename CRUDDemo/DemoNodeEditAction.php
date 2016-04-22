@@ -3,6 +3,7 @@
 namespace CRUDDemo;
 
 use OLOG\BT;
+use OLOG\CRUD\CRUDFormWidgetDate;
 use OLOG\CRUD\CRUDFormWidgetDateTime;
 use OLOG\CRUD\CRUDFormWidgetHtml;
 use OLOG\CRUD\CRUDFormWidgetInput;
@@ -55,7 +56,7 @@ class DemoNodeEditAction
                 ),
                 new CRUDFormRow(
                     'expiration_date nullable',
-                    new CRUDFormWidgetDateTime('expiration_date')
+                    new CRUDFormWidgetDate('expiration_date')
                 ),
                 new CRUDFormRow(
                     'State code',
