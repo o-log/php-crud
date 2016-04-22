@@ -118,11 +118,9 @@ class CRUDTable
             //$html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $create_form_element_id . '">Форма создания</button>';
             $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
         }
-        /* TODO: think over
         if ($filters_arr) {
             $html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $filters_element_id . '">Фильтры</button>';
         }
-        */
         $html .= '</div>';
 
         if ($create_form_html) {
@@ -153,7 +151,6 @@ class CRUDTable
 </div><!-- /.modal -->';
         }
 
-        /* TODO: think over
         if ($filters_arr) {
             $html .= '<div class="collapse" id="' . $filters_element_id . '">';
             $html .= '<div class="well">';
@@ -170,7 +167,6 @@ class CRUDTable
             $html .= '</div>';
             $html .= '</div>';
         }
-        */
 
         return $html;
     }
