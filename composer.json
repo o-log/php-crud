@@ -5,7 +5,6 @@
 		"o-log/php-router" : "1"
 	},
 	"require" : {
-		"o-log/php-model" : "2",
 		"o-log/php-bt" : "2",
 		"o-log/php-lib" : "1"
 	},
