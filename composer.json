@@ -6,7 +6,7 @@
 	},
 	"require" : {
 		"o-log/php-model" : "2",
-		"o-log/php-bt" : "1",
+		"o-log/php-bt" : "2",
 		"o-log/php-lib" : "1"
 	},
 	"autoload" : {
