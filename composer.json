@@ -6,7 +6,8 @@
 	},
 	"require" : {
 		"o-log/php-bt" : "3.*",
-		"o-log/php-lib" : "1.*"
+		"o-log/php-lib" : "1.*",
+		"o-log/php-model" : "3.*"
 	},
 	"autoload" : {
 		"psr-0" : {
