@@ -2,7 +2,7 @@
 	"name": "o-log/php-crud",
 	"require-dev" : {
 		"phpunit/phpunit" : "4.8.*",
-		"o-log/php-router" : "1"
+		"o-log/php-router" : "1.*"
 	},
 	"require" : {
 		"o-log/php-bt" : "3.*",
