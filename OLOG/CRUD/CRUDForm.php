@@ -18,7 +18,7 @@ class CRUDForm
         $model_class_name = POSTAccess::getRequiredPostValue(self::FIELD_CLASS_NAME);
         $object_id = POSTAccess::getOptionalPostValue(self::FIELD_OBJECT_ID);
 
-        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
+        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
 
         $new_prop_values_arr = [];
         $null_fields_arr = [];

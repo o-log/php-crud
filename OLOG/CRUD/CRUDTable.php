@@ -18,7 +18,7 @@ class CRUDTable
 
         // TODO: transactions??
 
-        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
+        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
 
         $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
         $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
@@ -182,7 +182,7 @@ class CRUDTable
      */
     static public function getObjIdsArrForClassName($model_class_name, $filters_arr, $order_by = '')
     {
-        \OLOG\Model\Helper::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
+        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
 
         $page_size = Pager::getPageSize();
         $start = Pager::getPageOffset();
