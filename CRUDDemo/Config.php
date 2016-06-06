@@ -2,6 +2,8 @@
 
 namespace CRUDDemo;
 
+use OLOG\Model\ModelConstants;
+
 class Config
 {
     const DB_NAME_PHPCRUDDEMO = 'phpcrud';
@@ -13,7 +15,7 @@ class Config
 
         $conf['return_false_if_no_route'] = true; // for local php server
 
-        $conf['db'] = [
+        $conf[ModelConstants::MODULE_CONFIG_ROOT_KEY]['db'] = [
             self::DB_NAME_PHPCRUDDEMO => [
                 'host' => '127.0.0.1',
                 'db_name' => 'phpcrud',

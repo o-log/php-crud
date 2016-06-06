@@ -21,6 +21,11 @@ class DemoNode implements
     protected $expiration_date;
     protected $id;
 
+    public function getReverseTitle(){
+        $title = $this->getTitle();
+        return strrev($title);
+    }
+
     public function getExpirationDate(){
         return $this->expiration_date;
     }

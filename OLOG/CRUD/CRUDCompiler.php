@@ -2,6 +2,8 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\Assert;
+
 class CRUDCompiler {
     /**
      * компиляция строки: разворачивание обращений к полям объектов
@@ -26,26 +28,23 @@ class CRUDCompiler {
             $replacement = 'UNKNOWN_EXPRESSION';
 
             $magic_matches = [];
-            if (preg_match('@^(\w+)\->(\w+)$@', $expression, $magic_matches)){
+            if (preg_match('@^(\w+)\->([\w()]+)$@', $expression, $magic_matches)){
                 $obj_key_in_data = $magic_matches[1];
                 $obj_field_name = $magic_matches[2];
 
-                \OLOG\Assert::assert($data[$obj_key_in_data]);
-                $replacement = CRUDFieldsAccess::getObjectFieldValue($data[$obj_key_in_data], $obj_field_name);
+                $obj = $data[$obj_key_in_data];
 
-                if (is_null($replacement)){
-                    $replacement = 'NULL'; // TODO: review?
-                }
+                $replacement = self::getReplacement($obj, $obj_field_name);
             }
 
-            if (preg_match('@^([\w\\\\]+)\.(\w+)->(\w+)$@', $expression, $magic_matches)){
+            if (preg_match('@^([\w\\\\]+)\.(\w+)->([\w()]+)$@', $expression, $magic_matches)){
                 $class_name = $magic_matches[1];
                 $obj_id = $magic_matches[2];
                 $obj_field_name = $magic_matches[3];
 
                 if ($obj_id != 'NULL') { // TODO: review?
                     $obj = CRUDObjectLoader::createAndLoadObject($class_name, $obj_id);
-                    $replacement = CRUDFieldsAccess::getObjectFieldValue($obj, $obj_field_name);
+                    $replacement = self::getReplacement($obj, $obj_field_name);
                 } else {
                     $replacement = '';
                 }
@@ -55,5 +54,24 @@ class CRUDCompiler {
         }
 
         return $str;
+    }
+
+    public static function getReplacement($obj, $obj_field_name){
+        \OLOG\Assert::assert($obj);
+
+        $matches = [];
+        if (preg_match('@^(\w+)\(\)$@', $obj_field_name, $matches)){ // имя поля заканчивается скобками - значит это имя метода
+            $method_name = $matches[1];
+            Assert::assert(method_exists($obj, $method_name));
+            $replacement = call_user_func([$obj, $method_name]);
+        } else {
+            $replacement = CRUDFieldsAccess::getObjectFieldValue($obj, $obj_field_name);
+        }
+
+        if (is_null($replacement)){
+            $replacement = 'NULL'; // TODO: review?
+        }
+
+        return $replacement;
     }
 }

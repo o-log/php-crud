@@ -1,3 +1,13 @@
+Библиотека умеет делать две вещи: выводить список объектов и выводить форму редактирования одного объекта. При этом она генерирует не готовую страницу, а только html-код таблицы или формы. Выходной html-код совместим с twitter bootstrap.
+
+Все остальное - проверка прав доступа, вывод таблицы или формы в нужное место страницы - нужно сделать отдельно. Для этого можно использовать готовые модули:
+- php-auth: авторизация пользователей и проверка разрешений
+- php-bt: содержит готовые шаблоны страниц
+
+Объекты загружаются из БД через методы \OLOG\Model\InterfaceFactory, соответственно класс объекта должен реализовать этот интерфейс.
+
+Объекты сохраняются в БД через методы \OLOG\Model\InterfaceSave, соответственно для редактирования класс объекта должен реализовать этот интерфейс.
+
 # Установка демо проекта
 
 В папке, где мы хотим развернуть демо проект, выполняем в консоли следующие команды:
@@ -22,4 +32,49 @@
 
 # Подключение библиотеки к проекту
 
-...
+Включаем в composer.json проект такие строки:
+
+	"require" : {
+		"o-log/php-crud" : "dev-master"
+    }
+
+# Вывод списка объектов
+
+Вот пример кода, который генерирует html таблицы объектов:
+
+    $html .= CRUDTable::html(
+        DemoNode::class,
+        \OLOG\CRUD\CRUDForm::html(
+            new DemoNode(),
+            [
+                new CRUDFormRow(
+                    'Title',
+                    new CRUDFormWidgetInput('title')
+                )
+            ]
+        ),
+        [
+            new CRUDTableColumn(
+                'Edit',
+                new CRUDTableWidgetText('{this->title}')
+            ),
+            new CRUDTableColumn(
+                'Reverse title',
+                new CRUDTableWidgetText('{this->getReverseTitle()}')
+            ),
+            new CRUDTableColumn(
+                'Edit',
+                new CRUDTableWidgetTextWithLink(
+                    '{this->title}',
+                    DemoNodeEditAction::getUrl('{this->id}')
+                )
+            ),
+            new CRUDTableColumn(
+                'Delete',
+                new CRUDTableWidgetDelete()
+            ),
+        ],
+        [],
+        'title'
+    );
+

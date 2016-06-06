@@ -37,8 +37,12 @@ class DemoNodesListAction
             ),
             [
                 new CRUDTableColumn(
-                    'Edit',
+                    'Title',
                     new CRUDTableWidgetText('{this->title}')
+                ),
+                new CRUDTableColumn(
+                    'Reverse title',
+                    new CRUDTableWidgetText('{this->getReverseTitle()}')
                 ),
                 new CRUDTableColumn(
                     'Edit',
