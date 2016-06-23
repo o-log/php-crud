@@ -19,7 +19,17 @@ class DemoNode implements
     protected $is_published = 0;
     protected $published_at_datetime_str = "0001-01-01";
     protected $expiration_date;
+    protected $image_path_in_images;
     protected $id;
+
+    public function getImagePathInImages(){
+        return $this->image_path_in_images;
+    }
+
+    public function setImagePathInImages($value){
+        $this->image_path_in_images = $value;
+    }
+
 
     public function getReverseTitle(){
         $title = $this->getTitle();

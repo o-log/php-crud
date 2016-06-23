@@ -43,6 +43,10 @@ class DemoNodeEditAction
                     new CRUDFormWidgetTextarea('title')
                 ),
                 new CRUDFormRow(
+                    'image_path_in_images nullable',
+                    new CRUDFormWidgetInput('image_path_in_images', true)
+                ),
+                new CRUDFormRow(
                     'Date',
                     new CRUDFormWidgetTimestamp('created_at_ts')
                 ),

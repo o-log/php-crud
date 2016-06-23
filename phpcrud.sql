@@ -17,4 +17,5 @@ array(
 'alter table node add column is_published int  not null   default 0  /* rand693032 */;',
 'alter table node add column published_at_datetime_str datetime  not null   default "0001-01-01"  /* rand319302 */;',
 'alter table node add column expiration_date date    /* rand838158 */;',
+'alter table node add column image_path_in_images varchar(255)    /* rand914385 */;',
 )
