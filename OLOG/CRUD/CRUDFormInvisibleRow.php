@@ -16,7 +16,6 @@ class CRUDFormInvisibleRow implements InterfaceCRUDFormRow
 
         $required = false;
         // TODO
-        //$required = \Sportbox\CRUD\Helpers::isRequiredField($model_class_name, $prop_obj->getName());
 
         //$editor_context_obj = CRUDController::getEditorContext();
 

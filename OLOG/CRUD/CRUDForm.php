@@ -58,8 +58,7 @@ class CRUDForm
         $obj->save();
 
         /* TODO: внести логирование в save?
-        \Sportbox\Logger\Logger::logObjectEvent($obj, 'CRUD сохранение');
-        $redirect_url = \Sportbox\CRUD\ControllerCRUD::getEditUrlForObj($obj);
+        \OLOG\Logger\Logger::logObjectEvent($obj, 'CRUD сохранение');
         */
 
         // keep get form
