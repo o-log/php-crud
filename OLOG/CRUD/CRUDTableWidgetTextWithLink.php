@@ -2,12 +2,14 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\BT;
 use OLOG\Sanitize;
 
 class CRUDTableWidgetTextWithLink implements InterfaceCRUDTableWidget
 {
     protected $text;
     protected $link;
+    protected $classes_str;
     
     public function html($obj){
         $url = CRUDCompiler::compile($this->getLink(), ['this' => $obj]);
@@ -18,16 +20,33 @@ class CRUDTableWidgetTextWithLink implements InterfaceCRUDTableWidget
             $text = '#EMPTY#';
         }
 
-        $o = '<a href="' . Sanitize::sanitizeUrl($url) . '">' . Sanitize::sanitizeTagContent($text) . '</a>';
+        $o = BT::a($url, $text, $this->getClassesStr());
 
         return $o;
         
     }
     
-    public function __construct($text, $link)
+    public function __construct($text, $link, $classes_str = '')
     {
         $this->setText($text);
         $this->setLink($link);
+        $this->setClassesStr($classes_str);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClassesStr()
+    {
+        return $this->classes_str;
+    }
+
+    /**
+     * @param mixed $classes_str
+     */
+    public function setClassesStr($classes_str)
+    {
+        $this->classes_str = $classes_str;
     }
 
     /**

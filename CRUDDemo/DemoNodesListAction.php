@@ -45,14 +45,15 @@ class DemoNodesListAction
                     new CRUDTableWidgetText('{this->getReverseTitle()}')
                 ),
                 new CRUDTableColumn(
-                    'Edit',
+                    '',
                     new CRUDTableWidgetTextWithLink(
-                        '{' . DemoNode::class . '.{this->id}->title}',
-                        DemoNodeEditAction::getUrl('{this->id}')
+                        'Edit',
+                        DemoNodeEditAction::getUrl('{this->id}'),
+                        'btn btn-xs btn-default'
                     )
                 ),
                 new CRUDTableColumn(
-                    'Delete',
+                    '',
                     new CRUDTableWidgetDelete()
                 ),
             ],
