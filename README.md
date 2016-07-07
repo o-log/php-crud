@@ -78,3 +78,58 @@
         'title'
     );
 
+Вот пример кода, который генерирует html редактора объекта:
+
+        $node_obj = DemoNode::factory($node_id);
+
+        $html .= \OLOG\CRUD\CRUDForm::html(
+            $node_obj,
+            [
+                new CRUDFormRow(
+                    'Id',
+                    new CRUDFormWidgetInput('id')
+                ),
+                new CRUDFormRow(
+                    'Title',
+                    new CRUDFormWidgetTextarea('title')
+                ),
+                new CRUDFormRow(
+                    'image_path_in_images nullable',
+                    new CRUDFormWidgetInput('image_path_in_images', true)
+                ),
+                new CRUDFormRow(
+                    'Date',
+                    new CRUDFormWidgetTimestamp('created_at_ts')
+                ),
+                new CRUDFormRow(
+                    'is_published',
+                    new CRUDFormWidgetRadios('is_published', [0 => 'no', 1 => 'yes'])
+                ),
+                new CRUDFormRow(
+                    'published_at_datetime_str',
+                    new CRUDFormWidgetDateTime('published_at_datetime_str')
+                ),
+                new CRUDFormRow(
+                    'expiration_date nullable',
+                    new CRUDFormWidgetDate('expiration_date')
+                ),
+                new CRUDFormRow(
+                    'State code',
+                    new CRUDFormWidgetOptions('state_code',
+                        [
+                            1 => 'announce',
+                            2 => 'live',
+                            3 => 'archive'
+                        ]
+                    )
+                ),
+                new CRUDFormRow(
+                    'State code',
+                    new CRUDFormWidgetHtml('<ul><li>html widget - line 1</li><li>html widget - line 2</li></ul>')
+                ),
+                new CRUDFormVerticalRow(
+                    'Body',
+                    new CRUDFormWidgetAceTextarea('body')
+                )
+            ]
+        );
