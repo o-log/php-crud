@@ -50,7 +50,12 @@ class CRUDCompiler {
                 }
             }
 
-            $str = preg_replace('@{([^}{]+)}@', $replacement, $str);
+            // здесь заменяем только первое вхождение, потому что выше мы обрабатывали только первое вхождение
+            // если не сделать это ограничение - вот такое выражение
+            // new \OLOG\CRUD\CRUDTableWidgetText('{this->video_width}x{this->video_height}'))
+            // выдаст "video_width Х video_width"
+            // т.е. для прочитает первые скобки, а потом два заменит на результат и первые, и вторые
+            $str = preg_replace('@{([^}{]+)}@', $replacement, $str, 1);
         }
 
         return $str;
