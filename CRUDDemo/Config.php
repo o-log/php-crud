@@ -17,7 +17,7 @@ class Config
 
         $conf[ModelConstants::MODULE_CONFIG_ROOT_KEY]['db'] = [
             self::DB_NAME_PHPCRUDDEMO => [
-                'host' => '127.0.0.1',
+                'host' => 'localhost',
                 'db_name' => 'phpcrud',
                 'user' => 'root',
                 'pass' => '1'

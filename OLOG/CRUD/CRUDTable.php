@@ -57,7 +57,9 @@ class CRUDTable
 
         $html .= self::toolbarHtml($create_form_html, $filters_arr);
 
-        $html .= '<table class="table table-hover">';
+		$uniq_id = uniqid();
+
+        $html .= '<table class="table table-hover" id="clickTable' . $uniq_id . '">';
         $html .= '<thead>';
         $html .= '<tr>';
 
@@ -100,6 +102,23 @@ class CRUDTable
 
         $html .= '</tbody>';
         $html .= '</table>';
+
+		$html .= '<script>
+(function () {
+	$("#clickTable' . $uniq_id . '").find("tbody tr").each(function () {
+		var $tr = $(this);
+		var $link = $tr.find("a:first");
+		var url = $link.attr("href");
+		var link_style = "z-index: 1;position: absolute;top: 0;bottom: 0;left: 0;right: 0;display: block;";
+		$tr.find("td").each(function () {
+			var $td = $(this).attr("style","position: relative;");
+			var $childrenTag = $td.find(">*");
+			if ($childrenTag[0] && $childrenTag[0].tagName == "FORM") {return false;}
+			$td.prepend(\'<a href="\' + url + \'" style="\' + link_style + \'"></a>\');
+		});
+	});
+})();
+</script>';
 
         $html .= Pager::renderPager(count($objs_ids_arr));
 
