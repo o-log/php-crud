@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\BT;
+use OLOG\BT\BT;
 use OLOG\Sanitize;
 
 class CRUDTableWidgetTextWithLink implements InterfaceCRUDTableWidget

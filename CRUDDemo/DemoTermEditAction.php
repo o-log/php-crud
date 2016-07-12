@@ -2,7 +2,7 @@
 
 namespace CRUDDemo;
 
-use OLOG\BT;
+use OLOG\BT\BT;
 use OLOG\CRUD\CRUDFormInvisibleRow;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDFormWidgetInput;

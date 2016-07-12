@@ -2,7 +2,7 @@
 
 namespace CRUDDemo;
 
-use OLOG\BT;
+use OLOG\BT\BT;
 
 class DemoMainPageAction
 {

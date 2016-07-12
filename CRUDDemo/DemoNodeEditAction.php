@@ -2,7 +2,7 @@
 
 namespace CRUDDemo;
 
-use OLOG\BT;
+use OLOG\BT\BT;
 use OLOG\CRUD\CRUDFormWidgetDate;
 use OLOG\CRUD\CRUDFormWidgetDateTime;
 use OLOG\CRUD\CRUDFormWidgetHtml;
