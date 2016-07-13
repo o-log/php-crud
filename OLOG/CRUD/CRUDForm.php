@@ -14,7 +14,13 @@ class CRUDForm
     const FIELD_CLASS_NAME = '_FIELD_CLASS_NAME';
     const FIELD_OBJECT_ID = '_FIELD_OBJECT_ID';
 
-    static protected function saveEditorFormOperation(){
+    /**
+     * @param string $url_to_redirect_after_save
+     * @param array $redirect_get_params_arr
+     * @throws \Exception
+     */
+    static protected function saveEditorFormOperation($url_to_redirect_after_save = '', $redirect_get_params_arr = [])
+    {
         $model_class_name = POSTAccess::getRequiredPostValue(self::FIELD_CLASS_NAME);
         $object_id = POSTAccess::getOptionalPostValue(self::FIELD_OBJECT_ID);
 
@@ -36,7 +42,7 @@ class CRUDForm
 
                 // чтение возможных NULL
                 if (array_key_exists($prop_name . "___is_null", $_POST)) {
-                    if ($_POST[$prop_name . "___is_null"]){
+                    if ($_POST[$prop_name . "___is_null"]) {
                         $null_fields_arr[$prop_name] = 1;
                     }
                 }
@@ -61,24 +67,41 @@ class CRUDForm
         \OLOG\Logger\Logger::logObjectEvent($obj, 'CRUD сохранение');
         */
 
+        if ($url_to_redirect_after_save != '') {
+            $redirect_url = $url_to_redirect_after_save;
+
+            $params_arr = [];
+            foreach ($redirect_get_params_arr as $param => $value) {
+                $params_arr[$param] = CRUDCompiler::compile($value, ['this' => $obj]);
+            }
+
+            if (!empty($redirect_get_params_arr)) {
+                $redirect_url = $url_to_redirect_after_save . '?' . http_build_query($params_arr);
+            }
+            \OLOG\Redirects::redirect($redirect_url);
+        }
+
         // keep get form
         \OLOG\Redirects::redirectToSelf();
     }
 
     /**
      * ид объекта может быть пустым - тогда при сохранении формы создаст новый объект
-     * @param $class_name
-     * @param $obj_id
-     * @param $elements_html_arr
+     * @param $obj
+     * @param $element_obj_arr
+     * @param string $url_to_redirect_after_save
+     * @param array $redirect_get_params_arr
      * @return string html-код формы редактирования
+     * @throws \Exception
      */
-    static public function html($obj, $element_obj_arr){
+    static public function html($obj, $element_obj_arr, $url_to_redirect_after_save = '', $redirect_get_params_arr = [])
+    {
         $html = '';
 
         // TODO: transactions??
 
-        Operations::matchOperation(self::OPERATION_SAVE_EDITOR_FORM, function() {
-            self::saveEditorFormOperation();
+        Operations::matchOperation(self::OPERATION_SAVE_EDITOR_FORM, function () use ($url_to_redirect_after_save, $redirect_get_params_arr) {
+            self::saveEditorFormOperation($url_to_redirect_after_save, $redirect_get_params_arr);
         });
 
         $html .= '<form class="form-horizontal" role="form" method="post" action="' . Sanitize::sanitizeUrl(\OLOG\Url::getCurrentUrl()) . '">';
@@ -89,7 +112,7 @@ class CRUDForm
         $html .= '<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue(CRUDFieldsAccess::getObjId($obj)) . '">';
 
         /** @var InterfaceCRUDFormRow $element_obj */
-        foreach ($element_obj_arr as $element_obj){
+        foreach ($element_obj_arr as $element_obj) {
             Assert::assert($element_obj instanceof InterfaceCRUDFormRow);
             $html .= $element_obj->html($obj);
         }
@@ -101,7 +124,7 @@ class CRUDForm
         $html .= '</div>';
 
         $html .= '</form>';
-        
+
         return $html;
     }
 }
