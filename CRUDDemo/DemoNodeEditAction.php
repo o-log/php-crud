@@ -7,6 +7,7 @@ use OLOG\CRUD\CRUDFormWidgetDate;
 use OLOG\CRUD\CRUDFormWidgetDateTime;
 use OLOG\CRUD\CRUDFormWidgetHtml;
 use OLOG\CRUD\CRUDFormWidgetInput;
+use OLOG\CRUD\CRUDFormWidgetMediumEditor;
 use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDFormWidgetRadios;
 use OLOG\Sanitize;
@@ -76,6 +77,10 @@ class DemoNodeEditAction
                     'State code',
                     new CRUDFormWidgetHtml('<ul><li>html widget - line 1</li><li>html widget - line 2</li></ul>')
                 ),
+				new CRUDFormVerticalRow(
+					'Body',
+					new CRUDFormWidgetMediumEditor('body')
+				),
                 new CRUDFormVerticalRow(
                     'Body',
                     new CRUDFormWidgetAceTextarea('body')
