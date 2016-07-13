@@ -31,7 +31,7 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 			';
 			$CRUDFormWidgetMediumEditor_include_script = false;
 		}
-		
+
 		$html = '';
 
 		$html .= '<input type="hidden" id="' . $uniqid . '_input" name="' . Sanitize::sanitizeAttrValue($field_name) . '" val="' . $field_value . '">';
@@ -39,10 +39,7 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 		$html .= '
 			<script>
 				var ' . $uniqid . ' = new MediumEditor("#' . $uniqid . '", {
-					placeholder: {
-							text: \'Текст писать тут\',
-							hideOnClick: true
-						}
+					placeholder: false
 				});
 				
 				' . $uniqid . '.subscribe(\'editableInput\', function (event, editable) {

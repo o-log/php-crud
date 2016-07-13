@@ -78,11 +78,11 @@ class DemoNodeEditAction
                     new CRUDFormWidgetHtml('<ul><li>html widget - line 1</li><li>html widget - line 2</li></ul>')
                 ),
 				new CRUDFormVerticalRow(
-					'Body',
+					'пример Medium Editor',
 					new CRUDFormWidgetMediumEditor('body2')
 				),
                 new CRUDFormVerticalRow(
-                    'Body',
+                    'пример Ace Editor',
                     new CRUDFormWidgetAceTextarea('body')
                 )
             ]
