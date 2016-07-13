@@ -107,7 +107,7 @@ class CRUDTable
 (function () {
 	$("#clickTable' . $uniq_id . '").find("tbody tr").each(function () {
 		var $tr = $(this);
-		if ($tr.find("a").length == 0) {return false;}		
+		if ($tr.find("a").length == 0 || $tr.find("a").length > 1) {return false;}		
 		var $link = $tr.find("a:first");
 		var url = $link.attr("href");
 		var link_style = "z-index: 1;position: absolute;top: 0;bottom: 0;left: 0;right: 0;display: block;";
