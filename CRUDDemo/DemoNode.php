@@ -20,7 +20,17 @@ class DemoNode implements
     protected $published_at_datetime_str = "0001-01-01";
     protected $expiration_date;
     protected $image_path_in_images;
+    protected $body2;
     protected $id;
+
+    public function getBody2(){
+        return $this->body2;
+    }
+
+    public function setBody2($value){
+        $this->body2 = $value;
+    }
+
 
     public function getImagePathInImages(){
         return $this->image_path_in_images;

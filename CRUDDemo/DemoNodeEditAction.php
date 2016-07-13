@@ -79,7 +79,7 @@ class DemoNodeEditAction
                 ),
 				new CRUDFormVerticalRow(
 					'Body',
-					new CRUDFormWidgetMediumEditor('body')
+					new CRUDFormWidgetMediumEditor('body2')
 				),
                 new CRUDFormVerticalRow(
                     'Body',
