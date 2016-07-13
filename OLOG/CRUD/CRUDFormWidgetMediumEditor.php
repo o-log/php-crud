@@ -34,7 +34,7 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 
 		$html = '';
 
-		$html .= '<input type="hidden" id="' . $uniqid . '_input" name="' . Sanitize::sanitizeAttrValue($field_name) . '" val="' . $field_value . '">';
+		$html .= '<textarea id="' . $uniqid . '_textarea" name="' . Sanitize::sanitizeAttrValue($field_name) . '" style="display: none;">' . $field_value . '</textarea>';
 		$html .= '<div id="' . $uniqid . '" class="form-control" style="height: auto;">' . $field_value . '</div>';
 		$html .= '
 			<script>
@@ -44,7 +44,7 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 				
 				' . $uniqid . '.subscribe(\'editableInput\', function (event, editable) {
 					var content = $(editable).html();
-					$(\'#' . $uniqid . '_input\').val(content);
+					$(\'#' . $uniqid . '_textarea\').val(content);
 				});
 			</script>
 		';
