@@ -21,17 +21,7 @@ class DemoNode implements
     protected $expiration_date;
     protected $image_path_in_images;
     protected $body2;
-    protected $gender = 1;
     protected $id;
-
-    public function getGender(){
-        return $this->gender;
-    }
-
-    public function setGender($value){
-        $this->gender = $value;
-    }
-
 
     public function getBody2(){
         return $this->body2;
