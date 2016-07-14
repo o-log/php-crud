@@ -5,6 +5,7 @@ namespace CRUDDemo;
 use OLOG\BT\BT;
 use OLOG\CRUD\CRUDFormInvisibleRow;
 use OLOG\CRUD\CRUDFormRow;
+use OLOG\CRUD\CRUDFormWidgetDate;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilter;
@@ -34,6 +35,10 @@ class DemoTermEditAction
                 new CRUDFormRow(
                     'Title',
                     new CRUDFormWidgetInput('title')
+                ),
+                new CRUDFormRow(
+                    'Gender',
+                    new CRUDFormWidgetDate('gender', false)
                 ),
                 new CRUDFormRow(
                     'Parent id',

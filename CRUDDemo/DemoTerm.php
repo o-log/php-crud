@@ -17,6 +17,7 @@ class DemoTerm implements
 
     protected $id;
     protected $title = '';
+    protected $gender = null;
     protected $parent_id;
 
     /**
@@ -49,6 +50,22 @@ class DemoTerm implements
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param string $gender
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
     }
 
     /**
