@@ -7,6 +7,8 @@ use OLOG\CRUD\CRUDFormInvisibleRow;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDFormWidgetDate;
 use OLOG\CRUD\CRUDFormWidgetInput;
+use OLOG\CRUD\CRUDFormWidgetOptions;
+use OLOG\CRUD\CRUDFormWidgetRadios;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilter;
 use OLOG\CRUD\CRUDTableWidgetDelete;
@@ -39,6 +41,13 @@ class DemoTermEditAction
                 new CRUDFormRow(
                     'Gender',
                     new CRUDFormWidgetDate('gender', false)
+                ),
+                new CRUDFormRow(
+                    'Chooser',
+                    new CRUDFormWidgetRadios('chooser', [
+                        1 => 'one',
+                        2 => 'two'
+                    ], true)
                 ),
                 new CRUDFormRow(
                     'Parent id',

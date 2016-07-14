@@ -3,84 +3,96 @@
 namespace CRUDDemo;
 
 class DemoTerm implements
-    \OLOG\Model\InterfaceFactory,
-    \OLOG\Model\InterfaceLoad,
-    \OLOG\Model\InterfaceSave,
-    \OLOG\Model\InterfaceDelete
+	\OLOG\Model\InterfaceFactory,
+	\OLOG\Model\InterfaceLoad,
+	\OLOG\Model\InterfaceSave,
+	\OLOG\Model\InterfaceDelete
 {
-    use \OLOG\Model\FactoryTrait;
-    use \OLOG\Model\ActiveRecord;
-    use \OLOG\Model\ProtectProperties;
+	use \OLOG\Model\FactoryTrait;
+	use \OLOG\Model\ActiveRecord;
+	use \OLOG\Model\ProtectProperties;
 
-    const DB_ID = 'phpcrud';
-    const DB_TABLE_NAME = 'term';
+	const DB_ID         = 'phpcrud';
+	const DB_TABLE_NAME = 'term';
 
-    protected $id;
-    protected $title = '';
-    protected $gender = null;
-    protected $parent_id;
+	protected $chooser = null;
+	protected $id;
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+	public function getChooser()
+	{
+		return $this->chooser;
+	}
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
+	public function setChooser($value)
+	{
+		$this->chooser = $value;
+	}
 
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
+	protected $title  = '';
+	protected $gender = null;
+	protected $parent_id;
 
-    /**
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
+	/**
+	 * @return int
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
 
-    /**
-     * @return string
-     */
-    public function getGender()
-    {
-        return $this->gender;
-    }
+	/**
+	 * @param int $id
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+	}
 
-    /**
-     * @param string $gender
-     */
-    public function setGender($gender)
-    {
-        $this->gender = $gender;
-    }
+	/**
+	 * @return string
+	 */
+	public function getTitle()
+	{
+		return $this->title;
+	}
 
-    /**
-     * @return mixed
-     */
-    public function getParentId()
-    {
-        return $this->parent_id;
-    }
+	/**
+	 * @param string $title
+	 */
+	public function setTitle($title)
+	{
+		$this->title = $title;
+	}
 
-    /**
-     * @param mixed $parent_id
-     */
-    public function setParentId($parent_id)
-    {
-        $this->parent_id = $parent_id;
-    }
+	/**
+	 * @return string
+	 */
+	public function getGender()
+	{
+		return $this->gender;
+	}
+
+	/**
+	 * @param string $gender
+	 */
+	public function setGender($gender)
+	{
+		$this->gender = $gender;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getParentId()
+	{
+		return $this->parent_id;
+	}
+
+	/**
+	 * @param mixed $parent_id
+	 */
+	public function setParentId($parent_id)
+	{
+		$this->parent_id = $parent_id;
+	}
 }
