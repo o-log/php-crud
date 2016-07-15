@@ -10,7 +10,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
 	protected $options_arr;
 	protected $show_null_checkbox;
 
-	public function __construct($field_name, $options_arr, $show_null_checkbox)
+	public function __construct($field_name, $options_arr, $show_null_checkbox = false)
 	{
 		$this->setFieldName($field_name);
 		$this->setOptionsArr($options_arr);
