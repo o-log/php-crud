@@ -50,6 +50,13 @@ class DemoTermEditAction
                     ], true)
                 ),
                 new CRUDFormRow(
+                    'Options',
+                    new CRUDFormWidgetOptions('options', [
+                        1 => 'one',
+                        2 => 'two'
+                    ], false)
+                ),
+                new CRUDFormRow(
                     'Parent id',
                     new CRUDFormWidgetReference('parent_id', DemoTerm::class, 'title')
                 )

@@ -2,15 +2,35 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\Sanitize;
+
 class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
 {
     protected $field_name;
     protected $options_arr;
+    protected $show_null_checkbox;
 
-    public function __construct($field_name, $options_arr)
+    public function __construct($field_name, $options_arr, $show_null_checkbox)
     {
         $this->setFieldName($field_name);
         $this->setOptionsArr($options_arr);
+        $this->setShowNullCheckbox($show_null_checkbox);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowNullCheckbox()
+    {
+        return $this->show_null_checkbox;
+    }
+
+    /**
+     * @param mixed $show_null_checkbox
+     */
+    public function setShowNullCheckbox($show_null_checkbox)
+    {
+        $this->show_null_checkbox = $show_null_checkbox;
     }
 
     public function html($obj)
@@ -18,7 +38,9 @@ class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
         $field_name = $this->getFieldName();
         $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
-        $options = '<option></option>';
+        $input_cols = $this->getShowNullCheckbox() ? '10' : '12';
+        $options = '<div class="col-sm-' . $input_cols . '">';
+        $options .= '<option></option>';
 
         $options_arr = $this->getOptionsArr();
 
@@ -30,6 +52,23 @@ class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
             }
 
             $options .= '<option value="' .  $value . '"' . $selected_html_attr . '>' . $title . '</option>';
+        }
+        $options .= '</div>';
+
+        $is_null_checked = '';
+        if(is_null($field_value))
+        {
+            $is_null_checked = ' checked ';
+        }
+
+        //return '<select name="' . $field_name . '" class="form-control">' . $options . '</select>';
+        if($this->getShowNullCheckbox())
+        {
+            $options .= '<div class="col-sm-2">
+                    <label class="form-control-static">
+                        <input type = "checkbox" value = "1" name = "' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" ' . $is_null_checked . ' /> null
+                    </label >
+                </div>';
         }
 
         return '<select name="' . $field_name . '" class="form-control">' . $options . '</select>';

@@ -21,4 +21,5 @@ array(
 'alter table node add column body2 text  not null    /* rand664233 */;',
 'alter table term add column gender tinyint(1) unsigned null default null /* rand3424238 */;',
 'alter table term add column chooser tinyint   default null  /* rand583409 */;',
+'alter table term add column options tinyint default null  /* rand31238724 */;',
 )

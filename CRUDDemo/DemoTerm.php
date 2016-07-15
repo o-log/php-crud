@@ -16,7 +16,18 @@ class DemoTerm implements
 	const DB_TABLE_NAME = 'term';
 
 	protected $chooser = null;
+	protected $options = null;
 	protected $id;
+
+	public function getOptions()
+	{
+		return $this->options;
+	}
+
+	public function setOptions($value)
+	{
+		$this->options = $value;
+	}
 
 	public function getChooser()
 	{
