@@ -12,12 +12,35 @@ class DemoTerm implements
     use \OLOG\Model\ActiveRecord;
     use \OLOG\Model\ProtectProperties;
 
-    const DB_ID = 'phpcrud';
+    const DB_ID         = 'phpcrud';
     const DB_TABLE_NAME = 'term';
 
+    protected $chooser = null;
+    protected $options = null;
     protected $id;
-    protected $title = '';
+    protected $title   = '';
+    protected $gender  = null;
     protected $parent_id;
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function setOptions($value)
+    {
+        $this->options = $value;
+    }
+
+    public function getChooser()
+    {
+        return $this->chooser;
+    }
+
+    public function setChooser($value)
+    {
+        $this->chooser = $value;
+    }
 
     /**
      * @return int
@@ -49,6 +72,22 @@ class DemoTerm implements
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param string $gender
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
     }
 
     /**
