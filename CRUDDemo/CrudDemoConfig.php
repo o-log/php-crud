@@ -21,18 +21,5 @@ class CrudDemoConfig
             self::DB_NAME_PHPCRUDDEMO,
             new DBSettings('localhost', 'phpcrud', 'root', '1')
         );
-
-        /*
-        $conf[ModelConstants::MODULE_CONFIG_ROOT_KEY]['db'] = [
-            self::DB_NAME_PHPCRUDDEMO => [
-                'host' => 'localhost',
-                'db_name' => 'phpcrud',
-                'user' => 'root',
-                'pass' => '1'
-            ]
-        ];
-
-        return $conf;
-        */
     }
 }
