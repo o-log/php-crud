@@ -4,7 +4,8 @@ require_once '../vendor/autoload.php';
 
 use \OLOG\Router;
 
-\OLOG\ConfWrapper::assignConfig(\CRUDDemo\Config::get());
+//\OLOG\ConfWrapper::assignConfig(\CRUDDemo\CrudDemoConfig::get());
+\CRUDDemo\CrudDemoConfig::init();
 
 Router::matchAction(\CRUDDemo\DemoMainPageAction::class, 0);
 

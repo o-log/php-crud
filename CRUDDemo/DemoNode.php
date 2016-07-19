@@ -12,7 +12,7 @@ class DemoNode implements
     use \OLOG\Model\ActiveRecord;
     use \OLOG\Model\ProtectProperties;
 
-    const DB_ID = \CRUDDemo\Config::DB_NAME_PHPCRUDDEMO;
+    const DB_ID = \CRUDDemo\CrudDemoConfig::DB_NAME_PHPCRUDDEMO;
     const DB_TABLE_NAME = 'node';
 
     protected $created_at_ts = 0;
