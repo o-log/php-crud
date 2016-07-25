@@ -1,4 +1,4 @@
-пше <?php
+<?php
 
 namespace OLOG\CRUD;
 
