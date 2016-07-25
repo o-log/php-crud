@@ -1,7 +1,8 @@
-<?php
+пше <?php
 
 namespace OLOG\CRUD;
 
+use OLOG\BT\BT;
 use OLOG\Sanitize;
 
 class CRUDFormWidgetReference implements InterfaceCRUDFormWidget
@@ -39,8 +40,6 @@ class CRUDFormWidgetReference implements InterfaceCRUDFormWidget
             $obj = CRUDObjectLoader::createAndLoadObject($referenced_class_name, $id);
             $options_arr[$id] = CRUDFieldsAccess::getObjectFieldValue($obj, $referenced_class_title_field);
         }
-
-        // TODO: send to common options widget?
 
         foreach($options_arr as $value => $title)
         {

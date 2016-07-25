@@ -15,6 +15,7 @@ use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDFormWidgetReference;
 use OLOG\CRUD\CRUDFormWidgetTextarea;
+use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 
 class DemoTermEditAction
 {
@@ -83,7 +84,7 @@ class DemoTermEditAction
                 ]
             ),
             [
-                new CRUDTableColumn('Title', new CRUDTableWidgetText('{this->title}')),
+                new CRUDTableColumn('Title', new CRUDTableWidgetTextWithLink('{this->title}', DemoTermEditAction::getUrl('{this->id}'))),
                 new CRUDTableColumn('Delete', new CRUDTableWidgetDelete())
             ],
             [
