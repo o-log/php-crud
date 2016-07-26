@@ -122,7 +122,7 @@ class Pager
 		<script>
 			(function () {
 				var pagination = $('#<?= $pagination_element_id ?>');
-				var table_id = pagination.closest('div[id^="table_"]').attr('id');
+				var table_id = pagination.closest('div[id^="tableContainer_"]').attr('id');
 				pagination.on('click', 'a', function (e) {
 					e.preventDefault();
 					var url = $(this).attr('href');

@@ -74,13 +74,13 @@ class CRUDTable
         // вывод таблицы
         //
 
-        $html = '<div id="table_' . $table_index_on_page . '">';
+        $html = '<div id="tableContainer_' . $table_index_on_page . '">';
 
         $html .= self::toolbarHtml($create_form_html, $filters_arr);
 
-		$uniq_id = uniqid();
+		$table_element_id = 'clickTable' . uniqid();
 
-		$html .= '<table class="table table-hover" id="clickTable' . $uniq_id . '">';
+		$html .= '<table class="table table-hover" id="' . $table_element_id . '">';
         $html .= '<thead>';
         $html .= '<tr>';
 
@@ -127,7 +127,7 @@ class CRUDTable
 		ob_start();?>
 		<script>
 			(function () {
-				$("#clickTable<?= $uniq_id ?>").find("tbody tr").each(function () {
+				$("#<?= $table_element_id ?>").find("tbody tr").each(function () {
 					var $tr = $(this);
 					// Проверка на наличие ссылки
 					if ($tr.find("a").length == 0) {return false;}
@@ -219,7 +219,7 @@ class CRUDTable
 		<script>
 			(function () {
 				var filter_form = $('#<?= $filters_element_id ?>_form');
-				var table_id = filter_form.closest('div[id^="table_"]').attr('id');
+				var table_id = filter_form.closest('div[id^="tableContainer_"]').attr('id');
 				filter_form.on('submit', function (e) {
 					e.preventDefault();
 					var query = $(this).serialize();
