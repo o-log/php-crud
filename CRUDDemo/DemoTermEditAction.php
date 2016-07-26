@@ -41,10 +41,6 @@ class DemoTermEditAction
                     new CRUDFormWidgetInput('title')
                 ),
                 new CRUDFormRow(
-                    'Gender',
-                    new CRUDFormWidgetDate('gender', false)
-                ),
-                new CRUDFormRow(
                     'Chooser',
                     new CRUDFormWidgetRadios('chooser', [
                         1 => 'one',
@@ -60,7 +56,7 @@ class DemoTermEditAction
                 ),
                 new CRUDFormRow(
                     'Parent id',
-                    new CRUDFormWidgetReferenceAjax('parent_id', DemoAjaxTermsListAction::getUrl())
+                    new CRUDFormWidgetReferenceAjax('parent_id', DemoTerm::class, 'title', DemoAjaxTermsListAction::getUrl())
                 )
             ]
         );
@@ -80,7 +76,7 @@ class DemoTermEditAction
                         new CRUDFormWidgetInput('title')
                     ),
                     new CRUDFormInvisibleRow(
-                        new CRUDFormWidgetReferenceAjax('parent_id', DemoAjaxTermsListAction::getUrl())
+                        new CRUDFormWidgetReferenceAjax('parent_id', DemoTerm::class, 'title', DemoAjaxTermsListAction::getUrl())
                     )
                 ]
             ),

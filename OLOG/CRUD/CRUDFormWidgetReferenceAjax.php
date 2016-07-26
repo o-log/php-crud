@@ -8,25 +8,32 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
 {
     protected $field_name;
     protected $ajax_action_url;
-    //protected $referenced_class_name;
-    //protected $referenced_class_title_field;
+    protected $referenced_class_name;
+    protected $referenced_class_title_field;
 
-    //public function __construct($field_name, $referenced_class_name, $referenced_class_title_field)
-    public function __construct($field_name, $ajax_action_url)
+    public function __construct($field_name, $referenced_class_name, $referenced_class_title_field, $ajax_action_url)
     {
         $this->setFieldName($field_name);
         $this->setAjaxActionUrl($ajax_action_url);
-        //$this->setReferencedClassName($referenced_class_name);
-        //$this->setReferencedClassTitleField($referenced_class_title_field);
+        $this->setReferencedClassName($referenced_class_name);
+        $this->setReferencedClassTitleField($referenced_class_title_field);
     }
 
     public function html($obj)
     {
         $field_name = $this->getFieldName();
-        //$referenced_class_name = $this->getReferencedClassName();
-        //$referenced_class_title_field = $this->getReferencedClassTitleField();
+        $referenced_class_name = $this->getReferencedClassName();
+        $referenced_class_title_field = $this->getReferencedClassTitleField();
 
         $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
+
+        $referenced_obj_title = '';
+
+        if (!is_null($field_value)) {
+            $referenced_obj = CRUDObjectLoader::createAndLoadObject($referenced_class_name, $field_value);
+            $referenced_obj_title = CRUDFieldsAccess::getObjectFieldValue($referenced_obj, $referenced_class_title_field);
+        }
+
 
         $html = '';
 
@@ -37,7 +44,7 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
 		$html .= '<span class="input-group-btn">';
 		$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $choose_form_element_id . '">Выбрать</button>';
 		$html .= '</span>';
-        $html .= '<div id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" class="form-control">' . $field_value . '</div>';
+        $html .= '<div id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" class="form-control">' . $referenced_obj_title . '</div>';
 		$html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '"/>';
         $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null"/>';
         $html .= '<span class="input-group-btn">';
