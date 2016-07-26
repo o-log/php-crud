@@ -138,7 +138,6 @@ class CRUDTable
 
         $html .= '<div class="btn-group" role="group">';
         if ($create_form_html) {
-            //$html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $create_form_element_id . '">Форма создания</button>';
             $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
         }
         if ($filters_arr) {
@@ -147,8 +146,6 @@ class CRUDTable
         $html .= '</div>';
 
         if ($create_form_html) {
-            //$html .= '<div class="collapse" id="' . $create_form_element_id . '">';
-            //$html .= '<div class="well">';
             $html .= '<div class="modal fade" id="' . $create_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -160,18 +157,8 @@ class CRUDTable
 
             $html .= $create_form_html;
 
-            //$html .= '</div>';
-            //$html .= '</div>';
-            $html .= '      </div>';
-            /*
-            $html .= '<div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>';
-            */
-            $html .= '</div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->';
+            $html .= '</div>';
+            $html .= '</div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
         }
 
         if ($filters_arr) {
@@ -179,12 +166,20 @@ class CRUDTable
             $html .= '<div class="well">';
 
             //$html .= $create_form_html;
-            // @var CRUDTableFilter $filter_obj
+            /** @var InterfaceCRUDTableFilter $filter_obj */
             foreach ($filters_arr as $filter_obj){
                 Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
                 
                 // TODO: finish
-                $html .= '<div>' . $filter_obj->getFieldName() . ': ' . $filter_obj->getValue() . '</div>';
+                switch ($filter_obj->getOperationCode()){
+                    case (CRUDTableFilter::FILTER_LIKE):
+                        $html .= '<div>' . $filter_obj->getFieldName() . ': <input type="" value="' . $filter_obj->getValue() . '"></div>';
+                        break;
+
+                    default:
+                        $html .= '<div>' . $filter_obj->getFieldName() . ': ' . $filter_obj->getValue() . '</div>';
+
+                }
             }
 
             $html .= '</div>';
@@ -231,12 +226,17 @@ class CRUDTable
 
             switch ($operation_code) {
                 case CRUDTableFilter::FILTER_EQUAL:
-                    $where .= ' and ' . $column_name . ' = ?';
+                    $where .= ' and ' . $column_name . ' = ? ';
                     $query_param_values_arr[] = $value;
                     break;
 
                 case CRUDTableFilter::FILTER_IS_NULL:
                     $where .= ' and ' . $column_name . ' is null ';
+                    break;
+
+                case CRUDTableFilter::FILTER_LIKE:
+                    $where .= ' and ' . $column_name . ' like ? ';
+                    $query_param_values_arr[] = $value;
                     break;
 
                 default:

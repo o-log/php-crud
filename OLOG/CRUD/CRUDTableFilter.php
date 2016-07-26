@@ -6,7 +6,8 @@ class CRUDTableFilter implements InterfaceCRUDTableFilter
 {
     const FILTER_IS_NULL = 'FILTER_IS_NULL';
     const FILTER_EQUAL = 'FILTER_EQUAL';
-    
+    const FILTER_LIKE = 'FILTER_LIKE';
+
     protected $field_name;
     protected $operation_code;
     protected $value;
