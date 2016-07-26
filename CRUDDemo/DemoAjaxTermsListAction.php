@@ -27,7 +27,7 @@ class DemoAjaxTermsListAction
             [
                 new CRUDTableColumn(
                     '',
-                    new CRUDTableWidgetReferenceSelect()
+                    new CRUDTableWidgetReferenceSelect('title')
                 ),
                 new CRUDTableColumn(
                     'Edit',
@@ -43,7 +43,8 @@ class DemoAjaxTermsListAction
                 )
             ],
             [
-                new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL)
+                new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL),
+                new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '%'),
             ]
         );
 

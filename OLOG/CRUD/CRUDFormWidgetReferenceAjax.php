@@ -77,9 +77,10 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
                 });
             }).on('click', '.js-ajax-form-select', function (e) {
             	e.preventDefault();
-				var select_id = $(this).data('id');
+                var select_id = $(this).data('id');
+                var select_title = $(this).data('title');
 				$('#<?= $choose_form_element_id ?>').modal('hide');
-				$('#<?= $select_element_id ?>_text').text(select_id);
+				$('#<?= $select_element_id ?>_text').text(select_title);
 				$('#<?= $select_element_id ?>').val(select_id);
 				$('#<?= $select_element_id ?>_is_null').val('');
 			});
