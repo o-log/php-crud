@@ -9,6 +9,7 @@ use OLOG\CRUD\CRUDFormWidgetDate;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDFormWidgetRadios;
+use OLOG\CRUD\CRUDFormWidgetReferenceAjax;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilter;
 use OLOG\CRUD\CRUDTableWidgetDelete;
@@ -59,7 +60,7 @@ class DemoTermEditAction
                 ),
                 new CRUDFormRow(
                     'Parent id',
-                    new CRUDFormWidgetReference('parent_id', DemoTerm::class, 'title')
+                    new CRUDFormWidgetReferenceAjax('parent_id', DemoTerm::class, 'title')
                 )
             ]
         );
@@ -79,7 +80,7 @@ class DemoTermEditAction
                         new CRUDFormWidgetInput('title')
                     ),
                     new CRUDFormInvisibleRow(
-                        new CRUDFormWidgetReference('parent_id', DemoTerm::class, 'title')
+                        new CRUDFormWidgetReferenceAjax('parent_id', DemoTerm::class, 'title')
                     )
                 ]
             ),
