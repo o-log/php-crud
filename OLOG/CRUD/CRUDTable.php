@@ -181,17 +181,23 @@ class CRUDTable
         if ($filters_arr) {
             $html .= '<div class="collapse" id="' . $filters_element_id . '">';
             $html .= '<div class="well">';
+			$html .= '<form id="' . $filters_element_id . '_form">';
+			$html .= '<div class="row">';
 
             $filter_index = 0;
 
             /** @var InterfaceCRUDTableFilter $filter_obj */
             foreach ($filters_arr as $filter_obj){
                 Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
-                
+
+				$html .= '<div class="col-md-4">';
+				$html .= '<div class="form-group">';
+
                 // TODO: finish
                 switch ($filter_obj->getOperationCode()){
                     case (CRUDTableFilter::FILTER_LIKE):
-                        $html .= '<div>' . $filter_obj->getFieldName() . ': <input name="filter_' . $filter_index . '" value="' . $filter_obj->getValue() . '"></div>';
+                        $html .= '<label>' . $filter_obj->getFieldName() . ' включает в себя:</label>';
+                        $html .= '<input class="form-control" name="filter_' . $filter_index . '" value="' . $filter_obj->getValue() . '">';
                         break;
 
                     default:
@@ -199,12 +205,39 @@ class CRUDTable
 
                 }
 
+                $html .= '</div>';
+				$html .= '</div>';
                 $filter_index++;
             }
 
+			$html .= '</div>';
+            $html .= '<button type="submit" class="btn btn-default">Поиск</button>';
+			$html .= '</form>';
             $html .= '</div>';
             $html .= '</div>';
         }
+		ob_start();?>
+
+		<script>
+			(function () {
+				var filter_form = $('#<?= $filters_element_id ?>_form');
+
+				filter_form.on('submit', function (e) {
+					e.preventDefault();
+
+					var query = $(this).serialize();
+
+					$.ajax({
+						url: location.href + '?' + query
+					}).success(function(received_html) {
+						$('table[id^="clickTable"]').html($(received_html).find('table[id^="clickTable"]').html());
+					});
+				});
+			})();
+		</script>
+
+		<?php
+		$html .= ob_get_clean();
 
         return $html;
     }
