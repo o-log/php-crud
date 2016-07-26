@@ -6,6 +6,7 @@ use OLOG\Assert;
 use OLOG\Operations;
 use OLOG\POSTAccess;
 use OLOG\Sanitize;
+use OLOG\Url;
 
 class CRUDTable
 {
@@ -39,6 +40,9 @@ class CRUDTable
      */
     static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '')
     {
+        static $table_index_on_page = 1;
+        $table_index_on_page++;
+
         Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
             self::deleteModelOperation($model_class_name);
         });
