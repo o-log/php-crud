@@ -172,6 +172,7 @@ class CRUDTable
 					}).success(function(received_html) {
 						$(table_elem_selector).html($(received_html).find(table_elem_selector).html());
 						$(pagination_elem_selector).html($(received_html).find(pagination_elem_selector).html());
+						clickTableRow();
 					});
 				}
 
