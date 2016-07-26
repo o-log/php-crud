@@ -25,30 +25,6 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
 
         $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
-        $options_html_arr = ['<option value=""></option>'];
-
-        // TODO: check referenced class interfaces
-
-        $referenced_obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
-            $referenced_class_name::DB_ID, // TODO: use common method
-            'select ID from ' . $referenced_class_name::DB_TABLE_NAME . ' order by ID' // TODO: respect custom ID fields
-        );
-
-        $options_arr = [];
-        foreach ($referenced_obj_ids_arr as $id){
-            $obj = CRUDObjectLoader::createAndLoadObject($referenced_class_name, $id);
-            $options_arr[$id] = CRUDFieldsAccess::getObjectFieldValue($obj, $referenced_class_title_field);
-        }
-
-        foreach($options_arr as $value => $title)
-        {
-            $selected_html_attr = '';
-            if ($field_value == $value) {
-                $selected_html_attr = ' selected';
-            }
-
-            $options_html_arr[] = '<option value="' .  $value . '"' . $selected_html_attr . '>' . $title . '</option>'; // TODO: sanitize
-        }
 
         $html = '';
 
@@ -56,10 +32,14 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
 		$create_form_element_id = 'collapse_' . rand(1, 999999);
 
         $html .= '<div class="input-group">';
-        $html .= '<div id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" class="form-control">' . implode('', $options_html_arr) . '</div>';
+		$html .= '<span class="input-group-btn">';
+		$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
+		$html .= '</span>';
+        $html .= '<div id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" class="form-control">' . $field_value . '</div>';
+		$html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '"/>';
         $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null"/>';
         $html .= '<span class="input-group-btn">';
-		$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
+		$html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_is_null" class="btn btn-default" data-toggle="modal">X</button>';
         $html .= '</span>';
         $html .= '</div>';
 
@@ -77,30 +57,17 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
             }).on('click', '.js-ajax-form-select', function (e) {
             	e.preventDefault();
 				var select_id = $(this).data('id');
-				$('#<?= $select_element_id ?>').text(select_id);
-				$('#<?= $select_element_id ?>_is_null').val(select_id);
 				$('#<?= $create_form_element_id ?>').modal('hide');
+				$('#<?= $select_element_id ?>_text').text(select_id);
+				$('#<?= $select_element_id ?>').var(select_id);
+				$('#<?= $select_element_id ?>_is_null').val('');
 			});
-
-			/*
-            var select_element = document.getElementById('<?= $select_element_id ?>');
-            select_element.addEventListener(
-                'change',
-                function(){
-                    var select_element_id = document.getElementById('<?= $select_element_id ?>');
-                    var is_null_element = document.getElementById('<?= $select_element_id ?>_is_null');
-                    var value = select_element_id.options[select_element_id.selectedIndex].value;
-
-                    if (value == ''){
-                        is_null_element.value = '1';
-                    } else {
-                        is_null_element.value = '';
-                    }
-                }
-            );
-
-            select_element.dispatchEvent(new Event('change')); // fire to initialize is_null input on display
-            */
+			$('#<?= $select_element_id ?>_btn_is_null').on('click', function (e) {
+				e.preventDefault();
+				$('#<?= $select_element_id ?>_text').text('');
+				$('#<?= $select_element_id ?>').var('');
+				$('#<?= $select_element_id ?>_is_null').val(1);
+			});
         </script>
 
         <?php
