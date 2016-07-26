@@ -25,10 +25,15 @@ class DemoAjaxTermsListAction
             '',
             [
                 new CRUDTableColumn(
+                    '',
+                    new CRUDTableWidgetText(
+                        'выбрать {this->id}'
+                    )
+                ),
+                new CRUDTableColumn(
                     'Edit',
-                    new CRUDTableWidgetTextWithLink(
-                        '{this->title}',
-                        DemoTermEditAction::getUrl('{this->id}')
+                    new CRUDTableWidgetText(
+                        '{this->title}'
                     )
                 ),
                 new CRUDTableColumn(
