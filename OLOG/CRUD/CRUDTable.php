@@ -40,7 +40,7 @@ class CRUDTable
      */
     static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '')
     {
-        static $table_index_on_page = 1;
+        static $table_index_on_page = 0;
         $table_index_on_page++;
 
         Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
@@ -74,13 +74,15 @@ class CRUDTable
         // вывод таблицы
         //
 
-        $html = '';
+		$table_container_element_id = 'tableContainer_' . $table_index_on_page;
 
-        $html .= self::toolbarHtml($create_form_html, $filters_arr);
+        $html = '<div id="' . $table_container_element_id . '">';
 
-		$uniq_id = uniqid();
+        $html .= self::toolbarHtml($create_form_html, $filters_arr, $table_container_element_id);
 
-        $html .= '<table class="table table-hover" id="clickTable' . $uniq_id . '">';
+		$table_element_id = 'clickTable' . uniqid();
+
+		$html .= '<table class="table table-hover" id="' . $table_element_id . '">';
         $html .= '<thead>';
         $html .= '<tr>';
 
@@ -124,33 +126,37 @@ class CRUDTable
         $html .= '</tbody>';
         $html .= '</table>';
 
-		$html .= '<script>
-(function () {
-	$("#clickTable' . $uniq_id . '").find("tbody tr").each(function () {
-		var $tr = $(this);
-		// Проверка на наличие ссылки
-		if ($tr.find("a").length == 0) {return false;}
-		// Проверка на наличие только одной ссылки
-		if ($tr.find("a").length > 1) {return false;}
-		var $link = $tr.find("a:first");
-		var url = $link.attr("href");
-		var link_style = "z-index: 1;position: absolute;top: 0;bottom: 0;left: 0;right: 0;display: block;";
-		$tr.find("td").each(function () {
-			var $td = $(this).attr("style","position: relative;");
-			var $childrenTag = $td.find(">*");
-			if ($childrenTag[0] && $childrenTag[0].tagName == "FORM") {return false;}
-			$td.prepend(\'<a href="\' + url + \'" style="\' + link_style + \'"></a>\');
-		});
-	});
-})();
-</script>';
+		ob_start();?>
+		<script>
+			(function () {
+				$("#<?= $table_element_id ?>").find("tbody tr").each(function () {
+					var $tr = $(this);
+					// Проверка на наличие ссылки
+					if ($tr.find("a").length == 0) {return false;}
+					// Проверка на наличие только одной ссылки
+					if ($tr.find("a").length > 1) {return false;}
+					var $link = $tr.find("a:first");
+					var url = $link.attr("href");
+					var link_style = "z-index: 1;position: absolute;top: 0;bottom: 0;left: 0;right: 0;display: block;";
+					$tr.find("td").each(function () {
+						var $td = $(this).attr("style","position: relative;");
+						var $childrenTag = $td.find(">*");
+						if ($childrenTag[0] && $childrenTag[0].tagName == "FORM") {return false;}
+						$td.prepend('<a href="' + url + '" style="' + link_style + '"></a>');
+					});
+				});
+			})();
+		</script>
+		<?php
+		$html .= ob_get_clean();
 
-        $html .= Pager::renderPager(count($objs_ids_arr));
+        $html .= Pager::renderPager(count($objs_ids_arr), $table_container_element_id);
+		$html .= '</div>';
 
         return $html;
     }
 
-    static protected function toolbarHtml($create_form_html, $filters_arr)
+    static protected function toolbarHtml($create_form_html, $filters_arr, $table_container_element_id)
     {
         $html = '';
 
@@ -167,19 +173,9 @@ class CRUDTable
         $html .= '</div>';
 
         if ($create_form_html) {
-            $html .= '<div class="modal fade" id="' . $create_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="gridSystemModalLabel">Форма создания</h4>
-      </div>
-      <div class="modal-body">';
-
+            $html .= '<div class="modal fade" id="' . $create_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="gridSystemModalLabel">Форма создания</h4></div><div class="modal-body">';
             $html .= $create_form_html;
-
-            $html .= '</div>';
-            $html .= '</div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
+            $html .= '</div></div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
         }
 
         if ($filters_arr) {
@@ -225,16 +221,14 @@ class CRUDTable
 		<script>
 			(function () {
 				var filter_form = $('#<?= $filters_element_id ?>_form');
-
+				var table_container_element_id = '<?= $table_container_element_id ?>';
 				filter_form.on('submit', function (e) {
 					e.preventDefault();
-
 					var query = $(this).serialize();
-
 					$.ajax({
-						url: location.href + '?' + query
+						url: '<?= Url::getCurrentUrl() ?>?' + query
 					}).success(function(received_html) {
-						$('table[id^="clickTable"]').html($(received_html).find('table[id^="clickTable"]').html());
+						$('#'+table_container_element_id).find('> .table').html($(received_html).find('#'+table_container_element_id).find('> .table').html());
 					});
 				});
 			})();

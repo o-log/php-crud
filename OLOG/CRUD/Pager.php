@@ -77,7 +77,7 @@ class Pager
      * @param int $elements_count
      * @return string
      */
-    static public function renderPager($elements_count = null)
+    static public function renderPager($elements_count = null, $table_container_element_id)
     {
         $pager_needed = false;
         if (self::hasPrevPage()){
@@ -92,7 +92,9 @@ class Pager
             return '';
         }
 
-        $html = "<ul class='pagination'>";
+		$pagination_element_id = 'pagination_' . rand(1, 999999);
+
+        $html = "<ul class='pagination' id='" . $pagination_element_id . "'>";
 
         // TODO: looses existing get form
         $page_url = \OLOG\Url::getCurrentUrlNoGetForm();
@@ -114,6 +116,29 @@ class Pager
         }
 
         $html .= "</ul>";
+
+		ob_start();?>
+
+		<script>
+			(function () {
+				var pagination = $('#<?= $pagination_element_id ?>');
+				var table_container_element_id = '<?= $table_container_element_id ?>';
+				pagination.on('click', 'a', function (e) {
+					e.preventDefault();
+					var url = $(this).attr('href');
+					if (url == "#") {return false;}
+					$.ajax({
+						url: url
+					}).success(function(received_html) {
+						$('#'+table_container_element_id).find('> .table').html($(received_html).find('#'+table_container_element_id).find('> .table').html());
+						$('#'+table_container_element_id).find('> .pagination').html($(received_html).find('#'+table_container_element_id).find('> .pagination').html());
+					});
+				});
+			})();
+		</script>
+
+		<?php
+		$html .= ob_get_clean();
 
         return $html;
     }
