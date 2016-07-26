@@ -56,7 +56,14 @@ class DemoTermEditAction
                 ),
                 new CRUDFormRow(
                     'Parent id',
-                    new CRUDFormWidgetReferenceAjax('parent_id', DemoTerm::class, 'title', DemoAjaxTermsListAction::getUrl())
+                    new CRUDFormWidgetReferenceAjax(
+                        'parent_id',
+                        DemoTerm::class,
+                        'title',
+                        DemoAjaxTermsListAction::getUrl(),
+                        DemoTermEditAction::getUrl(),
+                        ''
+                    )
                 )
             ]
         );
@@ -76,7 +83,7 @@ class DemoTermEditAction
                         new CRUDFormWidgetInput('title')
                     ),
                     new CRUDFormInvisibleRow(
-                        new CRUDFormWidgetReferenceAjax('parent_id', DemoTerm::class, 'title', DemoAjaxTermsListAction::getUrl())
+                        new CRUDFormWidgetReferenceAjax('parent_id', DemoTerm::class, 'title', DemoAjaxTermsListAction::getUrl(), '')
                     )
                 ]
             ),

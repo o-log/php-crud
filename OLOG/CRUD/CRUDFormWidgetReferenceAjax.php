@@ -2,6 +2,7 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\BT\BT;
 use OLOG\Sanitize;
 
 class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
@@ -10,13 +11,15 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
     protected $ajax_action_url;
     protected $referenced_class_name;
     protected $referenced_class_title_field;
+    protected $editor_url;
 
-    public function __construct($field_name, $referenced_class_name, $referenced_class_title_field, $ajax_action_url)
+    public function __construct($field_name, $referenced_class_name, $referenced_class_title_field, $ajax_action_url, $editor_url)
     {
         $this->setFieldName($field_name);
         $this->setAjaxActionUrl($ajax_action_url);
         $this->setReferencedClassName($referenced_class_name);
         $this->setReferencedClassTitleField($referenced_class_title_field);
+        $this->setEditorUrl($editor_url);
     }
 
     public function html($obj)
@@ -52,19 +55,7 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         $html .= '</span>';
         $html .= '</div>';
 
-		$html .= '<div class="modal fade" id="' . $choose_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
-		<div class="modal-dialog" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		<span aria-hidden="true">&times;</span>
-		</button>
-		<h4 class="modal-title" id="gridSystemModalLabel">Выбор</h4>
-		</div>
-		<div class="modal-body"></div>
-		</div>
-		</div>
-		</div>';
+        $html .= BT::modal($choose_form_element_id, 'Выбрать');
 
         ob_start();?>
 
@@ -162,6 +153,22 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
     public function setReferencedClassTitleField($referenced_class_title_field)
     {
         $this->referenced_class_title_field = $referenced_class_title_field;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEditorUrl()
+    {
+        return $this->editor_url;
+    }
+
+    /**
+     * @param mixed $editor_url
+     */
+    public function setEditorUrl($editor_url)
+    {
+        $this->editor_url = $editor_url;
     }
 
 
