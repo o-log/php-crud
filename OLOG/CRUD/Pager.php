@@ -30,7 +30,7 @@ class Pager
         return $page_number;
     }
 
-    static public function getPageSize($default_page_size = 30)
+    static public function getPageSize($default_page_size = 3)
     {
         $page_size = $default_page_size;
         if (array_key_exists('page_size', $_GET)) {
@@ -92,7 +92,9 @@ class Pager
             return '';
         }
 
-        $html = "<ul class='pagination'>";
+		$pagination_element_id = 'pagination_' . rand(1, 999999);
+
+        $html = "<ul class='pagination' id='" . $pagination_element_id . "'>";
 
         // TODO: looses existing get form
         $page_url = \OLOG\Url::getCurrentUrlNoGetForm();
@@ -114,6 +116,29 @@ class Pager
         }
 
         $html .= "</ul>";
+
+		ob_start();?>
+
+		<script>
+			(function () {
+				var pagination = $('#<?= $pagination_element_id ?>');
+				var table_id = pagination.closest('div[id^="table_"]').attr('id');
+				pagination.on('click', 'a', function (e) {
+					e.preventDefault();
+					var url = $(this).attr('href');
+					if (url == "#") {return false;}
+					$.ajax({
+						url: url
+					}).success(function(received_html) {
+						$('#'+table_id).find('> .table').html($(received_html).find('#'+table_id).find('> .table').html());
+						$('#'+table_id).find('> .pagination').html($(received_html).find('#'+table_id).find('> .pagination').html());
+					});
+				});
+			})();
+		</script>
+
+		<?php
+		$html .= ob_get_clean();
 
         return $html;
     }

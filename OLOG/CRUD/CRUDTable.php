@@ -148,8 +148,8 @@ class CRUDTable
 		<?php
 		$html .= ob_get_clean();
 
-		$html .= '</div>';
         $html .= Pager::renderPager(count($objs_ids_arr));
+		$html .= '</div>';
 
         return $html;
     }
