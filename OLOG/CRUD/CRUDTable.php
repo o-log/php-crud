@@ -221,14 +221,14 @@ class CRUDTable
 		<script>
 			(function () {
 				var filter_form = $('#<?= $filters_element_id ?>_form');
-				var table_id = '<?= $table_container_element_id ?>';
+				var table_container_element_id = '<?= $table_container_element_id ?>';
 				filter_form.on('submit', function (e) {
 					e.preventDefault();
 					var query = $(this).serialize();
 					$.ajax({
 						url: '<?= Url::getCurrentUrl() ?>?' + query
 					}).success(function(received_html) {
-						$('#'+table_id).find('> .table').html($(received_html).find('#'+table_id).find('> .table').html());
+						$('#'+table_container_element_id).find('> .table').html($(received_html).find('#'+table_container_element_id).find('> .table').html());
 					});
 				});
 			})();

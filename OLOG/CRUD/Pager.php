@@ -122,7 +122,7 @@ class Pager
 		<script>
 			(function () {
 				var pagination = $('#<?= $pagination_element_id ?>');
-				var table_id = '<?= $table_container_element_id ?>';
+				var table_container_element_id = '<?= $table_container_element_id ?>';
 				pagination.on('click', 'a', function (e) {
 					e.preventDefault();
 					var url = $(this).attr('href');
@@ -130,8 +130,8 @@ class Pager
 					$.ajax({
 						url: url
 					}).success(function(received_html) {
-						$('#'+table_id).find('> .table').html($(received_html).find('#'+table_id).find('> .table').html());
-						$('#'+table_id).find('> .pagination').html($(received_html).find('#'+table_id).find('> .pagination').html());
+						$('#'+table_container_element_id).find('> .table').html($(received_html).find('#'+table_container_element_id).find('> .table').html());
+						$('#'+table_container_element_id).find('> .pagination').html($(received_html).find('#'+table_container_element_id).find('> .pagination').html());
 					});
 				});
 			})();
