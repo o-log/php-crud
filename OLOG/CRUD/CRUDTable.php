@@ -43,6 +43,23 @@ class CRUDTable
             self::deleteModelOperation($model_class_name);
         });
 
+        // override filters values from request
+
+        $filter_index = 0;
+
+        /** @var InterfaceCRUDTableFilter $filter_obj */
+        foreach ($filters_arr as $filter_obj){
+            Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
+
+            $filter_field_name = 'filter_' . $filter_index;
+
+            if (array_key_exists($filter_field_name, $_GET)){
+                $filter_obj->setValue(urldecode($_GET[$filter_field_name]));
+            }
+
+            $filter_index++;
+        }
+
         //
         // готовим список ID объектов для вывода
         //
