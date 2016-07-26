@@ -4,6 +4,7 @@ namespace CRUDDemo;
 
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilter;
+use OLOG\CRUD\CRUDTableWidgetReferenceSelect;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 
@@ -26,9 +27,7 @@ class DemoAjaxTermsListAction
             [
                 new CRUDTableColumn(
                     '',
-                    new CRUDTableWidgetText(
-                        'выбрать {this->id}'
-                    )
+                    new CRUDTableWidgetReferenceSelect()
                 ),
                 new CRUDTableColumn(
                     'Edit',
