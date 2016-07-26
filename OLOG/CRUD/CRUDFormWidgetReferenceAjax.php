@@ -53,49 +53,17 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         $html = '';
 
         $select_element_id = 'js_select_' . rand(1, 999999);
+		$create_form_element_id = 'collapse_' . rand(1, 999999);
 
-        $html .= '<div class="row"><div class="col-md-10">';
-        $html .= '<select id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control">' . implode('', $options_html_arr) . '</select>';
+        $html .= '<div class="input-group">';
+        $html .= '<div id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" class="form-control">' . implode('', $options_html_arr) . '</div>';
         $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null"/>';
-
-
-        $html .= '</div><div class="col-md-2">';
-
-
-
-        $create_form_html = 'FORM';
-        $create_form_element_id = 'collapse_' . rand(1, 999999);
-
-        $html .= '<div class="btn-group" role="group">';
-        if ($create_form_html) {
-            $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
-        }
+        $html .= '<span class="input-group-btn">';
+		$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
+        $html .= '</span>';
         $html .= '</div>';
 
-        $html .= '</div></div>';
-
-        if ($create_form_html) {
-            $html .= '<div class="modal fade" id="' . $create_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="gridSystemModalLabel">Форма создания</h4>
-      </div>
-      <div class="modal-body">';
-
-            $html .= $create_form_html;
-
-            $html .= '</div>';
-            $html .= '</div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
-        }
-
-
-
-
-
-
-
+		$html .= '<div class="modal fade" id="' . $create_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="gridSystemModalLabel">Форма создания</h4></div><div class="modal-body"></div></div></div></div><!-- /.modal -->';
 
         ob_start();?>
 
@@ -106,8 +74,15 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
                 }).success(function(received_html) {
                     $('#<?= $create_form_element_id ?> .modal-body').html(received_html);
                 });
-            });
+            }).on('click', '.js-ajax-form-select', function (e) {
+            	e.preventDefault();
+				var select_id = $(this).data('id');
+				$('#<?= $select_element_id ?>').text(select_id);
+				$('#<?= $select_element_id ?>_is_null').val(select_id);
+				$('#<?= $create_form_element_id ?>').modal('hide');
+			});
 
+			/*
             var select_element = document.getElementById('<?= $select_element_id ?>');
             select_element.addEventListener(
                 'change',
@@ -125,6 +100,7 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
             );
 
             select_element.dispatchEvent(new Event('change')); // fire to initialize is_null input on display
+            */
         </script>
 
         <?php
