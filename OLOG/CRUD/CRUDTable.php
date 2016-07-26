@@ -74,9 +74,11 @@ class CRUDTable
         // вывод таблицы
         //
 
-        $html = '<div id="tableContainer_' . $table_index_on_page . '">';
+		$table_container_element_id = 'tableContainer_' . $table_index_on_page;
 
-        $html .= self::toolbarHtml($create_form_html, $filters_arr);
+        $html = '<div id="' . $table_container_element_id . '">';
+
+        $html .= self::toolbarHtml($create_form_html, $filters_arr, $table_container_element_id);
 
 		$table_element_id = 'clickTable' . uniqid();
 
@@ -148,13 +150,13 @@ class CRUDTable
 		<?php
 		$html .= ob_get_clean();
 
-        $html .= Pager::renderPager(count($objs_ids_arr));
+        $html .= Pager::renderPager(count($objs_ids_arr), $table_container_element_id);
 		$html .= '</div>';
 
         return $html;
     }
 
-    static protected function toolbarHtml($create_form_html, $filters_arr)
+    static protected function toolbarHtml($create_form_html, $filters_arr, $table_container_element_id)
     {
         $html = '';
 
@@ -219,7 +221,7 @@ class CRUDTable
 		<script>
 			(function () {
 				var filter_form = $('#<?= $filters_element_id ?>_form');
-				var table_id = filter_form.closest('div[id^="tableContainer_"]').attr('id');
+				var table_id = '<?= $table_container_element_id ?>';
 				filter_form.on('submit', function (e) {
 					e.preventDefault();
 					var query = $(this).serialize();

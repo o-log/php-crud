@@ -30,7 +30,7 @@ class Pager
         return $page_number;
     }
 
-    static public function getPageSize($default_page_size = 3)
+    static public function getPageSize($default_page_size = 30)
     {
         $page_size = $default_page_size;
         if (array_key_exists('page_size', $_GET)) {
@@ -77,7 +77,7 @@ class Pager
      * @param int $elements_count
      * @return string
      */
-    static public function renderPager($elements_count = null)
+    static public function renderPager($elements_count = null, $table_container_element_id)
     {
         $pager_needed = false;
         if (self::hasPrevPage()){
@@ -122,7 +122,7 @@ class Pager
 		<script>
 			(function () {
 				var pagination = $('#<?= $pagination_element_id ?>');
-				var table_id = pagination.closest('div[id^="tableContainer_"]').attr('id');
+				var table_id = '<?= $table_container_element_id ?>';
 				pagination.on('click', 'a', function (e) {
 					e.preventDefault();
 					var url = $(this).attr('href');
