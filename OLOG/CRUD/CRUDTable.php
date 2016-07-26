@@ -165,7 +165,8 @@ class CRUDTable
             $html .= '<div class="collapse" id="' . $filters_element_id . '">';
             $html .= '<div class="well">';
 
-            //$html .= $create_form_html;
+            $filter_index = 0;
+
             /** @var InterfaceCRUDTableFilter $filter_obj */
             foreach ($filters_arr as $filter_obj){
                 Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
@@ -173,13 +174,15 @@ class CRUDTable
                 // TODO: finish
                 switch ($filter_obj->getOperationCode()){
                     case (CRUDTableFilter::FILTER_LIKE):
-                        $html .= '<div>' . $filter_obj->getFieldName() . ': <input type="" value="' . $filter_obj->getValue() . '"></div>';
+                        $html .= '<div>' . $filter_obj->getFieldName() . ': <input name="filter_' . $filter_index . '" value="' . $filter_obj->getValue() . '"></div>';
                         break;
 
                     default:
                         $html .= '<div>' . $filter_obj->getFieldName() . ': ' . $filter_obj->getValue() . '</div>';
 
                 }
+
+                $filter_index++;
             }
 
             $html .= '</div>';
