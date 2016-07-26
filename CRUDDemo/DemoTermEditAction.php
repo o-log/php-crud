@@ -61,8 +61,7 @@ class DemoTermEditAction
                         DemoTerm::class,
                         'title',
                         DemoAjaxTermsListAction::getUrl(),
-                        DemoTermEditAction::getUrl(),
-                        ''
+                        DemoTermEditAction::getUrl('REFERENCED_ID')
                     )
                 )
             ]
@@ -83,7 +82,7 @@ class DemoTermEditAction
                         new CRUDFormWidgetInput('title')
                     ),
                     new CRUDFormInvisibleRow(
-                        new CRUDFormWidgetReferenceAjax('parent_id', DemoTerm::class, 'title', DemoAjaxTermsListAction::getUrl(), '')
+                        new CRUDFormWidgetReferenceAjax('parent_id', DemoTerm::class, 'title', DemoAjaxTermsListAction::getUrl(), DemoTermEditAction::getUrl('REFERENCED_ID'))
                     )
                 ]
             ),

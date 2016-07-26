@@ -3,6 +3,7 @@
 namespace OLOG\CRUD;
 
 use OLOG\Assert;
+use OLOG\GETAccess;
 use OLOG\Operations;
 use OLOG\POSTAccess;
 use OLOG\Sanitize;
@@ -30,6 +31,10 @@ class CRUDTable
 		\OLOG\Redirects::redirectToSelf();
 	}
 
+	static protected function filterFormFieldName($table_index_on_page, $filter_index){
+		return 'table_' . $table_index_on_page . '_filter_' . $filter_index;
+	}
+
 	/**
 	 * @param $model_class_name
 	 * @param $creation_form_html
@@ -55,7 +60,9 @@ class CRUDTable
 			$CRUDTable_include_script = false;
 		}
 
-		// override filters values from request
+		//
+		// read filters values from request
+		//
 
 		$filter_index = 0;
 
@@ -63,7 +70,7 @@ class CRUDTable
 		foreach ($filters_arr as $filter_obj){
 			Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
 
-			$filter_field_name = 'filter_' . $filter_index;
+			$filter_field_name = self::filterFormFieldName($table_index_on_page, $filter_index);
 
 			if (array_key_exists($filter_field_name, $_GET)){
 				$filter_obj->setValue(urldecode($_GET[$filter_field_name]));
@@ -76,7 +83,7 @@ class CRUDTable
 		// готовим список ID объектов для вывода
 		//
 
-		$objs_ids_arr = self::getObjIdsArrForClassName($model_class_name, $filters_arr, $order_by);
+		$objs_ids_arr = self::getObjIdsArrForClassName($table_index_on_page, $model_class_name, $filters_arr, $order_by);
 
 		//
 		// вывод таблицы
@@ -132,7 +139,7 @@ class CRUDTable
 		$html .= '</tbody>';
 		$html .= '</table>';
 
-		$html .= Pager::renderPager(count($objs_ids_arr));
+		$html .= Pager::renderPager($table_index_on_page, count($objs_ids_arr));
 		$html .= '</div>';
 
 		ob_start();?>
@@ -278,12 +285,12 @@ class CRUDTable
 	 * @param $context_arr array Массив пар "имя поля" - "значение поля"
 	 * @return array Массив идентикаторов объектов.
 	 */
-	static public function getObjIdsArrForClassName($model_class_name, $filters_arr, $order_by = '')
+	static public function getObjIdsArrForClassName($table_index_on_page, $model_class_name, $filters_arr, $order_by = '')
 	{
 		\OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
 
-		$page_size = Pager::getPageSize();
-		$start = Pager::getPageOffset();
+		$page_size = Pager::getPageSize($table_index_on_page);
+		$start = Pager::getPageOffset($table_index_on_page);
 
 		$db_table_name = $model_class_name::DB_TABLE_NAME;
 		$db_id = $model_class_name::DB_ID;

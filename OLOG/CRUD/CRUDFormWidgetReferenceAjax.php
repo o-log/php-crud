@@ -31,6 +31,11 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
         $referenced_obj_title = '';
+        $is_null_value = '';
+
+        if (is_null($field_value)){
+            $is_null_value = "1";
+        }
 
         if (!is_null($field_value)) {
             $referenced_obj = CRUDObjectLoader::createAndLoadObject($referenced_class_name, $field_value);
@@ -48,10 +53,11 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
 		$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $choose_form_element_id . '">Выбрать</button>';
 		$html .= '</span>';
         $html .= '<div id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" class="form-control">' . $referenced_obj_title . '</div>';
-		$html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '"/>';
-        $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null"/>';
+		$html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . $field_value . '"/>';
+        $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" value="' . $is_null_value . '"/>';
         $html .= '<span class="input-group-btn">';
-		$html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_is_null" class="btn btn-default" data-toggle="modal">X</button>';
+        $html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_is_null" class="btn btn-default" data-toggle="modal">X</button>';
+        $html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_link" class="btn btn-default" data-toggle="modal">Перейти</button>';
         $html .= '</span>';
         $html .= '</div>';
 
@@ -75,12 +81,21 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
 				$('#<?= $select_element_id ?>').val(select_id);
 				$('#<?= $select_element_id ?>_is_null').val('');
 			});
+
 			$('#<?= $select_element_id ?>_btn_is_null').on('click', function (e) {
 				e.preventDefault();
 				$('#<?= $select_element_id ?>_text').text('');
 				$('#<?= $select_element_id ?>').val('');
 				$('#<?= $select_element_id ?>_is_null').val(1);
 			});
+
+            $('#<?= $select_element_id ?>_btn_link').on('click', function (e) {
+                var url = '<?= $this->getEditorUrl() ?>';
+                var id = $('#<?= $select_element_id ?>').val();
+                url = url.replace('REFERENCED_ID', id);
+
+                window.location = url;
+            });
         </script>
 
         <?php
