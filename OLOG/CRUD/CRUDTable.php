@@ -37,15 +37,17 @@ class CRUDTable
 
 	/**
 	 * @param $model_class_name
-	 * @param $creation_form_html
-	 * @param $columns_arr
-	 * @param $element_config_arr
-	 * @param array $context_arr
-	 * @throws \Exception
+	 * @param $create_form_html
+	 * @param $column_obj_arr
+	 * @param array $filters_arr
+	 * @param string $order_by
+	 * @return string
 	 */
 	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '')
 	{
 		static $CRUDTable_include_script;
+
+		// индекс - это идентификатор таблицы на странице, к которому привязываются все данные: имена полей формы и т.п.
 		static $table_index_on_page = 0;
 		$table_index_on_page++;
 
@@ -93,7 +95,7 @@ class CRUDTable
 
 		$html = '<div id="' . $table_container_element_id . '">';
 
-		$html .= self::toolbarHtml($create_form_html, $filters_arr);
+		$html .= self::toolbarHtml($table_index_on_page, $create_form_html, $filters_arr);
 
 		$html .= '<table class="table table-hover">';
 		$html .= '<thead>';
@@ -212,7 +214,7 @@ class CRUDTable
 		return $script . $html;
 	}
 
-	static protected function toolbarHtml($create_form_html, $filters_arr)
+	static protected function toolbarHtml($table_index_on_page, $create_form_html, $filters_arr)
 	{
 		$html = '';
 
@@ -246,14 +248,14 @@ class CRUDTable
 			foreach ($filters_arr as $filter_obj){
 				Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
 
-				$html .= '<div class="col-md-4">';
+				$html .= '<div class="col-md-12">';
 				$html .= '<div class="form-group">';
 
 				// TODO: finish
 				switch ($filter_obj->getOperationCode()){
 					case (CRUDTableFilter::FILTER_LIKE):
 						$html .= '<label>' . $filter_obj->getFieldName() . ' включает в себя:</label>';
-						$html .= '<input class="form-control" name="filter_' . $filter_index . '" value="' . $filter_obj->getValue() . '">';
+						$html .= '<input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '">';
 						break;
 
 					default:
@@ -323,7 +325,7 @@ class CRUDTable
 
 				case CRUDTableFilter::FILTER_LIKE:
 					$where .= ' and ' . $column_name . ' like ? ';
-					$query_param_values_arr[] = $value;
+					$query_param_values_arr[] = '%' . $value . '%';
 					break;
 
 				default:

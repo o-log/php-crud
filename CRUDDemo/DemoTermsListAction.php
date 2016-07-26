@@ -58,7 +58,7 @@ class DemoTermsListAction
             ],
             [
                 new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL),
-                new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '%')
+                new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
             ]
         );
 
