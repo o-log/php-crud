@@ -92,13 +92,13 @@ new CRUDTableWidgetText('{this->id}')
 
 К другим объектам, на которые ссылается текущий, можно обратиться следующим образом:
 
-new CRUDTableWidgetText('{DemoTerm.{this->term_id}->title}'))
+new CRUDTableWidgetText('{DemoTerm.{this->term_id}->title}')
 
 Здесь мы выводим название рубрики, связанной с новостью: создаем объект класса DemoTerm с идентификатором, который берем из поля term_id текущего объекта, и выводит его название.
 
 На практике для указания имени класса вместо скаляра стоит использовать автоматические константы, поэтому окончательная запись будет выглядеть так:
 
-new CRUDTableWidgetText('{' . DemoTerm::class . '.{this->term_id}->title}'))
+new CRUDTableWidgetText('{' . DemoTerm::class . '.{this->term_id}->title}')
 
 # Вывод редактора объекта
 
