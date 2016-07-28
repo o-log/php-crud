@@ -245,7 +245,8 @@ class CRUDTable
 
         $html .= '<div class="btn-group" role="group">';
         if ($create_form_html) {
-            $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
+            //$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
+            $html .= '<button type="button" class="btn btn-default" data-toggle="collapse" data-target="#' . $create_form_element_id . '">Создать</button>';
         }
         $html .= '</div>';
 
@@ -255,7 +256,9 @@ class CRUDTable
             $html .= $create_form_html;
             $html .= '</div></div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
             */
-            $html .= BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
+            //$html .= BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
+
+            $html .= '<div class="collapse" id="' . $create_form_element_id . '"><div class="well">' . $create_form_html . '</div></div>';
         }
 
         return $html;
