@@ -17,7 +17,12 @@ class CRUDTable
 	const OPERATION_ADD_MODEL = 'OPERATION_ADD_MODEL';
 	const OPERATION_DELETE_MODEL = 'OPERATION_DELETE_MODEL';
 
-	static protected function deleteModelOperation($model_class_name)
+    const FILTERS_POSITION_LEFT = 'FILTERS_POSITION_LEFT';
+    const FILTERS_POSITION_TOP = 'FILTERS_POSITION_TOP';
+    const FILTERS_POSITION_NONE = 'FILTERS_POSITION_NONE';
+
+
+    static protected function deleteModelOperation($model_class_name)
 	{
 
 		// TODO: transactions??
@@ -68,7 +73,7 @@ class CRUDTable
 	 * @param string $order_by
 	 * @return string
 	 */
-	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '1')
+	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '1', $filters_position = self::FILTERS_POSITION_NONE)
 	{
 
 	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
@@ -103,9 +108,25 @@ class CRUDTable
 
         // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
 		$html = '<div>';
-        $html .= '<div class="' . $table_container_element_id . '">';
+        $html .= '<div class="' . $table_container_element_id . ' row">';
+
+        if ($filters_position == self::FILTERS_POSITION_LEFT) {
+            $html .= '<div class="col-sm-4">';
+            $html .= self::filtersHtml($table_id, $filters_arr);
+            $html .= '</div>';
+        }
+
+        if ($filters_position == self::FILTERS_POSITION_LEFT) {
+            $html .= '<div class="col-sm-8">';
+        } else {
+            $html .= '<div class="col-sm-12">';
+        }
 
 		$html .= self::toolbarHtml($table_id, $create_form_html, $filters_arr);
+
+        if ($filters_position == self::FILTERS_POSITION_TOP) {
+            $html .= self::filtersHtml($table_id, $filters_arr);
+        }
 
 		$html .= '<table class="table table-hover">';
 		$html .= '<thead>';
@@ -153,90 +174,91 @@ class CRUDTable
 
 		$html .= Pager::renderPager($table_id, count($objs_ids_arr));
 
-		$html .= '</div>';
         $html .= '</div>';
-        
+        $html .= '</div>';
+
+        $html .= '</div>';
+
         $html .= '<script>CRUD.Table.init("' . $table_container_element_id . '", "' . Url::getCurrentUrlNoGetForm() . '");</script>';
 
 		return $script . $html;
 	}
 
-	static protected function toolbarHtml($table_index_on_page, $create_form_html, $filters_arr)
-	{
-		$html = '';
+    static protected function filtersHtml($table_index_on_page, $filters_arr)
+    {
+        $html = '';
 
-		$create_form_element_id = 'collapse_' . rand(1, 999999);
-		$filters_element_id = 'collapse_' . rand(1, 999999);
 
-		$html .= '<div class="btn-group" role="group">';
-		if ($create_form_html) {
-			$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
-		}
-		/*
-		if ($filters_arr) {
-			$html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $filters_element_id . '">Фильтры</button>';
-		}
-		*/
-		$html .= '</div>';
+        if ($filters_arr) {
+            $html .= '<div class="well well-sm">';
+            $html .= '<form class="filters-form form-horizontal">';
+            $html .= '<div class="row">';
 
-		if ($create_form_html) {
-		    /*
-			$html .= '<div class="modal fade" id="' . $create_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="gridSystemModalLabel">Форма создания</h4></div><div class="modal-body">';
-			$html .= $create_form_html;
-			$html .= '</div></div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
-		    */
-		    echo BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
-		}
+            $filter_index = 0;
 
-		if ($filters_arr) {
-			//$html .= '<div class="collapse" id="' . $filters_element_id . '">';
-			$html .= '<div class="well well-sm">';
-			$html .= '<form class="filters-form form-horizontal">';
-			$html .= '<div class="row">';
+            /** @var InterfaceCRUDTableFilter $filter_obj */
+            foreach ($filters_arr as $filter_obj){
+                Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
 
-			$filter_index = 0;
+                $html .= '<div class="col-md-12">';
+                $html .= '<div class="form-group">';
 
-			/** @var InterfaceCRUDTableFilter $filter_obj */
-			foreach ($filters_arr as $filter_obj){
-				Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
+                // TODO: finish
+                switch ($filter_obj->getOperationCode()){
+                    case (CRUDTableFilter::FILTER_LIKE):
+                        $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' включает в себя:</label>';
+                        $html .= '<div class="col-sm-8"><input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '"></div>';
+                        break;
 
-				$html .= '<div class="col-md-12">';
-				$html .= '<div class="form-group">';
+                    case (CRUDTableFilter::FILTER_EQUAL):
+                        $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' равно:</label>';
+                        $html .= '<div class="col-sm-8"><input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '"></div>';
+                        break;
 
-				// TODO: finish
-				switch ($filter_obj->getOperationCode()){
-					case (CRUDTableFilter::FILTER_LIKE):
-						$html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' включает в себя:</label>';
-						$html .= '<div class="col-sm-8"><input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '"></div>';
-						break;
-
-					case (CRUDTableFilter::FILTER_EQUAL):
-						$html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' равно:</label>';
-						$html .= '<div class="col-sm-8"><input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '"></div>';
-						break;
-
-					case (CRUDTableFilter::FILTER_IS_NULL):
-						$html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . '</label>';
+                    case (CRUDTableFilter::FILTER_IS_NULL):
+                        $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . '</label>';
                         $html .= '<div class="col-sm-8">IS NULL</div>';
-						break;
+                        break;
 
-					default:
-						throw new \Exception('filter type not supported');
-				}
+                    default:
+                        throw new \Exception('filter type not supported');
+                }
 
-				$html .= '</div>';
-				$html .= '</div>';
-				$filter_index++;
-			}
+                $html .= '</div>';
+                $html .= '</div>';
+                $filter_index++;
+            }
 
-			$html .= '</div>';
-			$html .= '<div class="row"><div class="col-sm-8 col-sm-offset-4"><button style="width: 100%;" type="submit" class="btn btn-default">Поиск</button></div></div>';
-			$html .= '</form>';
-			$html .= '</div>';
-			//$html .= '</div>';
-		}
+            $html .= '</div>';
+            $html .= '<div class="row"><div class="col-sm-8 col-sm-offset-4"><button style="width: 100%;" type="submit" class="btn btn-default">Поиск</button></div></div>';
+            $html .= '</form>';
+            $html .= '</div>';
+        }
 
-		return $html;
-	}
+        return $html;
+    }
+    static protected function toolbarHtml($table_index_on_page, $create_form_html, $filters_arr)
+    {
+        $html = '';
+
+        $create_form_element_id = 'collapse_' . rand(1, 999999);
+
+        $html .= '<div class="btn-group" role="group">';
+        if ($create_form_html) {
+            $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
+        }
+        $html .= '</div>';
+
+        if ($create_form_html) {
+            /*
+            $html .= '<div class="modal fade" id="' . $create_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="gridSystemModalLabel">Форма создания</h4></div><div class="modal-body">';
+            $html .= $create_form_html;
+            $html .= '</div></div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
+            */
+            echo BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
+        }
+
+        return $html;
+    }
 
 }
