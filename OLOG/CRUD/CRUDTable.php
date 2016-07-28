@@ -6,6 +6,7 @@ use OLOG\Assert;
 use OLOG\GETAccess;
 use OLOG\Operations;
 use OLOG\POSTAccess;
+use OLOG\Render;
 use OLOG\Sanitize;
 use OLOG\Url;
 
@@ -31,76 +32,79 @@ class CRUDTable
 		\OLOG\Redirects::redirectToSelf();
 	}
 
-	static protected function filterFormFieldName($table_index_on_page, $filter_index){
-		return 'table_' . $table_index_on_page . '_filter_' . $filter_index;
+	static protected function filterFormFieldName($table_id, $filter_index){
+		return 'table_' . $table_id . '_filter_' . $filter_index;
 	}
 
+
+    static public function readFiltersValuesFromRequest($table_id, $filters_arr)
+    {
+        $filter_index = 0;
+
+        /** @var InterfaceCRUDTableFilter $filter_obj */
+        foreach ($filters_arr as $filter_obj) {
+            Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
+
+            $filter_field_name = self::filterFormFieldName($table_id, $filter_index);
+
+            if (array_key_exists($filter_field_name, $_GET)) {
+                $filter_obj->setValue(urldecode($_GET[$filter_field_name]));
+            }
+
+            $filter_index++;
+        }
+
+        return $filters_arr;
+    }
+
+
 	/**
-	 * @param $model_class_name
+     * table_id - это идентификатор таблицы на странице, к которому привязываются все данные: имена полей формы и т.п.
+     * @param $model_class_name
 	 * @param $create_form_html
 	 * @param $column_obj_arr
 	 * @param array $filters_arr
 	 * @param string $order_by
 	 * @return string
 	 */
-	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_uniq_id = '')
+	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '1')
 	{
+
+	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
+
 		static $CRUDTable_include_script;
-
-		// индекс - это идентификатор таблицы на странице, к которому привязываются все данные: имена полей формы и т.п.
-		static $table_index_on_page_counter = 0;
-		$table_index_on_page_counter++;
-
-		$table_index_on_page = $table_index_on_page_counter;
-		if ($table_uniq_id){
-			$table_index_on_page = $table_uniq_id;
-		}
 
 		Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
 			self::deleteModelOperation($model_class_name);
 		});
 
-
 		$script = '';
+
+		// include script only once per page
 		if(!isset($CRUDTable_include_script)){
 			$script = '<script src="//cdnjs.cloudflare.com/ajax/libs/js-url/2.3.0/url.min.js"></script>';
+
+			$script .= '<script>';
+            $script .= Render::callLocaltemplate('templates/crudtable.js');
+			$script .= '</script>';
+
 			$CRUDTable_include_script = false;
 		}
 
-		//
-		// read filters values from request
-		//
-
-		$filter_index = 0;
-
-		/** @var InterfaceCRUDTableFilter $filter_obj */
-		foreach ($filters_arr as $filter_obj){
-			Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
-
-			$filter_field_name = self::filterFormFieldName($table_index_on_page, $filter_index);
-
-			if (array_key_exists($filter_field_name, $_GET)){
-				$filter_obj->setValue(urldecode($_GET[$filter_field_name]));
-			}
-
-			$filter_index++;
-		}
-
-		//
-		// готовим список ID объектов для вывода
-		//
-
-		$objs_ids_arr = self::getObjIdsArrForClassName($table_index_on_page, $model_class_name, $filters_arr, $order_by);
+        $filters_arr = self::readFiltersValuesFromRequest($table_id, $filters_arr);
+        $objs_ids_arr = CRUDInternalTableObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $order_by);
 
 		//
 		// вывод таблицы
 		//
 
-		$table_container_element_id = 'tableContainer_' . $table_index_on_page;
+		$table_container_element_id = 'tableContainer_' . $table_id;
 
-		$html = '<div id="' . $table_container_element_id . '">';
+        // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
+		$html = '<div>';
+        $html .= '<div class="' . $table_container_element_id . '">';
 
-		$html .= self::toolbarHtml($table_index_on_page, $create_form_html, $filters_arr);
+		$html .= self::toolbarHtml($table_id, $create_form_html, $filters_arr);
 
 		$html .= '<table class="table table-hover">';
 		$html .= '<thead>';
@@ -146,75 +150,12 @@ class CRUDTable
 		$html .= '</tbody>';
 		$html .= '</table>';
 
-		$html .= Pager::renderPager($table_index_on_page, count($objs_ids_arr));
+		$html .= Pager::renderPager($table_id, count($objs_ids_arr));
+
 		$html .= '</div>';
-
-		ob_start();?>
-		<script>
-			(function () {
-				var table_container_element_id = '<?= $table_container_element_id ?>';
-				var filter_elem_selector = '#' + table_container_element_id + ' .filters-form';
-				var table_elem_selector = '#' + table_container_element_id + ' > .table';
-				var pagination_elem_selector = '#' + table_container_element_id + ' > .pagination';
-
-				var filter_params = '';
-				var pagination_params = '';
-
-				var clickTableRow = function () {
-					$(table_elem_selector).find("tbody tr").each(function () {
-						var $tr = $(this);
-						// Проверка на наличие ссылки
-						if ($tr.find("a").length == 0) {return false;}
-						// Проверка на наличие только одной ссылки
-						if ($tr.find("a").length > 1) {return false;}
-						var $link = $tr.find("a:first");
-						var url = $link.attr("href");
-						var link_style = "z-index: 1;position: absolute;top: 0;bottom: 0;left: 0;right: 0;display: block;";
-						$tr.find("td").each(function () {
-							var $td = $(this).attr("style","position: relative;");
-							var $childrenTag = $td.find(">*");
-							if ($childrenTag[0] && $childrenTag[0].tagName == "FORM") {return false;}
-							$td.prepend('<a href="' + url + '" style="' + link_style + '"></a>');
-						});
-					});
-				};
-				clickTableRow();
-
-				var request = function () {
-					$.ajax({
-						url: '<?= Url::getCurrentUrl() ?>?' + filter_params + '&' + pagination_params
-					}).success(function(received_html) {
-						$(table_elem_selector).html($(received_html).find(table_elem_selector).html());
-						$(pagination_elem_selector).html($(received_html).find(pagination_elem_selector).html());
-						clickTableRow();
-					});
-				}
-
-				var filterAjaxLoad = function () {
-					$(filter_elem_selector).on('submit', function (e) {
-						e.preventDefault();
-						var query = $(this).serialize();
-						filter_params = query;
-						request();
-					});
-				};
-				filterAjaxLoad();
-
-				var paginationAjaxLoad = function () {
-					$(pagination_elem_selector).on('click', 'a', function (e) {
-						e.preventDefault();
-						var query = $(this).attr('href');
-						if (query == "#") {return false;}
-						query = url('query', query);
-						pagination_params = query;
-						request();
-					});
-				};
-				paginationAjaxLoad();
-			})();
-		</script>
-		<?php
-		$html .= ob_get_clean();
+        $html .= '</div>';
+        
+        $html .= '<script>CRUD.Table.init("' . $table_container_element_id . '", "' . Url::getCurrentUrlNoGetForm() . '");</script>';
 
 		return $script . $html;
 	}
@@ -246,7 +187,7 @@ class CRUDTable
 		if ($filters_arr) {
 			//$html .= '<div class="collapse" id="' . $filters_element_id . '">';
 			$html .= '<div class="well well-sm">';
-			$html .= '<form class="filters-form">';
+			$html .= '<form class="filters-form form-horizontal">';
 			$html .= '<div class="row">';
 
 			$filter_index = 0;
@@ -261,17 +202,18 @@ class CRUDTable
 				// TODO: finish
 				switch ($filter_obj->getOperationCode()){
 					case (CRUDTableFilter::FILTER_LIKE):
-						$html .= '<label>' . $filter_obj->getFieldName() . ' включает в себя:</label>';
-						$html .= '<input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '">';
+						$html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' включает в себя:</label>';
+						$html .= '<div class="col-sm-8"><input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '"></div>';
 						break;
 
 					case (CRUDTableFilter::FILTER_EQUAL):
-						$html .= '<label>' . $filter_obj->getFieldName() . ' равно:</label>';
-						$html .= '<input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '">';
+						$html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' равно:</label>';
+						$html .= '<div class="col-sm-8"><input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '"></div>';
 						break;
 
 					case (CRUDTableFilter::FILTER_IS_NULL):
-						$html .= '<label>' . $filter_obj->getFieldName() . ' is null</label>';
+						$html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . '</label>';
+                        $html .= '<div class="col-sm-8">IS NULL</div>';
 						break;
 
 					default:
@@ -284,7 +226,7 @@ class CRUDTable
 			}
 
 			$html .= '</div>';
-			$html .= '<button type="submit" class="btn btn-default">Поиск</button>';
+			$html .= '<div class="row"><div class="col-sm-8 col-sm-offset-4"><button style="width: 100%;" type="submit" class="btn btn-default">Поиск</button></div></div>';
 			$html .= '</form>';
 			$html .= '</div>';
 			//$html .= '</div>';
@@ -293,72 +235,4 @@ class CRUDTable
 		return $html;
 	}
 
-	/**
-	 * Возвращает одну страницу списка объектов указанного класса.
-	 * Сортировка: TODO.
-	 * Фильтры: массив $context_arr.
-	 * Как определяется страница: см. Pager.
-	 * @param $model_class_name Имя класса модели
-	 * @param $context_arr array Массив пар "имя поля" - "значение поля"
-	 * @return array Массив идентикаторов объектов.
-	 */
-	static public function getObjIdsArrForClassName($table_index_on_page, $model_class_name, $filters_arr, $order_by = '')
-	{
-		\OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
-
-		$page_size = Pager::getPageSize($table_index_on_page);
-		$start = Pager::getPageOffset($table_index_on_page);
-
-		$db_table_name = $model_class_name::DB_TABLE_NAME;
-		$db_id = $model_class_name::DB_ID;
-
-		$db_id_field_name = CRUDFieldsAccess::getIdFieldName($model_class_name);
-
-		$query_param_values_arr = array();
-
-		$where = ' 1 = 1 ';
-
-		/** @var InterfaceCRUDTableFilter $filter_obj */
-		foreach ($filters_arr as $filter_obj) {
-			Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
-
-			$column_name = $filter_obj->getFieldName();
-			$operation_code = $filter_obj->getOperationCode();
-			$value = $filter_obj->getValue();
-
-			$column_name = preg_replace("/[^a-zA-Z0-9_]+/", "", $column_name);
-
-			switch ($operation_code) {
-				case CRUDTableFilter::FILTER_EQUAL:
-					$where .= ' and ' . $column_name . ' = ? ';
-					$query_param_values_arr[] = $value;
-					break;
-
-				case CRUDTableFilter::FILTER_IS_NULL:
-					$where .= ' and ' . $column_name . ' is null ';
-					break;
-
-				case CRUDTableFilter::FILTER_LIKE:
-					$where .= ' and ' . $column_name . ' like ? ';
-					$query_param_values_arr[] = '%' . $value . '%';
-					break;
-
-				default:
-					throw new \Exception('unknown filter code');
-			}
-		}
-
-		if ($order_by == '') {
-			$order_by = $db_id_field_name;
-		}
-
-		$obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
-			$db_id,
-			"select " . $db_id_field_name . " from " . $db_table_name . ' where ' . $where . ' order by ' . $order_by . ' limit ' . intval($page_size) . ' offset ' . intval($start),
-			$query_param_values_arr
-		);
-
-		return $obj_ids_arr;
-
-	}
 }
