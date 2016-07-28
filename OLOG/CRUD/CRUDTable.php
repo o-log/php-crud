@@ -3,6 +3,7 @@
 namespace OLOG\CRUD;
 
 use OLOG\Assert;
+use OLOG\BT\BT;
 use OLOG\GETAccess;
 use OLOG\Operations;
 use OLOG\POSTAccess;
@@ -179,9 +180,12 @@ class CRUDTable
 		$html .= '</div>';
 
 		if ($create_form_html) {
+		    /*
 			$html .= '<div class="modal fade" id="' . $create_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="gridSystemModalLabel">Форма создания</h4></div><div class="modal-body">';
 			$html .= $create_form_html;
 			$html .= '</div></div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
+		    */
+		    echo BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
 		}
 
 		if ($filters_arr) {
