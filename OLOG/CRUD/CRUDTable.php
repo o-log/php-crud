@@ -255,7 +255,7 @@ class CRUDTable
             $html .= $create_form_html;
             $html .= '</div></div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
             */
-            echo BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
+            $html .= BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
         }
 
         return $html;
