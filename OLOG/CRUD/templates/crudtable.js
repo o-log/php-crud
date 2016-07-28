@@ -37,7 +37,7 @@ CRUD.Table = CRUD.Table || {
 
         filterAjaxLoad: function (table_container_element_id, query_url) {
             var filter_elem_selector = '.' + table_container_element_id + ' .filters-form';
-            var pagination_elem_selector = '.' + table_container_element_id + ' > .pagination';
+            var pagination_elem_selector = '.' + table_container_element_id + ' .pagination';
             $(filter_elem_selector).on('submit', function (e) {
                 e.preventDefault();
                 var params = $(this).serialize();
@@ -51,7 +51,7 @@ CRUD.Table = CRUD.Table || {
 
         paginationAjaxLoad: function (table_container_element_id, query_url) {
             var filter_elem_selector = '.' + table_container_element_id + ' .filters-form';
-            var pagination_elem_selector = '.' + table_container_element_id + ' > .pagination';
+            var pagination_elem_selector = '.' + table_container_element_id + ' .pagination';
             $(pagination_elem_selector).on('click', 'a', function (e) {
                 e.preventDefault();
                 if ($(this).attr('href') == "#") {return false;}
@@ -65,8 +65,8 @@ CRUD.Table = CRUD.Table || {
         },
 
         requestAjax: function (table_container_element_id, query) {
-            var table_elem_selector = '.' + table_container_element_id + ' > .table';
-            var pagination_elem_selector = '.' + table_container_element_id + ' > .pagination';
+            var table_elem_selector = '.' + table_container_element_id + ' .table';
+            var pagination_elem_selector = '.' + table_container_element_id + ' .pagination';
 
 
             $.ajax({
