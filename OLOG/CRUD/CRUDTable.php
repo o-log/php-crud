@@ -43,13 +43,18 @@ class CRUDTable
 	 * @param string $order_by
 	 * @return string
 	 */
-	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '')
+	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_uniq_id = '')
 	{
 		static $CRUDTable_include_script;
 
 		// индекс - это идентификатор таблицы на странице, к которому привязываются все данные: имена полей формы и т.п.
-		static $table_index_on_page = 0;
-		$table_index_on_page++;
+		static $table_index_on_page_counter = 0;
+		$table_index_on_page_counter++;
+
+		$table_index_on_page = $table_index_on_page_counter;
+		if ($table_uniq_id){
+			$table_index_on_page = $table_uniq_id;
+		}
 
 		Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
 			self::deleteModelOperation($model_class_name);
@@ -225,9 +230,11 @@ class CRUDTable
 		if ($create_form_html) {
 			$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
 		}
+		/*
 		if ($filters_arr) {
 			$html .= '<button class="btn btn-default" type="button" data-toggle="collapse" href="#' . $filters_element_id . '">Фильтры</button>';
 		}
+		*/
 		$html .= '</div>';
 
 		if ($create_form_html) {
@@ -237,8 +244,8 @@ class CRUDTable
 		}
 
 		if ($filters_arr) {
-			$html .= '<div class="collapse" id="' . $filters_element_id . '">';
-			$html .= '<div class="well">';
+			//$html .= '<div class="collapse" id="' . $filters_element_id . '">';
+			$html .= '<div class="well well-sm">';
 			$html .= '<form class="filters-form">';
 			$html .= '<div class="row">';
 
@@ -258,11 +265,19 @@ class CRUDTable
 						$html .= '<input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '">';
 						break;
 
+					case (CRUDTableFilter::FILTER_EQUAL):
+						$html .= '<label>' . $filter_obj->getFieldName() . ' равно:</label>';
+						$html .= '<input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '">';
+						break;
+
+					case (CRUDTableFilter::FILTER_IS_NULL):
+						$html .= '<label>' . $filter_obj->getFieldName() . ' is null</label>';
+						break;
+
 					default:
-						$html .= '<div>' . $filter_obj->getFieldName() . ': ' . $filter_obj->getValue() . '</div>';
-
+						throw new \Exception('filter type not supported');
 				}
-
+git
 				$html .= '</div>';
 				$html .= '</div>';
 				$filter_index++;
@@ -272,7 +287,7 @@ class CRUDTable
 			$html .= '<button type="submit" class="btn btn-default">Поиск</button>';
 			$html .= '</form>';
 			$html .= '</div>';
-			$html .= '</div>';
+			//$html .= '</div>';
 		}
 
 		return $html;

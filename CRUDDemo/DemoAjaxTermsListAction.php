@@ -45,7 +45,9 @@ class DemoAjaxTermsListAction
             [
                 new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL),
                 new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '%'),
-            ]
+            ],
+            '',
+            25683745
         );
 
         echo $html;
