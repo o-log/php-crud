@@ -277,7 +277,7 @@ class CRUDTable
 					default:
 						throw new \Exception('filter type not supported');
 				}
-git
+
 				$html .= '</div>';
 				$html .= '</div>';
 				$filter_index++;
