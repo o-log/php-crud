@@ -8,7 +8,6 @@ use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDFormWidgetAceTextarea;
 use OLOG\CRUD\CRUDFormWidgetDate;
 use OLOG\CRUD\CRUDFormWidgetDateTime;
-use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDFormWidgetRadios;
 use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDTable;
