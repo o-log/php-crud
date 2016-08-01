@@ -68,13 +68,11 @@ class CRUDFormWidgetInput implements InterfaceCRUDFormWidget
         $html .= '<div class="col-sm-' . $input_cols . '">';
 
         $is_required_str = '';
-        $required_class = '';
         if ($this->is_required){
             $is_required_str = ' required ';
-            $required_class = ' has-warning ';
         }
 
-        $html .= '<input name="' . Sanitize::sanitizeAttrValue($field_name) . '" ' . $is_required_str . ' class="form-control ' . $required_class . '" value="' . Sanitize::sanitizeAttrValue($field_value) . '"/>';
+        $html .= '<input name="' . Sanitize::sanitizeAttrValue($field_name) . '" ' . $is_required_str . ' class="form-control" value="' . Sanitize::sanitizeAttrValue($field_value) . '"/>';
         $html .= '</div>';
 
         if ($this->getShowNullCheckbox()) {
