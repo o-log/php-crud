@@ -101,6 +101,7 @@ class CRUDForm
         $script = '';
         if(!isset($CRUDForm_include_script)){
             $script = '<script src="//cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>';
+            $script .= '<style>input:required {border: 1px solid #a94442;}</style>';
             $CRUDForm_include_script = false;
         }
 
@@ -134,7 +135,7 @@ class CRUDForm
         $html .= '</div>';
 
         $html .= '</form>';
-        $html .= '<script>$("#"' . $form_element_id . ').validator();</script>';
+        $html .= '<script>$("#' . $form_element_id . '").validator();</script>';
 
         return $script . $html;
     }
