@@ -12,14 +12,16 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
     protected $referenced_class_name;
     protected $referenced_class_title_field;
     protected $editor_url;
+    protected $is_required;
 
-    public function __construct($field_name, $referenced_class_name, $referenced_class_title_field, $ajax_action_url, $editor_url)
+    public function __construct($field_name, $referenced_class_name, $referenced_class_title_field, $ajax_action_url, $editor_url, $is_required = false)
     {
         $this->setFieldName($field_name);
         $this->setAjaxActionUrl($ajax_action_url);
         $this->setReferencedClassName($referenced_class_name);
         $this->setReferencedClassTitleField($referenced_class_title_field);
         $this->setEditorUrl($editor_url);
+        $this->setIsRequired($is_required);
     }
 
     public function html($obj)
@@ -31,6 +33,7 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
         $referenced_obj_title = '';
+        $disabled_btn_link = 'disabled';
         $is_null_value = '';
 
         if (is_null($field_value)){
@@ -40,8 +43,13 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         if (!is_null($field_value)) {
             $referenced_obj = CRUDObjectLoader::createAndLoadObject($referenced_class_name, $field_value);
             $referenced_obj_title = CRUDFieldsAccess::getObjectFieldValue($referenced_obj, $referenced_class_title_field);
+            $disabled_btn_link = '';
         }
 
+        $is_required_str = '';
+        if ($this->is_required){
+            $is_required_str = ' required ';
+        }
 
         $html = '';
 
@@ -56,7 +64,7 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
             $html .= '</span>';
         }
 
-        $html .= '<div id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" class="form-control">' . $referenced_obj_title . '</div>';
+        $html .= '<div><input type="text" style="position: relative;z-index: -1;" class="form-control" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" name="' . Sanitize::sanitizeAttrValue($field_name) . ' " value="' . $referenced_obj_title . '" ' . $is_required_str . '/></div>';
 		$html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . $field_value . '"/>';
         $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" value="' . $is_null_value . '"/>';
         $html .= '<span class="input-group-btn">';
@@ -65,7 +73,7 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
 
         if ($this->getEditorUrl()) {
             $html .= '<span class="input-group-btn">';
-            $html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_link" class="btn btn-default" data-toggle="modal">Перейти</button>';
+            $html .= '<button ' . $disabled_btn_link . ' type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_link" class="btn btn-default" data-toggle="modal">Перейти</button>';
             $html .= '</span>';
         }
 
@@ -87,14 +95,16 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
                 var select_id = $(this).data('id');
                 var select_title = $(this).data('title');
 				$('#<?= $choose_form_element_id ?>').modal('hide');
-				$('#<?= $select_element_id ?>_text').text(select_title);
+				$('#<?= $select_element_id ?>_text').val(select_title).trigger('change');
+                $('#<?= $select_element_id ?>_btn_link').attr('disabled', false);
 				$('#<?= $select_element_id ?>').val(select_id);
 				$('#<?= $select_element_id ?>_is_null').val('');
 			});
 
 			$('#<?= $select_element_id ?>_btn_is_null').on('click', function (e) {
 				e.preventDefault();
-				$('#<?= $select_element_id ?>_text').text('');
+				$('#<?= $select_element_id ?>_text').val('').trigger('change');
+                $('#<?= $select_element_id ?>_btn_link').attr('disabled', true);
 				$('#<?= $select_element_id ?>').val('');
 				$('#<?= $select_element_id ?>_is_null').val(1);
 			});
@@ -112,6 +122,22 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         $html .= ob_get_clean();
 
         return $html;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsRequired()
+    {
+        return $this->is_required;
+    }
+
+    /**
+     * @param mixed $is_required
+     */
+    public function setIsRequired($is_required)
+    {
+        $this->is_required = $is_required;
     }
 
     /**

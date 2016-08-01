@@ -38,21 +38,21 @@ class DemoTermEditAction
             [
                 new CRUDFormRow(
                     'Title',
-                    new CRUDFormWidgetInput('title')
+                    new CRUDFormWidgetInput('title', false, true)
                 ),
                 new CRUDFormRow(
                     'Chooser',
                     new CRUDFormWidgetRadios('chooser', [
                         1 => 'one',
                         2 => 'two'
-                    ], true)
+                    ], true, true)
                 ),
                 new CRUDFormRow(
                     'Options',
                     new CRUDFormWidgetOptions('options', [
                         1 => 'one',
                         2 => 'two'
-                    ], false)
+                    ], false, true)
                 ),
                 new CRUDFormRow(
                     'Parent id',
@@ -61,7 +61,8 @@ class DemoTermEditAction
                         DemoTerm::class,
                         'title',
                         DemoAjaxTermsListAction::getUrl(),
-                        DemoTermEditAction::getUrl('REFERENCED_ID')
+                        DemoTermEditAction::getUrl('REFERENCED_ID'),
+                        true
                     )
                 )
             ]
