@@ -11,12 +11,30 @@ class CRUDTableFilter implements InterfaceCRUDTableFilter
     protected $field_name;
     protected $operation_code;
     protected $value;
-    
-    public function __construct($field_name, $operation_code, $value = null)
+    protected $widget_obj;
+
+    /**
+     * @return mixed
+     */
+    public function getWidgetObj()
+    {
+        return $this->widget_obj;
+    }
+
+    /**
+     * @param mixed $widget_obj
+     */
+    public function setWidgetObj($widget_obj)
+    {
+        $this->widget_obj = $widget_obj;
+    }
+
+    public function __construct($field_name, $operation_code, $value = null, $widget_obj = null)
     {
         $this->setFieldName($field_name);
         $this->setOperationCode($operation_code);
         $this->setValue($value);
+        $this->setWidgetObj($widget_obj);
     }
 
     /**

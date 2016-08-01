@@ -38,9 +38,20 @@ class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
         $field_name = $this->getFieldName();
         $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
+        return $this->htmlForValue($field_value);
+    }
+
+    public function htmlForValue($field_value, $input_name = null)
+    {
+        $field_name = $this->getFieldName();
+
+        if (is_null($input_name)){
+            $input_name = $field_name;
+        }
+
         $input_cols = $this->getShowNullCheckbox() ? '10' : '12';
         $options = '<div class="col-sm-' . $input_cols . '">';
-        $options .= '<option></option>';
+        //$options .= '<option></option>';
 
         $options_arr = $this->getOptionsArr();
 
@@ -61,17 +72,16 @@ class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
             $is_null_checked = ' checked ';
         }
 
-        //return '<select name="' . $field_name . '" class="form-control">' . $options . '</select>';
         if($this->getShowNullCheckbox())
         {
             $options .= '<div class="col-sm-2">
                     <label class="form-control-static">
-                        <input type = "checkbox" value = "1" name = "' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" ' . $is_null_checked . ' /> null
+                        <input type = "checkbox" value = "1" name = "' . Sanitize::sanitizeAttrValue($input_name) . '___is_null" ' . $is_null_checked . ' /> null
                     </label >
                 </div>';
         }
 
-        return '<select name="' . $field_name . '" class="form-control">' . $options . '</select>';
+        return '<select name="' . $input_name . '" class="form-control">' . $options . '</select>';
     }
 
     /**
