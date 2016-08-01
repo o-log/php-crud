@@ -96,12 +96,12 @@ class CRUDForm
      */
     static public function html($obj, $element_obj_arr, $url_to_redirect_after_save = '', $redirect_get_params_arr = [])
     {
-        static $CRUDTable_include_script;
+        static $CRUDForm_include_script;
 
         $script = '';
-        if(!isset($CRUDTable_include_script)){
+        if(!isset($CRUDForm_include_script)){
             $script = '<script src="//cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>';
-            $CRUDTable_include_script = false;
+            $CRUDForm_include_script = false;
         }
 
         // TODO: transactions??
