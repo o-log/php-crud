@@ -5,6 +5,7 @@ namespace OLOG\CRUD;
 use OLOG\Assert;
 use OLOG\Operations;
 use OLOG\POSTAccess;
+use OLOG\Render;
 use OLOG\Sanitize;
 
 class CRUDForm
@@ -100,8 +101,12 @@ class CRUDForm
 
         $script = '';
         if(!isset($CRUDForm_include_script)){
-            $script = '<script src="//cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>';
-            $script .= '<style>input:required {border: 1px solid #a94442;}</style>';
+            $script .= '<script>';
+            $script .= Render::callLocaltemplate('templates/crudform.js');
+            $script .= '</script>';
+            $script .= '<style>';
+            $script .= Render::callLocaltemplate('templates/crudform.css');
+            $script .= '</style>';
             $CRUDForm_include_script = false;
         }
 
@@ -135,7 +140,7 @@ class CRUDForm
         $html .= '</div>';
 
         $html .= '</form>';
-        $html .= '<script>$("#' . $form_element_id . '").validator();</script>';
+        $html .= '<script>CRUD.Form.init("' . $form_element_id . '");</script>';
 
         return $script . $html;
     }

@@ -5,6 +5,11 @@ namespace CRUDDemo;
 use OLOG\BT\BT;
 use OLOG\CRUD\CRUDForm;
 use OLOG\CRUD\CRUDFormRow;
+use OLOG\CRUD\CRUDFormWidgetAceTextarea;
+use OLOG\CRUD\CRUDFormWidgetDate;
+use OLOG\CRUD\CRUDFormWidgetDateTime;
+use OLOG\CRUD\CRUDFormWidgetOptions;
+use OLOG\CRUD\CRUDFormWidgetRadios;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilter;
 use OLOG\CRUD\CRUDTableWidgetDelete;
@@ -34,6 +39,20 @@ class DemoTermsListAction
                     new CRUDFormRow(
                         'Title',
                         new CRUDFormWidgetInput('title', false, true)
+                    ),
+                    new CRUDFormRow(
+                        'Chooser',
+                        new CRUDFormWidgetRadios('chooser', [
+                            1 => 'one',
+                            2 => 'two'
+                        ], true, true)
+                    ),
+                    new CRUDFormRow(
+                        'Options',
+                        new CRUDFormWidgetOptions('options', [
+                            1 => 'one',
+                            2 => 'two'
+                        ], false, true)
                     )
                 ]
             ),

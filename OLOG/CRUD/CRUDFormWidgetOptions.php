@@ -9,12 +9,30 @@ class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
     protected $field_name;
     protected $options_arr;
     protected $show_null_checkbox;
+    protected $is_required;
 
-    public function __construct($field_name, $options_arr, $show_null_checkbox = false)
+    public function __construct($field_name, $options_arr, $show_null_checkbox = false, $is_required = false)
     {
         $this->setFieldName($field_name);
         $this->setOptionsArr($options_arr);
         $this->setShowNullCheckbox($show_null_checkbox);
+        $this->setIsRequired($is_required);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsRequired()
+    {
+        return $this->is_required;
+    }
+
+    /**
+     * @param mixed $is_required
+     */
+    public function setIsRequired($is_required)
+    {
+        $this->is_required = $is_required;
     }
 
     /**
@@ -71,7 +89,12 @@ class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
                 </div>';
         }
 
-        return '<select name="' . $field_name . '" class="form-control">' . $options . '</select>';
+        $is_required_str = '';
+        if ($this->is_required){
+            $is_required_str = ' required ';
+        }
+
+        return '<select name="' . $field_name . '" class="form-control" ' . $is_required_str . '>' . $options . '</select>';
     }
 
     /**
