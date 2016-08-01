@@ -17,19 +17,20 @@ CRUD.Form = CRUD.Form || {
 		required: function (form_element_id) {
 			var $form = $('#' + form_element_id);
 			var required_class = 'required-class';
-			$form.find(':required').each(function () {
+			$form.find('[required]').each(function () {
 				var $this = $(this);
+				var $field = ($this.data('field')) ? $('#' + $this.data('field')) : $this;
 				$this.on('change keyup blur', function () {
 					if (CRUD.Form.validator(form_element_id, $this) == true) {
 						if ($this.attr('type') != 'radio') {
-							$this.removeClass(required_class);
+							$field.removeClass(required_class);
 						} else {
 							var radio_name = $this.attr('name');
 							$form.find('[name="' + radio_name + '"]').removeClass(required_class);
 						}
 					} else {
 						if ($this.attr('type') != 'radio') {
-							$this.addClass(required_class);
+							$field.addClass(required_class);
 						} else {
 							var radio_name = $this.attr('name');
 							$form.find('[name="' + radio_name + '"]').addClass(required_class);
@@ -41,7 +42,7 @@ CRUD.Form = CRUD.Form || {
 
 		validator: function (form_element_id, $required_elem) {
 			var $form = $('#' + form_element_id);
-			var $required = $required_elem || ':required';
+			var $required = $required_elem || '[required]';
 			var errors = [];
 			$form.find($required).each(function () {
 				var $this = $(this);

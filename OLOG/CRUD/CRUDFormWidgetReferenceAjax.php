@@ -64,8 +64,8 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
             $html .= '</span>';
         }
 
-        $html .= '<div><input type="text" style="position: relative;z-index: -1;" class="form-control" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" name="' . Sanitize::sanitizeAttrValue($field_name) . ' " value="' . $referenced_obj_title . '" ' . $is_required_str . '/></div>';
-		$html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . $field_value . '"/>';
+        $html .= '<div class="form-control" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text">' . $referenced_obj_title . '</div>';
+		$html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" ' . $is_required_str . '/>';
         $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" value="' . $is_null_value . '"/>';
         $html .= '<span class="input-group-btn">';
         $html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_is_null" class="btn btn-default" data-toggle="modal">X</button>';
@@ -95,17 +95,17 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
                 var select_id = $(this).data('id');
                 var select_title = $(this).data('title');
 				$('#<?= $choose_form_element_id ?>').modal('hide');
-				$('#<?= $select_element_id ?>_text').val(select_title).trigger('change');
+				$('#<?= $select_element_id ?>_text').text(select_title);
                 $('#<?= $select_element_id ?>_btn_link').attr('disabled', false);
-				$('#<?= $select_element_id ?>').val(select_id);
+				$('#<?= $select_element_id ?>').val(select_id).trigger('change');
 				$('#<?= $select_element_id ?>_is_null').val('');
 			});
 
 			$('#<?= $select_element_id ?>_btn_is_null').on('click', function (e) {
 				e.preventDefault();
-				$('#<?= $select_element_id ?>_text').val('').trigger('change');
+				$('#<?= $select_element_id ?>_text').text('');
                 $('#<?= $select_element_id ?>_btn_link').attr('disabled', true);
-				$('#<?= $select_element_id ?>').val('');
+				$('#<?= $select_element_id ?>').val('').trigger('change');
 				$('#<?= $select_element_id ?>_is_null').val(1);
 			});
 
