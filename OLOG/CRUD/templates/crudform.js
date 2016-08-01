@@ -19,7 +19,6 @@ CRUD.Form = CRUD.Form || {
 			var required_class = 'required-class';
 			$form.find(':required').each(function () {
 				var $this = $(this);
-				$this.addClass(required_class);
 				$this.on('change keyup blur', function () {
 					if (CRUD.Form.validator(form_element_id, $this) == true) {
 						if ($this.attr('type') != 'radio') {
@@ -36,7 +35,7 @@ CRUD.Form = CRUD.Form || {
 							$form.find('[name="' + radio_name + '"]').addClass(required_class);
 						}
 					}
-				});
+				}).trigger('change');
 			});
 		},
 
