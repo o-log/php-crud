@@ -104,9 +104,7 @@ class CRUDForm
             $script .= '<script>';
             $script .= Render::callLocaltemplate('templates/crudform.js');
             $script .= '</script>';
-            $script .= '<style>';
-            $script .= Render::callLocaltemplate('templates/crudform.css');
-            $script .= '</style>';
+            $script .= '<style>.required-class {border: 1px solid red;}.required-class[type="radio"]:before {font-size: 1em;content: \'*\';color: red;}</style>';
             $CRUDForm_include_script = false;
         }
 
