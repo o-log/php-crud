@@ -8,6 +8,23 @@ class CRUDFormWidgetInput implements InterfaceCRUDFormWidget
 {
     protected $field_name;
     protected $show_null_checkbox;
+    protected $is_required;
+
+    /**
+     * @return mixed
+     */
+    public function getIsRequired()
+    {
+        return $this->is_required;
+    }
+
+    /**
+     * @param mixed $is_required
+     */
+    public function setIsRequired($is_required)
+    {
+        $this->is_required = $is_required;
+    }
 
     /**
      * @return mixed
@@ -26,10 +43,11 @@ class CRUDFormWidgetInput implements InterfaceCRUDFormWidget
     }
 
 
-    public function __construct($field_name, $show_null_checkbox = false)
+    public function __construct($field_name, $show_null_checkbox = false, $is_required = false)
     {
         $this->setFieldName($field_name);
         $this->setShowNullCheckbox($show_null_checkbox);
+        $this->setIsRequired($is_required);
     }
 
     public function html($obj)
@@ -42,14 +60,19 @@ class CRUDFormWidgetInput implements InterfaceCRUDFormWidget
             $is_null_checked = ' checked ';
         }
 
-        //return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" rows="1">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
         $html = '';
 
         $input_cols = $this->getShowNullCheckbox() ? '10' : '12';
 
         $html .= '<div class="row">';
         $html .= '<div class="col-sm-' . $input_cols . '">';
-        $html .= '<input name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control" value="' . Sanitize::sanitizeAttrValue($field_value) . '"/>';
+
+        $is_required_str = '';
+        if ($this->is_required){
+            $is_required_str = ' required ';
+        }
+
+        $html .= '<input name="' . Sanitize::sanitizeAttrValue($field_name) . '" ' . $is_required_str . ' class="form-control" value="' . Sanitize::sanitizeAttrValue($field_value) . '"/>';
         $html .= '</div>';
 
         if ($this->getShowNullCheckbox()) {

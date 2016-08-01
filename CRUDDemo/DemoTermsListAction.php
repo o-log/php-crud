@@ -33,7 +33,7 @@ class DemoTermsListAction
                 [
                     new CRUDFormRow(
                         'Title',
-                        new CRUDFormWidgetInput('title')
+                        new CRUDFormWidgetInput('title', false, true)
                     )
                 ]
             ),
