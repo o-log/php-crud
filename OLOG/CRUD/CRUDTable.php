@@ -220,6 +220,11 @@ class CRUDTable
                         $html .= '<div class="col-sm-8">IS NULL</div>';
                         break;
 
+                    case (CRUDTableFilter::FILTER_IN):
+                        $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . '</label>';
+                        $html .= '<div class="col-sm-8">IN ' . implode(', ', $filter_obj->getValue()) . '</div>';
+                        break;
+
                     default:
                         throw new \Exception('filter type not supported');
                 }

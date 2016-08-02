@@ -56,6 +56,19 @@ class CRUDInternalTableObjectsSelector
                     $query_param_values_arr[] = '%' . $value . '%';
                     break;
 
+                case CRUDTableFilter::FILTER_IN:
+                    if (count($value)) {
+                        $in_placeholders_arr = [];
+
+                        foreach ($value as $in_single_value) {
+                            $in_placeholders_arr[] = '?';
+                            $query_param_values_arr[] = $in_single_value;
+                        }
+
+                        $where .= ' and ' . $column_name . ' in (' . implode(', ', $in_placeholders_arr) . ') ';
+                    }
+                    break;
+
                 default:
                     throw new \Exception('unknown filter code');
             }
