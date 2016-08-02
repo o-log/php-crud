@@ -10,7 +10,7 @@ CRUD.Table = CRUD.Table || {
         },
 
         clickTableRow: function (table_container_element_id) {
-            var table_elem_selector = '.' + table_container_element_id + ' > .table';
+            var table_elem_selector = '.' + table_container_element_id + ' .table';
             $(table_elem_selector).find("tbody tr").each(function () {
                 var $tr = $(this);
                 // Проверка на наличие ссылки
