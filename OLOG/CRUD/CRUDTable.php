@@ -206,13 +206,25 @@ class CRUDTable
                 // TODO: finish
                 switch ($filter_obj->getOperationCode()){
                     case (CRUDTableFilter::FILTER_LIKE):
-                        $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' включает в себя:</label>';
+                        $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' содержит:</label>';
                         $html .= '<div class="col-sm-8"><input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '"></div>';
                         break;
 
                     case (CRUDTableFilter::FILTER_EQUAL):
                         $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' равно:</label>';
-                        $html .= '<div class="col-sm-8"><input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '"></div>';
+                        $html .= '<div class="col-sm-8">';
+
+                        $input_name = self::filterFormFieldName($table_index_on_page, $filter_index);
+
+                        if ($filter_obj->getWidgetObj()) {
+                            /** @var InterfaceCRUDFormWidget $widget_obj */
+                            $widget_obj = $filter_obj->getWidgetObj();
+                            $html .= $widget_obj->htmlForValue($filter_obj->getValue(), $input_name);
+                        } else {
+                            $html .= '<input class="form-control" name="' . $input_name . '" value="' . $filter_obj->getValue() . '">';
+                        }
+
+                        $html .= '</div>';
                         break;
 
                     case (CRUDTableFilter::FILTER_IS_NULL):
@@ -256,13 +268,7 @@ class CRUDTable
         $html .= '</div>';
 
         if ($create_form_html) {
-            /*
-            $html .= '<div class="modal fade" id="' . $create_form_element_id . '" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="gridSystemModalLabel">Форма создания</h4></div><div class="modal-body">';
-            $html .= $create_form_html;
-            $html .= '</div></div><!-- /.modal-content --></div><!-- /.modal-dialog --></div><!-- /.modal -->';
-            */
             //$html .= BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
-
             $html .= '<div class="collapse" id="' . $create_form_element_id . '"><div class="well">' . $create_form_html . '</div></div>';
         }
 

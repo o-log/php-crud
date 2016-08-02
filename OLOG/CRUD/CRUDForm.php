@@ -5,6 +5,7 @@ namespace OLOG\CRUD;
 use OLOG\Assert;
 use OLOG\Operations;
 use OLOG\POSTAccess;
+use OLOG\Render;
 use OLOG\Sanitize;
 
 class CRUDForm
@@ -96,7 +97,16 @@ class CRUDForm
      */
     static public function html($obj, $element_obj_arr, $url_to_redirect_after_save = '', $redirect_get_params_arr = [])
     {
-        $html = '';
+        static $CRUDForm_include_script;
+
+        $script = '';
+        if(!isset($CRUDForm_include_script)){
+            $script .= '<script>';
+            $script .= Render::callLocaltemplate('templates/crudform.js');
+            $script .= '</script>';
+            $script .= '<style>.required-class {border: 1px solid red;}.required-class[type="radio"]:before {font-size: 1em;content: \'*\';color: red;}</style>';
+            $CRUDForm_include_script = false;
+        }
 
         // TODO: transactions??
 
@@ -104,7 +114,11 @@ class CRUDForm
             self::saveEditorFormOperation($url_to_redirect_after_save, $redirect_get_params_arr);
         });
 
-        $html .= '<form class="form-horizontal" role="form" method="post" action="' . Sanitize::sanitizeUrl(\OLOG\Url::getCurrentUrl()) . '">';
+        $form_element_id = 'formElem_' . uniqid();
+
+        $html = '';
+
+        $html .= '<form id="' . $form_element_id . '" class="form-horizontal" role="form" method="post" action="' . Sanitize::sanitizeUrl(\OLOG\Url::getCurrentUrl()) . '">';
 
         $html .= Operations::operationCodeHiddenField(self::OPERATION_SAVE_EDITOR_FORM);
 
@@ -124,7 +138,8 @@ class CRUDForm
         $html .= '</div>';
 
         $html .= '</form>';
+        $html .= '<script>CRUD.Form.init("' . $form_element_id . '");</script>';
 
-        return $html;
+        return $script . $html;
     }
 }

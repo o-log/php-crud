@@ -9,13 +9,31 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
 	protected $field_name;
 	protected $options_arr;
 	protected $show_null_checkbox;
+    protected $is_required;
 
-	public function __construct($field_name, $options_arr, $show_null_checkbox = false)
+	public function __construct($field_name, $options_arr, $show_null_checkbox = false, $is_required = false)
 	{
 		$this->setFieldName($field_name);
 		$this->setOptionsArr($options_arr);
 		$this->setShowNullCheckbox($show_null_checkbox);
+        $this->setIsRequired($is_required);
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getIsRequired()
+    {
+        return $this->is_required;
+    }
+
+    /**
+     * @param mixed $is_required
+     */
+    public function setIsRequired($is_required)
+    {
+        $this->is_required = $is_required;
+    }
 
 	/**
 	 * @return mixed
@@ -63,7 +81,12 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
 				$selected_html_attr = ' checked ';
 			}
 
-			$options .= '<label class="radio-inline"><input type="radio" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . Sanitize::sanitizeAttrValue($value) . '" ' . $selected_html_attr . ' > ' . $title . '</label>';
+            $is_required_str = '';
+            if ($this->is_required){
+                $is_required_str = ' required ';
+            }
+
+			$options .= '<label class="radio-inline"><input type="radio" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . Sanitize::sanitizeAttrValue($value) . '" ' . $selected_html_attr . ' ' . $is_required_str . ' > ' . $title . '</label>';
 		}
 		$options .= '</div>';
 

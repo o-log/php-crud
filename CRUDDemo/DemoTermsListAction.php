@@ -5,6 +5,12 @@ namespace CRUDDemo;
 use OLOG\BT\BT;
 use OLOG\CRUD\CRUDForm;
 use OLOG\CRUD\CRUDFormRow;
+use OLOG\CRUD\CRUDFormWidgetAceTextarea;
+use OLOG\CRUD\CRUDFormWidgetDate;
+use OLOG\CRUD\CRUDFormWidgetDateTime;
+use OLOG\CRUD\CRUDFormWidgetRadios;
+use OLOG\CRUD\CRUDFormWidgetOptions;
+use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilter;
 use OLOG\CRUD\CRUDTableWidgetDelete;
@@ -33,7 +39,21 @@ class DemoTermsListAction
                 [
                     new CRUDFormRow(
                         'Title',
-                        new CRUDFormWidgetInput('title')
+                        new CRUDFormWidgetInput('title', false, true)
+                    ),
+                    new CRUDFormRow(
+                        'Chooser',
+                        new CRUDFormWidgetRadios('chooser', [
+                            1 => 'one',
+                            2 => 'two'
+                        ], true, true)
+                    ),
+                    new CRUDFormRow(
+                        'Options',
+                        new CRUDFormWidgetOptions('options', [
+                            1 => 'one',
+                            2 => 'two'
+                        ], false, true)
                     )
                 ]
             ),
@@ -58,8 +78,12 @@ class DemoTermsListAction
             ],
             [
                 new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL),
+                new CRUDTableFilter('vocabulary_id', CRUDTableFilter::FILTER_EQUAL, DemoTerm::VOCABULARY_MAIN, new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR)),
                 new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
-            ]
+            ],
+            null,
+            '8726438755234',
+            CRUDTable::FILTERS_POSITION_TOP
         );
 
         DemoLayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());
