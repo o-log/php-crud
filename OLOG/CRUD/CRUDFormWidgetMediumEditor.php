@@ -36,18 +36,26 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 
 		$html .= '<textarea id="' . $uniqid . '_textarea" name="' . Sanitize::sanitizeAttrValue($field_name) . '" style="display: none;">' . $field_value . '</textarea>';
 		$html .= '<div id="' . $uniqid . '" class="form-control" style="height: auto;">' . $field_value . '</div>';
-		$html .= '
+        ob_start();?>
 			<script>
-				var ' . $uniqid . ' = new MediumEditor("#' . $uniqid . '", {
-					placeholder: false
+				var <?= $uniqid ?> = new MediumEditor("#<?= $uniqid ?>", {
+					placeholder: false,
+                    paste: {
+                        forcePlainText: true,
+                        cleanPastedHTML: false,
+                        cleanReplacements: [],
+                        cleanAttrs: ['class', 'style', 'dir'],
+                        cleanTags: ['meta']
+                    }
 				});
-				
-				' . $uniqid . '.subscribe(\'editableInput\', function (event, editable) {
+
+                <?= $uniqid ?>.subscribe('editableInput', function (event, editable) {
 					var content = $(editable).html();
-					$(\'#' . $uniqid . '_textarea\').val(content);
+					$('#<?= $uniqid ?>_textarea').val(content);
 				});
 			</script>
-		';
+		<?php
+        $html .= ob_get_clean();
 
 		return $script . $html;
 	}
