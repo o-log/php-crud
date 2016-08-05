@@ -38,7 +38,7 @@ class CRUDFieldsAccess
             }
         }
 
-        \OLOG\Assert::assert($field_prop_obj);
+        \OLOG\Assert::assert($field_prop_obj, 'Field "' . $field_name . '" not found in object. Object class: "' . $obj_class_name . '"');
 
         $field_prop_obj->setAccessible(true);
         return $field_prop_obj->getValue($obj);
