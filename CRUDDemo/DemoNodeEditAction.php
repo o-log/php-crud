@@ -3,6 +3,7 @@
 namespace CRUDDemo;
 
 use OLOG\BT\BT;
+use OLOG\CRUD\CRUDFormRowHtml;
 use OLOG\CRUD\CRUDFormWidgetDate;
 use OLOG\CRUD\CRUDFormWidgetDateTime;
 use OLOG\CRUD\CRUDFormWidgetHtml;
@@ -59,6 +60,7 @@ class DemoNodeEditAction
                     'published_at_datetime_str',
                     new CRUDFormWidgetDateTime('published_at_datetime_str')
                 ),
+                new CRUDFormRowHtml('<h2>Extra fields</h2>'),
                 new CRUDFormRow(
                     'expiration_date nullable',
                     new CRUDFormWidgetDate('expiration_date')
