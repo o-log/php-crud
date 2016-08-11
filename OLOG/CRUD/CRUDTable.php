@@ -84,6 +84,15 @@ class CRUDTable
         return $filters_arr;
     }
 
+    static public function executeOperations($model_class_name){
+        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
+            self::deleteModelOperation($model_class_name);
+        });
+
+        Operations::matchOperation(self::OPERATION_SWAP_MODEL_WEIGHT, function () use ($model_class_name) {
+            self::swapModelWeightOperation($model_class_name);
+        });
+    }
 
 	/**
      * table_id - это идентификатор таблицы на странице, к которому привязываются все данные: имена полей формы и т.п.
@@ -101,13 +110,7 @@ class CRUDTable
 
 		static $CRUDTable_include_script;
 
-        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
-            self::deleteModelOperation($model_class_name);
-        });
-
-        Operations::matchOperation(self::OPERATION_SWAP_MODEL_WEIGHT, function () use ($model_class_name) {
-            self::swapModelWeightOperation($model_class_name);
-        });
+        self::executeOperations($model_class_name);
 
         $script = '';
 
