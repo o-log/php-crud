@@ -5,6 +5,7 @@ namespace OLOG\CRUD;
 use OLOG\Assert;
 use OLOG\BT\BT;
 use OLOG\GETAccess;
+use OLOG\Model\InterfaceWeight;
 use OLOG\Operations;
 use OLOG\POSTAccess;
 use OLOG\Render;
@@ -15,7 +16,8 @@ class CRUDTable
 {
 	const KEY_LIST_COLUMNS = 'LIST_COLUMNS';
 	const OPERATION_ADD_MODEL = 'OPERATION_ADD_MODEL';
-	const OPERATION_DELETE_MODEL = 'OPERATION_DELETE_MODEL';
+    const OPERATION_DELETE_MODEL = 'OPERATION_DELETE_MODEL';
+    const OPERATION_SWAP_MODEL_WEIGHT = 'OPERATION_SWAP_MODEL_WEIGHT';
 
     const FILTERS_POSITION_LEFT = 'FILTERS_POSITION_LEFT';
     const FILTERS_POSITION_TOP = 'FILTERS_POSITION_TOP';
@@ -23,22 +25,41 @@ class CRUDTable
 
 
     static protected function deleteModelOperation($model_class_name)
-	{
+    {
+        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
 
-		// TODO: transactions??
+        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
+        $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
 
-		\OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
+        $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
+        $obj->delete();
 
-		$model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
-		$model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
+        \OLOG\Redirects::redirectToSelf();
+    }
 
-		$obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
-		$obj->delete();
+    static protected function swapModelWeightOperation($model_class_name)
+    {
+        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceWeight::class);
 
-		\OLOG\Redirects::redirectToSelf();
-	}
+        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
+        $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
 
-	static protected function filterFormFieldName($table_id, $filter_index){
+        $context_fields_names_str = POSTAccess::getRequiredPostValue(CRUDTableWidgetWeight::FORMFIELD_CONTEXT_FIELDS_NAME);
+        $context_fields_names_arr = explode(',', $context_fields_names_str);
+
+        $context_arr = [];
+        foreach ($context_fields_names_arr as $context_field_name){
+            $context_arr[$context_field_name] = NullablePostFields::optionalFieldValue($context_field_name);
+        }
+
+        /** @var InterfaceWeight $obj */
+        $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
+        $obj->swapWeights($context_arr);
+
+        \OLOG\Redirects::redirectToSelf();
+    }
+
+    static protected function filterFormFieldName($table_id, $filter_index){
 		return 'table_' . $table_id . '_filter_' . $filter_index;
 	}
 
@@ -80,11 +101,15 @@ class CRUDTable
 
 		static $CRUDTable_include_script;
 
-		Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
-			self::deleteModelOperation($model_class_name);
-		});
+        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
+            self::deleteModelOperation($model_class_name);
+        });
 
-		$script = '';
+        Operations::matchOperation(self::OPERATION_SWAP_MODEL_WEIGHT, function () use ($model_class_name) {
+            self::swapModelWeightOperation($model_class_name);
+        });
+
+        $script = '';
 
 		// include script only once per page
 		if(!isset($CRUDTable_include_script)){

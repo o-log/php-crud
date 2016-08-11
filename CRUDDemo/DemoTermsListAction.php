@@ -18,6 +18,7 @@ use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDFormWidgetTextarea;
+use OLOG\CRUD\CRUDTableWidgetWeight;
 
 class DemoTermsListAction
 {
@@ -72,6 +73,14 @@ class DemoTermsListAction
                     )
                 ),
                 new CRUDTableColumn(
+                    'weight',
+                    new CRUDTableWidgetWeight(
+                        [
+                            'parent_id' => null
+                        ]
+                    )
+                ),
+                new CRUDTableColumn(
                     'Delete',
                     new CRUDTableWidgetDelete()
                 )
@@ -81,7 +90,7 @@ class DemoTermsListAction
                 new CRUDTableFilter('vocabulary_id', CRUDTableFilter::FILTER_EQUAL, DemoTerm::VOCABULARY_MAIN, new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR)),
                 new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
             ],
-            null,
+            'weight',
             '8726438755234',
             CRUDTable::FILTERS_POSITION_TOP
         );

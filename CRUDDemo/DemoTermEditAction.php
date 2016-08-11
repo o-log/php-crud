@@ -17,6 +17,7 @@ use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDFormWidgetReference;
 use OLOG\CRUD\CRUDFormWidgetTextarea;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
+use OLOG\CRUD\CRUDTableWidgetWeight;
 
 class DemoTermEditAction
 {
@@ -41,6 +42,10 @@ class DemoTermEditAction
                     new CRUDFormWidgetInput('title', false, true)
                 ),
                 new CRUDFormRow(
+                    'weight',
+                    new CRUDFormWidgetInput('weight', false, true)
+                ),
+                new CRUDFormRow(
                     'Chooser',
                     new CRUDFormWidgetRadios('chooser', [
                         1 => 'one',
@@ -61,8 +66,8 @@ class DemoTermEditAction
                         DemoTerm::class,
                         'title',
                         DemoAjaxTermsListAction::getUrl(),
-                        DemoTermEditAction::getUrl('REFERENCED_ID'),
-                        true
+                        DemoTermEditAction::getUrl('REFERENCED_ID')
+
                     )
                 )
             ]
@@ -89,11 +94,14 @@ class DemoTermEditAction
             ),
             [
                 new CRUDTableColumn('Title', new CRUDTableWidgetTextWithLink('{this->title}', DemoTermEditAction::getUrl('{this->id}'))),
+                new CRUDTableColumn('Weight', new CRUDTableWidgetWeight(['parent_id' => $term_id])),
                 new CRUDTableColumn('Delete', new CRUDTableWidgetDelete())
             ],
             [
                 new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_EQUAL, $term_id)
-            ]
+            ],
+            'weight'
+
         );
 
         DemoLayoutTemplate::render($html, 'Term ' . $term_id, self::breadcrumbsArr($term_id));

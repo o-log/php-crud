@@ -2,15 +2,20 @@
 
 namespace CRUDDemo;
 
+use OLOG\Model\InterfaceWeight;
+use OLOG\Model\WeightTrait;
+
 class DemoTerm implements
     \OLOG\Model\InterfaceFactory,
     \OLOG\Model\InterfaceLoad,
     \OLOG\Model\InterfaceSave,
-    \OLOG\Model\InterfaceDelete
+    \OLOG\Model\InterfaceDelete,
+    InterfaceWeight
 {
     use \OLOG\Model\FactoryTrait;
     use \OLOG\Model\ActiveRecordTrait;
     use \OLOG\Model\ProtectPropertiesTrait;
+    use WeightTrait;
 
     const DB_ID         = 'phpcrud';
     const DB_TABLE_NAME = 'term';
@@ -28,7 +33,24 @@ class DemoTerm implements
     protected $chooser = null;
     protected $options = null;
     protected $vocabulary_id = 1;
+    protected $weight = 0;
     protected $id;
+
+    public function beforeSave(){
+        $this->initWeight(
+            ['parent_id' => $this->getParentId()]
+        );
+    }
+
+    public function getWeight(){
+        return $this->weight;
+    }
+
+    public function setWeight($value){
+        $this->weight = $value;
+    }
+
+
 
     static public function getIdsArrForVocabularyIdByCreatedAtDesc($value, $offset = 0, $page_size = 30){
         if (is_null($value)) {
