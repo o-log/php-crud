@@ -24,11 +24,11 @@ class CRUDTable
     const FILTERS_POSITION_NONE = 'FILTERS_POSITION_NONE';
 
 
-    static protected function deleteModelOperation($model_class_name)
+    static protected function deleteModelOperation()
     {
+        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
         \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
 
-        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
         $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
 
         $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
@@ -37,11 +37,11 @@ class CRUDTable
         \OLOG\Redirects::redirectToSelf();
     }
 
-    static protected function swapModelWeightOperation($model_class_name)
+    static protected function swapModelWeightOperation()
     {
+        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
         \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceWeight::class);
 
-        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
         $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
 
         $context_fields_names_str = POSTAccess::getRequiredPostValue(CRUDTableWidgetWeight::FORMFIELD_CONTEXT_FIELDS_NAME);
@@ -84,13 +84,13 @@ class CRUDTable
         return $filters_arr;
     }
 
-    static public function executeOperations($model_class_name){
-        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () use ($model_class_name) {
-            self::deleteModelOperation($model_class_name);
+    static public function executeOperations(){
+        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () {
+            self::deleteModelOperation();
         });
 
-        Operations::matchOperation(self::OPERATION_SWAP_MODEL_WEIGHT, function () use ($model_class_name) {
-            self::swapModelWeightOperation($model_class_name);
+        Operations::matchOperation(self::OPERATION_SWAP_MODEL_WEIGHT, function () {
+            self::swapModelWeightOperation();
         });
     }
 
@@ -110,7 +110,7 @@ class CRUDTable
 
 		static $CRUDTable_include_script;
 
-        self::executeOperations($model_class_name);
+        self::executeOperations();
 
         $script = '';
 
