@@ -26,25 +26,14 @@ class CRUDFormWidgetDate implements InterfaceCRUDFormWidget
 
         /* Нужно изменить на нах CDN */
         $script = '';
-        $uniqid = uniqid('CRUDFormWidgetDate_');
         if (!isset($CRUDFormWidgetDate_include_script)) {
             $script = '
-                <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
-                <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/locale/ru.js"></script>
-                <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
-                <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
+								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/locale/ru.js"></script>
+				<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
+								<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
 			';
             $CRUDFormWidgetDate_include_script = false;
-        }
-
-        $is_null_checked = '';
-        if (is_null($field_value)) {
-            $is_null_checked = ' checked ';
-        }
-
-        $field_value_attr = '';
-        if ($field_value) {
-            $field_value_attr = date('d-m-Y', strtotime($field_value));
         }
 
         $is_required_str = '';
@@ -52,47 +41,74 @@ class CRUDFormWidgetDate implements InterfaceCRUDFormWidget
             $is_required_str = ' required ';
         }
 
+        $field_value_attr = '';
+        if ($field_value) {
+            $field_value_attr = date('d-m-Y', strtotime($field_value));
+        }
+
+        $uniqid = uniqid('CRUDFormWidgetDate_');
         $input_cols = $this->getShowNullCheckbox() ? '10' : '12';
 
         $html = '';
-        $html .= '
-            <input type="hidden" id="' . $uniqid . '_input" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . Sanitize::sanitizeTagContent($field_value) . '" data-field="' . $uniqid . '_date" ' . $is_required_str . '>
-            <div class="row">
-                <div class="col-sm-' . $input_cols . '">
-                    <div class="input-group date" id="' . $uniqid . '">
-                        <input id="' . $uniqid . '_date" type="text" class="form-control" value="' . $field_value_attr . '">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
-                </div>
-        ';
-
-        if ($this->getShowNullCheckbox()) {
-            $html .= '
-                <div class="col-sm-2">
-                    <label class="form-control-static">
-                        <input type = "checkbox" value = "1" name = "' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" ' . $is_null_checked . ' /> null
-                    </label >
-                </div>
-            ';
-        }
-        $html .= '</div>';
+        $html .= '<div class="row">';
+        $html .= '<div class="col-sm-' . $input_cols . '">';
 
         ob_start(); ?>
+        <input type="hidden" id="<?= $uniqid ?>_input" name="<?= Sanitize::sanitizeAttrValue($field_name) ?>" value="<?= Sanitize::sanitizeTagContent($field_value) ?>" data-field="<?= $uniqid ?>_date" <?= $is_required_str ?>>
+        <div class="input-group date" id="<?= $uniqid ?>">
+            <input id="<?= $uniqid ?>_date" type="text" class="form-control" value="<?= $field_value_attr ?>">
+            <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+        </div>
         <script>
             $("#<?= $uniqid ?>").datetimepicker({
                 format: "DD-MM-YYYY",
                 sideBySide: true,
                 showTodayButton: true
-            }).on(
-                "dp.change", function (obj) {
+            }).on("dp.change", function(obj){
+                if (obj.date) {
                     $("#<?= $uniqid ?>_input").val(obj.date.format("YYYY-MM-DD")).trigger('change');
                 }
-            );
+            });
         </script>
         <?php
         $html .= ob_get_clean();
+        $html .= '</div>';
+
+        if ($this->getShowNullCheckbox()) {
+
+            $is_null_checked = '';
+            if (is_null($field_value)) {
+                $is_null_checked = ' checked ';
+            }
+            ob_start(); ?>
+            <div class="col-sm-2">
+                <label class="form-control-static">
+                    <input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= Sanitize::sanitizeAttrValue($field_name) ?>___is_null" <?= $is_null_checked ?>> NULL
+                </label>
+            </div>
+            <script>
+                (function () {
+                    var $input_is_null = $('#<?= $uniqid ?>___is_null');
+
+                    $("#<?= $uniqid ?>_input").on('change', function () {
+                        $input_is_null.prop('checked',false);
+                    });
+
+                    $input_is_null.on('change', function () {
+                        if ($(this).is(':checked')) {
+                            $('#<?= $uniqid ?>').data("DateTimePicker").clear();
+                            $('#<?= $uniqid ?>_input').val('');
+                        }
+                    });
+                })();
+            </script>
+            <?php
+            $html .= ob_get_clean();
+        }
+
+        $html .= '</div>';
 
         return $script . $html;
     }
