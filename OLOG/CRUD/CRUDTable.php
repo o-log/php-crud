@@ -8,6 +8,7 @@ use OLOG\GETAccess;
 use OLOG\Model\InterfaceWeight;
 use OLOG\Operations;
 use OLOG\POSTAccess;
+use OLOG\Redirects;
 use OLOG\Render;
 use OLOG\Sanitize;
 use OLOG\Url;
@@ -26,13 +27,19 @@ class CRUDTable
 
     static protected function deleteModelOperation()
     {
-        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
+        $model_class_name = POSTAccess::getRequiredPostValue(CRUDTableWidgetDelete::FIELD_CLASS_NAME);
         \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
 
-        $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
+        $model_id = POSTAccess::getRequiredPostValue(CRUDTableWidgetDelete::FIELD_OBJECT_ID);
 
         $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
         $obj->delete();
+
+        $redirect_url = POSTAccess::getOptionalPostValue(CRUDTableWidgetDelete::FIELD_REDIRECT_AFTER_DELETE_URL, '');
+
+        if ($redirect_url != ''){
+            Redirects::redirect($redirect_url);
+        }
 
         \OLOG\Redirects::redirectToSelf();
     }
