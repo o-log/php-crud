@@ -225,7 +225,7 @@ class CRUDTable
 
 
         if ($filters_arr) {
-            $html .= '<div class="well well-sm">';
+            $html .= '<div class="">';
             $html .= '<form class="filters-form form-horizontal">';
             $html .= '<div class="row">';
 
