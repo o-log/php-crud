@@ -24,6 +24,17 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
         $field_name = $this->getFieldName();
         $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
+        return self::htmlForValue($field_value);
+    }
+
+    public function htmlForValue($field_value, $input_name = null)
+    {
+        $field_name = $this->getFieldName();
+
+        if (is_null($input_name)){
+            $input_name = $field_name;
+        }
+
         $uniqid = uniqid('CRUDFormWidgetRadios_');
         $input_cols = $this->getShowNullCheckbox() ? '10' : '12';
 
@@ -44,7 +55,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
                 $is_required_str = ' required ';
             }
 
-            $html .= '<label class="radio-inline"><input type="radio" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . Sanitize::sanitizeAttrValue($value) . '" ' . $selected_html_attr . ' ' . $is_required_str . ' > ' . $title . '</label>';
+            $html .= '<label class="radio-inline"><input type="radio" name="' . Sanitize::sanitizeAttrValue($input_name) . '" value="' . Sanitize::sanitizeAttrValue($value) . '" ' . $selected_html_attr . ' ' . $is_required_str . ' > ' . $title . '</label>';
         }
         $html .= '</div>';
 
@@ -57,7 +68,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
             ob_start(); ?>
             <div class="col-sm-2">
                 <label class="form-control-static">
-                    <input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= Sanitize::sanitizeAttrValue($field_name) ?>___is_null" <?= $is_null_checked ?>> NULL
+                    <input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= Sanitize::sanitizeAttrValue($input_name) ?>___is_null" <?= $is_null_checked ?>> NULL
                 </label>
             </div>
             <script>
