@@ -37,7 +37,7 @@ class CRUDTableWidgetWeight implements InterfaceCRUDTableWidget
         $o .= '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
         $o .= '<input type="hidden" name="_id" value="' . Sanitize::sanitizeAttrValue(CRUDFieldsAccess::getObjId($obj)) . '">';
 
-        $o .= $obj->getWeight() . ' <button class="btn btn-xs btn-default" type="submit">вверх</button>';
+        $o .= '<button class="btn btn-xs btn-default" type="submit"><span class="glyphicon glyphicon-arrow-up"></span></button>';
 
         $o .= '</form>';
 
