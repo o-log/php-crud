@@ -11,28 +11,30 @@ CRUD.Table = CRUD.Table || {
 
         clickTableRow: function (table_container_element_id) {
             var table_elem_selector = '.' + table_container_element_id + ' .table';
-            $(table_elem_selector).find("tbody tr").each(function () {
-                var $tr = $(this);
-                // Проверка на наличие ссылки
-                if ($tr.find("a").length == 0) {
-                    return false;
-                }
-                // Проверка на наличие только одной ссылки
-                if ($tr.find("a").length > 1) {
-                    return false;
-                }
-                var $link = $tr.find("a:first");
-                var url = $link.attr("href");
-                var link_style = "z-index: 1;position: absolute;top: 0;bottom: 0;left: 0;right: 0;display: block;";
-                $tr.find("td").each(function () {
-                    var $td = $(this).attr("style", "position: relative;");
-                    var $childrenTag = $td.find(">*");
-                    if ($childrenTag[0] && $childrenTag[0].tagName == "FORM") {
-                        return false;
-                    }
-                    $td.prepend('<a href="' + url + '" style="' + link_style + '"></a>');
-                });
-            });
+            $(table_elem_selector).each(function () {
+				$(this).find("tbody tr").each(function () {
+					var $tr = $(this);
+					// Проверка на наличие ссылки
+					if ($tr.find("a").length == 0) {
+						return false;
+					}
+					// Проверка на наличие только одной ссылки
+					if ($tr.find("a").length > 1) {
+						return false;
+					}
+					var $link = $tr.find("a:first");
+					var url = $link.attr("href");
+					var link_style = "z-index: 1;position: absolute;top: 0;bottom: 0;left: 0;right: 0;display: block;";
+					$tr.find("td").each(function () {
+						var $td = $(this).attr("style", "position: relative;");
+						var $childrenTag = $td.find(">*");
+						if ($childrenTag[0] && $childrenTag[0].tagName == "FORM") {
+							return false;
+						}
+						$td.prepend('<a href="' + url + '" style="' + link_style + '"></a>');
+					});
+				});
+			});
         },
 
         filterAjaxLoad: function (table_container_element_id, query_url) {
