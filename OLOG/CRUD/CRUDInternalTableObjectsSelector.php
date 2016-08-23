@@ -6,6 +6,46 @@ use OLOG\Assert;
 
 class CRUDInternalTableObjectsSelector
 {
+    static public function getRecursiveObjIdsArrForClassName($model_class_name, $parent_id_field_name, $order_by = '', $parent_id = null, $depth = 0)
+    {
+        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
+
+        $db_table_name = $model_class_name::DB_TABLE_NAME;
+        $db_id = $model_class_name::DB_ID;
+
+        $db_id_field_name = CRUDFieldsAccess::getIdFieldName($model_class_name);
+
+        $query_param_values_arr = array();
+
+        $where = ' 1 = 1 ';
+
+        if (is_null($parent_id)){
+            $where .= ' and ' . $parent_id_field_name . ' is null ';
+        } else {
+            $where .= ' and ' . $parent_id_field_name . ' = ? ';
+            $query_param_values_arr[] = $parent_id;
+        }
+
+        if ($order_by == '') {
+            $order_by = $db_id_field_name;
+        }
+
+        $obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
+            $db_id,
+            "select " . $db_id_field_name . " from " . $db_table_name . ' where ' . $where . ' order by ' . $order_by,
+            $query_param_values_arr
+        );
+
+        $output_arr = [];
+
+        foreach ($obj_ids_arr as $fetched_obj_id){
+            $output_arr[] = ['id' => $fetched_obj_id, 'depth' => $depth];
+            $output_arr = array_merge($output_arr, self::getRecursiveObjIdsArrForClassName($model_class_name, $parent_id_field_name, $order_by, $fetched_obj_id, $depth + 1));
+        }
+
+        return $output_arr;
+    }
+
     /**
      * Возвращает одну страницу списка объектов указанного класса.
      * Сортировка: TODO.
