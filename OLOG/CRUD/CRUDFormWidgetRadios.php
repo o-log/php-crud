@@ -24,7 +24,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
         $field_name = $this->getFieldName();
         $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
-        return self::htmlForValue($field_value);
+        return $this->htmlForValue($field_value);
     }
 
     public function htmlForValue($field_value, $input_name = null)

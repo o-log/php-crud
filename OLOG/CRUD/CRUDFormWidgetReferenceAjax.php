@@ -27,10 +27,21 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
     public function html($obj)
     {
         $field_name = $this->getFieldName();
+        $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
+
+        return $this->htmlForValue($field_value);
+    }
+
+    public function htmlForValue($field_value, $input_name = null)
+    {
+        $field_name = $this->getFieldName();
+
+        if (is_null($input_name)){
+            $input_name = $field_name;
+        }
+
         $referenced_class_name = $this->getReferencedClassName();
         $referenced_class_title_field = $this->getReferencedClassTitleField();
-
-        $field_value = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
 
         $referenced_obj_title = '';
         $disabled_btn_link = 'disabled';
@@ -65,8 +76,8 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         }
 
         $html .= '<div class="form-control" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text">' . $referenced_obj_title . '</div>';
-		$html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" ' . $is_required_str . '/>';
-        $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" value="' . $is_null_value . '"/>';
+		$html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($input_name) . '" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" ' . $is_required_str . '/>';
+        $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($input_name) . '___is_null" value="' . $is_null_value . '"/>';
         $html .= '<span class="input-group-btn">';
         $html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_is_null" class="btn btn-default" data-toggle="modal">X</button>';
         $html .= '</span>';
