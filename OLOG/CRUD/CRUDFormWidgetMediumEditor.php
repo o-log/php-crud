@@ -51,7 +51,7 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 
                 <?= $uniqid ?>.subscribe('editableInput', function (event, editable) {
 					var content = $(editable).html();
-					$('#<?= $uniqid ?>_textarea').val(content);
+					$('#<?= $uniqid ?>_textarea').val(content).trigger('MediumEditor.change');
 				});
 			</script>
 		<?php
