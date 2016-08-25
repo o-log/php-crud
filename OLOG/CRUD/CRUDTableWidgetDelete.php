@@ -26,7 +26,7 @@ class CRUDTableWidgetDelete implements InterfaceCRUDTableWidget
         Assert::assert($obj);
         
         $o = '';
-        $o .= '<form method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
+        $o .= '<form style="display: inline;" method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
         $o .= Operations::operationCodeHiddenField(CRUDTable::OPERATION_DELETE_MODEL);
         $o .='<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
         $o .='<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue(CRUDFieldsAccess::getObjId($obj)) . '">';
