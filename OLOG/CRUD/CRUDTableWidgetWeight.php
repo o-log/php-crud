@@ -13,9 +13,13 @@ class CRUDTableWidgetWeight implements InterfaceCRUDTableWidget
     const FORMFIELD_CONTEXT_FIELDS_NAME = 'context_field_names';
 
     protected $context_fields_arr = [];
+    protected $button_text;
+    protected $button_class_str;
 
-    public function __construct($context_fields_arr){
+    public function __construct($context_fields_arr, $button_text = '', $button_class_str = 'btn btn-xs btn-default glyphicon glyphicon-arrow-up'){
         $this->context_fields_arr = $context_fields_arr;
+        $this->button_class_str = $button_class_str;
+        $this->button_text = $button_text;
     }
 
     /**
@@ -26,7 +30,7 @@ class CRUDTableWidgetWeight implements InterfaceCRUDTableWidget
         Assert::assert($obj);
 
         $o = '';
-        $o .= '<form method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
+        $o .= '<form style="display: inline;" method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
         $o .= Operations::operationCodeHiddenField(CRUDTable::OPERATION_SWAP_MODEL_WEIGHT);
         $o .= '<input type="hidden" name="' . self::FORMFIELD_CONTEXT_FIELDS_NAME . '" value="' . Sanitize::sanitizeAttrValue(implode(',', array_keys($this->context_fields_arr))) . '">';
 
@@ -37,7 +41,7 @@ class CRUDTableWidgetWeight implements InterfaceCRUDTableWidget
         $o .= '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
         $o .= '<input type="hidden" name="_id" value="' . Sanitize::sanitizeAttrValue(CRUDFieldsAccess::getObjId($obj)) . '">';
 
-        $o .= '<button class="btn btn-xs btn-default" type="submit"><span class="glyphicon glyphicon-arrow-up"></span></button>';
+        $o .= '<button class="' . $this->button_class_str . '" type="submit">' . $this->button_text .'</button>';
 
         $o .= '</form>';
 

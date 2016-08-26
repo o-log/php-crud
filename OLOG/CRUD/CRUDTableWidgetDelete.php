@@ -16,7 +16,7 @@ class CRUDTableWidgetDelete implements InterfaceCRUDTableWidget
     const FIELD_OBJECT_ID = '_id';
     const FIELD_REDIRECT_AFTER_DELETE_URL = 'redirect_after_delete_url';
 
-    public function __construct($button_text = '<span class="glyphicon glyphicon-remove"></span>', $button_class_str = 'btn btn-xs btn-default', $redirect_after_delete_url = ''){
+    public function __construct($button_text = '', $button_class_str = 'btn btn-xs btn-default glyphicon glyphicon-remove', $redirect_after_delete_url = ''){
         $this->button_class_str = $button_class_str;
         $this->button_text = $button_text;
         $this->redirect_after_delete_url = $redirect_after_delete_url;
