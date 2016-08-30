@@ -62,14 +62,12 @@ class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
     public function htmlForValue($field_value, $input_name = null)
     {
         $field_name = $this->getFieldName();
+        $html = '';
+        $options = '';
 
         if (is_null($input_name)){
             $input_name = $field_name;
         }
-
-        $input_cols = $this->getShowNullCheckbox() ? '10' : '12';
-        $options = '<div class="col-sm-' . $input_cols . '">';
-        //$options .= '<option></option>';
 
         $options_arr = $this->getOptionsArr();
 
@@ -82,7 +80,6 @@ class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
 
             $options .= '<option value="' .  $value . '"' . $selected_html_attr . '>' . $title . '</option>';
         }
-        $options .= '</div>';
 
         $is_null_checked = '';
         if(is_null($field_value))
@@ -90,20 +87,24 @@ class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
             $is_null_checked = ' checked ';
         }
 
-        if($this->getShowNullCheckbox())
-        {
-            $options .= '<div class="col-sm-2">
-                    <label class="form-control-static">
-                        <input type = "checkbox" value = "1" name = "' . Sanitize::sanitizeAttrValue($input_name) . '___is_null" ' . $is_null_checked . ' /> null
-                    </label >
-                </div>';
-        }
 
         $is_required_str = '';
         if ($this->is_required){
             $is_required_str = ' required ';
         }
-        return '<select name="' . $input_name . '" class="form-control" ' . $is_required_str . '>' . $options . '</select>';
+
+        $html .= '<div class="input-group">';
+        $html .= '<select name="' . $input_name . '" class="form-control" ' . $is_required_str . '>' . $options . '</select>';
+
+        if($this->getShowNullCheckbox()) {
+            $html .= '<div class="input-group-addon">';
+            $html .= '<input type = "checkbox" value="1" name="' . Sanitize::sanitizeAttrValue($input_name) . '___is_null" ' . $is_null_checked . ' /> null';
+            $html .= '</div>';
+        }
+
+        $html .= '</div>';
+
+        return $html;
 
     }
 

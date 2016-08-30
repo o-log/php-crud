@@ -73,44 +73,54 @@ class CRUDInternalTableObjectsSelector
 
         /** @var InterfaceCRUDTableFilter $filter_obj */
         foreach ($filters_arr as $filter_obj) {
-            Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
+            if ($filter_obj instanceof InterfaceCRUDTableFilter) {
 
-            $column_name = $filter_obj->getFieldName();
-            $operation_code = $filter_obj->getOperationCode();
-            $value = $filter_obj->getValue();
+                $column_name = $filter_obj->getFieldName();
+                $operation_code = $filter_obj->getOperationCode();
+                $value = $filter_obj->getValue();
 
-            $column_name = preg_replace("/[^a-zA-Z0-9_]+/", "", $column_name);
+                $column_name = preg_replace("/[^a-zA-Z0-9_]+/", "", $column_name);
 
-            switch ($operation_code) {
-                case CRUDTableFilter::FILTER_EQUAL:
-                    $where .= ' and ' . $column_name . ' = ? ';
-                    $query_param_values_arr[] = $value;
-                    break;
+                switch ($operation_code) {
+                    case CRUDTableFilter::FILTER_EQUAL:
+                        $where .= ' and ' . $column_name . ' = ? ';
+                        $query_param_values_arr[] = $value;
+                        break;
 
-                case CRUDTableFilter::FILTER_IS_NULL:
-                    $where .= ' and ' . $column_name . ' is null ';
-                    break;
+                    case CRUDTableFilter::FILTER_IS_NULL:
+                        $where .= ' and ' . $column_name . ' is null ';
+                        break;
 
-                case CRUDTableFilter::FILTER_LIKE:
-                    $where .= ' and ' . $column_name . ' like ? ';
-                    $query_param_values_arr[] = '%' . $value . '%';
-                    break;
+                    case CRUDTableFilter::FILTER_LIKE:
+                        $where .= ' and ' . $column_name . ' like ? ';
+                        $query_param_values_arr[] = '%' . $value . '%';
+                        break;
 
-                case CRUDTableFilter::FILTER_IN:
-                    if (count($value)) {
-                        $in_placeholders_arr = [];
+                    case CRUDTableFilter::FILTER_IN:
+                        if (count($value)) {
+                            $in_placeholders_arr = [];
 
-                        foreach ($value as $in_single_value) {
-                            $in_placeholders_arr[] = '?';
-                            $query_param_values_arr[] = $in_single_value;
+                            foreach ($value as $in_single_value) {
+                                $in_placeholders_arr[] = '?';
+                                $query_param_values_arr[] = $in_single_value;
+                            }
+
+                            $where .= ' and ' . $column_name . ' in (' . implode(', ', $in_placeholders_arr) . ') ';
                         }
+                        break;
 
-                        $where .= ' and ' . $column_name . ' in (' . implode(', ', $in_placeholders_arr) . ') ';
-                    }
-                    break;
+                    default:
+                        throw new \Exception('unknown filter code');
+                }
+            } elseif ($filter_obj instanceof InterfaceCRUDTableFilter2) {
+                list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
+                if ($filter_sql_condition != ''){
+                    $where .= ' and ' . $filter_sql_condition;
+                }
 
-                default:
-                    throw new \Exception('unknown filter code');
+                $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
+            } else {
+                throw new \Exception('filter doesnt implement InterfaceCRUDTableFilter nor InterfaceCRUDTableFilter2');
             }
         }
 

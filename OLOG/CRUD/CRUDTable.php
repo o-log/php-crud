@@ -77,15 +77,20 @@ class CRUDTable
 
         /** @var InterfaceCRUDTableFilter $filter_obj */
         foreach ($filters_arr as $filter_obj) {
-            Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
+            if ($filter_obj instanceof InterfaceCRUDTableFilter) {
 
-            $filter_field_name = self::filterFormFieldName($table_id, $filter_index);
+                $filter_field_name = self::filterFormFieldName($table_id, $filter_index);
 
-            if (array_key_exists($filter_field_name, $_GET)) {
-                $filter_obj->setValue(urldecode($_GET[$filter_field_name]));
+                if (array_key_exists($filter_field_name, $_GET)) {
+                    $filter_obj->setValue(urldecode($_GET[$filter_field_name]));
+                }
+
+                $filter_index++;
+            } elseif ($filter_obj instanceof InterfaceCRUDTableFilter2) {
+                // DO NOTHING - FILTER WILL READ ITS VALUE WHEN REQUIRED
+            } else {
+                throw new \Exception('filter doesnt implement InterfaceCRUDTableFilter nor InterfaceCRUDTableFilter2');
             }
-
-            $filter_index++;
         }
 
         return $filters_arr;
@@ -233,52 +238,64 @@ class CRUDTable
 
             /** @var InterfaceCRUDTableFilter $filter_obj */
             foreach ($filters_arr as $filter_obj){
-                Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter);
+                if ($filter_obj instanceof InterfaceCRUDTableFilter) {
 
-                $html .= '<div class="col-md-12">';
-                $html .= '<div class="form-group">';
+                    $html .= '<div class="col-md-12">';
+                    $html .= '<div class="form-group">';
 
-                // TODO: finish
-                switch ($filter_obj->getOperationCode()){
-                    case (CRUDTableFilter::FILTER_LIKE):
-                        $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' содержит:</label>';
-                        $html .= '<div class="col-sm-8"><input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '"></div>';
-                        break;
+                    // TODO: finish
+                    switch ($filter_obj->getOperationCode()) {
+                        case (CRUDTableFilter::FILTER_LIKE):
+                            $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' содержит:</label>';
+                            $html .= '<div class="col-sm-8"><input class="form-control" name="' . self::filterFormFieldName($table_index_on_page, $filter_index) . '" value="' . $filter_obj->getValue() . '"></div>';
+                            break;
 
-                    case (CRUDTableFilter::FILTER_EQUAL):
-                        $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' равно:</label>';
-                        $html .= '<div class="col-sm-8">';
+                        case (CRUDTableFilter::FILTER_EQUAL):
+                            $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . ' равно:</label>';
+                            $html .= '<div class="col-sm-8">';
 
-                        $input_name = self::filterFormFieldName($table_index_on_page, $filter_index);
+                            $input_name = self::filterFormFieldName($table_index_on_page, $filter_index);
 
-                        if ($filter_obj->getWidgetObj()) {
-                            /** @var InterfaceCRUDFormWidget $widget_obj */
-                            $widget_obj = $filter_obj->getWidgetObj();
-                            $html .= $widget_obj->htmlForValue($filter_obj->getValue(), $input_name);
-                        } else {
-                            $html .= '<input class="form-control" name="' . $input_name . '" value="' . $filter_obj->getValue() . '">';
-                        }
+                            if ($filter_obj->getWidgetObj()) {
+                                /** @var InterfaceCRUDFormWidget $widget_obj */
+                                $widget_obj = $filter_obj->getWidgetObj();
+                                $html .= $widget_obj->htmlForValue($filter_obj->getValue(), $input_name);
+                            } else {
+                                $html .= '<input class="form-control" name="' . $input_name . '" value="' . $filter_obj->getValue() . '">';
+                            }
 
-                        $html .= '</div>';
-                        break;
+                            $html .= '</div>';
+                            break;
 
-                    case (CRUDTableFilter::FILTER_IS_NULL):
-                        $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . '</label>';
-                        $html .= '<div class="col-sm-8">IS NULL</div>';
-                        break;
+                        case (CRUDTableFilter::FILTER_IS_NULL):
+                            $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . '</label>';
+                            $html .= '<div class="col-sm-8">IS NULL</div>';
+                            break;
 
-                    case (CRUDTableFilter::FILTER_IN):
-                        $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . '</label>';
-                        $html .= '<div class="col-sm-8">IN ' . implode(', ', $filter_obj->getValue()) . '</div>';
-                        break;
+                        case (CRUDTableFilter::FILTER_IN):
+                            $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getFieldName() . '</label>';
+                            $html .= '<div class="col-sm-8">IN ' . implode(', ', $filter_obj->getValue()) . '</div>';
+                            break;
 
-                    default:
-                        throw new \Exception('filter type not supported');
+                        default:
+                            throw new \Exception('filter type not supported');
+                    }
+
+                    $html .= '</div>';
+                    $html .= '</div>';
+                    $filter_index++;
+                } elseif ($filter_obj instanceof InterfaceCRUDTableFilter2) {
+                    $html .= '<div class="col-md-12">';
+                    $html .= '<div class="form-group">';
+
+                    $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getTitle() . '</label>';
+                    $html .= '<div class="col-sm-8">' . $filter_obj->getHtml() . '</div>';
+
+                    $html .= '</div>';
+                    $html .= '</div>';
+                } else {
+                    throw new \Exception('filter doesnt implement interface ...');
                 }
-
-                $html .= '</div>';
-                $html .= '</div>';
-                $filter_index++;
             }
 
             $html .= '</div>';

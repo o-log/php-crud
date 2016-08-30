@@ -60,6 +60,10 @@ class DemoTermEditAction
                     ], false, true)
                 ),
                 new CRUDFormRow(
+                    'Vocabulary',
+                    new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, true)
+                ),
+                new CRUDFormRow(
                     'Parent id',
                     new CRUDFormWidgetReferenceAjax(
                         'parent_id',
