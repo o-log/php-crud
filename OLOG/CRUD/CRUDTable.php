@@ -291,6 +291,10 @@ class CRUDTable
     }
     static protected function toolbarHtml($table_index_on_page, $create_form_html, $filters_arr)
     {
+        if ($create_form_html == ''){
+            return '';
+        }
+
         $html = '';
 
         $create_form_element_id = 'collapse_' . rand(1, 999999);
