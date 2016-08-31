@@ -104,10 +104,14 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
     public function widgetHtmlForValue($field_value, $input_name = null)
     {
         $html = '';
-        $options_html = '';
 
         $options_arr = $this->getOptionsArr();
 
+
+        if($this->getShowNullCheckbox()) {
+        }
+
+        $html .= '<select onchange="$(this).closest(\'form\').submit();" id="' . $input_name . '" name="' . $input_name . '" class="form-control">';
         foreach($options_arr as $value => $title)
         {
             $selected_html_attr = '';
@@ -115,26 +119,15 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
                 $selected_html_attr = ' selected';
             }
 
-            $options_html .= '<option value="' .  $value . '"' . $selected_html_attr . '>' . $title . '</option>';
+            $html .= '<option value="' .  $value . '"' . $selected_html_attr . '>' . $title . '</option>';
         }
-
-        $is_null_checked = '';
-        if(is_null($field_value))
-        {
-            $is_null_checked = ' checked ';
-        }
-
-
-        if($this->getShowNullCheckbox()) {
-            $html .= '<div class="input-group">';
-        }
-
-        $html .= '<select onchange="$(this).closest(\'form\').submit();" name="' . $input_name . '" class="form-control">' . $options_html . '</select>';
+        $html .= '</select>';
 
         if($this->getShowNullCheckbox()) {
             $html .= '<div class="input-group-addon">';
+            $is_null_checked = is_null($field_value) ? ' checked ' : '';
+
             $html .= '<input type = "checkbox" value="1" name="' . Sanitize::sanitizeAttrValue($input_name) . '___is_null" ' . $is_null_checked . ' /> null';
-            $html .= '</div>';
             $html .= '</div>';
         }
 
@@ -149,17 +142,30 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
         //$input_name = self::filterFormFieldName($table_index_on_page, $filter_index);
         $input_name = $this->getFilterIniqId();
 
-        $html .= '<div class="row"><div class="col-md-10">';
+        //$html .= '<div class="row"><div class="col-md-9">';
+        $html .= '<div class="input-group">';
 
         $html .= $this->widgetHtmlForValue($this->getValueFromForm(), $input_name);
 
-        $html .= '</div><div class="col-md-2>">';
+        //$html .= '</div><div class="col-md-3>">';
 
         $enabled_checked = $this->getInitialIsEnabled() ? ' checked ' : '';
+        $html .= '<div class="input-group-addon">';
+        $html .= '<label><input title="Filter active" onchange="f' . $input_name . '_enabledclick(this);" type="checkbox" id="' . $this->enabledCheckboxName() . '" name="' . $this->enabledCheckboxName() . '" ' . $enabled_checked . ' value="1"></label>';
+        $html .= '</div>';
 
-        $html .= '<label style="padding-top: 7px;"><input onkeyup="$(this).closest(\'form\').submit();" type="checkbox" name="' . $this->enabledCheckboxName() . '" ' . $enabled_checked . ' value="1"> enabled</label>';
+        $html .= '</div>';
 
-        $html .= '</div></div>';
+        $html .= '
+        <script>
+        function f' . $input_name . '_enabledclick(checkbox_element){
+            $("#' . $input_name . '").prop("disabled", !$(checkbox_element).prop("checked"));
+            $(checkbox_element).closest("form").submit();
+        }
+        </script>
+        ';
+
+        //$html .= '</div></div>';
 
         return $html;
     }
