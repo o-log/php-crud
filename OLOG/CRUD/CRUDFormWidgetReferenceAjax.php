@@ -67,24 +67,23 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         $select_element_id = 'js_select_' . rand(1, 999999);
 		$choose_form_element_id = 'collapse_' . rand(1, 999999);
 
+        $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($input_name) . '" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" ' . $is_required_str . '/>';
+        $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($input_name) . '___is_null" value="' . $is_null_value . '"/>';
+
         $html .= '<div class="input-group">';
 
         if ($this->getAjaxActionUrl()) {
             $html .= '<span class="input-group-btn">';
-            $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $choose_form_element_id . '">Выбрать</button>';
+            $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $choose_form_element_id . '"><span class="glyphicon glyphicon-folder-open"></span></button>';
+            $html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_is_null" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>';
             $html .= '</span>';
         }
 
         $html .= '<div class="form-control" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text">' . $referenced_obj_title . '</div>';
-		$html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($input_name) . '" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" ' . $is_required_str . '/>';
-        $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($input_name) . '___is_null" value="' . $is_null_value . '"/>';
-        $html .= '<span class="input-group-btn">';
-        $html .= '<button type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_is_null" class="btn btn-default" data-toggle="modal">X</button>';
-        $html .= '</span>';
 
         if ($this->getEditorUrl()) {
             $html .= '<span class="input-group-btn">';
-            $html .= '<button ' . $disabled_btn_link . ' type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_link" class="btn btn-default" data-toggle="modal">Перейти</button>';
+            $html .= '<button ' . $disabled_btn_link . ' type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_link" class="btn btn-default">Перейти</button>';
             $html .= '</span>';
         }
 

@@ -39,8 +39,9 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
         $input_cols = $this->getShowNullCheckbox() ? '10' : '12';
 
         $html = '';
-        $html .= '<div class="row">';
-        $html .= '<div class="col-sm-' . $input_cols . '" id="' . $uniqid . '_radio_box">';
+        //$html .= '<div class="row">';
+        //$html .= '<div class="col-sm-' . $input_cols . '" id="' . $uniqid . '_radio_box">';
+        $html .= '<div id="' . $uniqid . '_radio_box">';
 
         $options_arr = $this->getOptionsArr();
 
@@ -57,7 +58,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
 
             $html .= '<label class="radio-inline"><input type="radio" name="' . Sanitize::sanitizeAttrValue($input_name) . '" value="' . Sanitize::sanitizeAttrValue($value) . '" ' . $selected_html_attr . ' ' . $is_required_str . ' > ' . $title . '</label>';
         }
-        $html .= '</div>';
+        //$html .= '</div>';
 
         if ($this->getShowNullCheckbox()) {
 
@@ -66,11 +67,9 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
                 $is_null_checked = ' checked ';
             }
             ob_start(); ?>
-            <div class="col-sm-2">
-                <label class="form-control-static">
+                <label class="radio-inline">
                     <input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= Sanitize::sanitizeAttrValue($input_name) ?>___is_null" <?= $is_null_checked ?>> NULL
                 </label>
-            </div>
             <script>
                 (function () {
                     var $input_is_null = $('#<?= $uniqid ?>___is_null');
