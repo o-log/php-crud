@@ -6,7 +6,7 @@ use OLOG\Assert;
 
 class CRUDInternalTableObjectsSelector
 {
-    static public function getRecursiveObjIdsArrForClassName($model_class_name, $parent_id_field_name, $order_by = '', $parent_id = null, $depth = 0)
+    static public function getRecursiveObjIdsArrForClassName($model_class_name, $parent_id_field_name, $filters_arr, $order_by = '', $parent_id = null, $depth = 0)
     {
         \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
 
@@ -26,6 +26,18 @@ class CRUDInternalTableObjectsSelector
             $query_param_values_arr[] = $parent_id;
         }
 
+        /** @var InterfaceCRUDTableFilter2 $filter_obj */
+        foreach ($filters_arr as $filter_obj) {
+            Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter2);
+
+            list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
+            if ($filter_sql_condition != ''){
+                $where .= ' and ' . $filter_sql_condition;
+            }
+
+            $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
+        }
+
         if ($order_by == '') {
             $order_by = $db_id_field_name;
         }
@@ -40,7 +52,7 @@ class CRUDInternalTableObjectsSelector
 
         foreach ($obj_ids_arr as $fetched_obj_id){
             $output_arr[] = ['id' => $fetched_obj_id, 'depth' => $depth];
-            $output_arr = array_merge($output_arr, self::getRecursiveObjIdsArrForClassName($model_class_name, $parent_id_field_name, $order_by, $fetched_obj_id, $depth + 1));
+            $output_arr = array_merge($output_arr, self::getRecursiveObjIdsArrForClassName($model_class_name, $parent_id_field_name, $filters_arr, $order_by, $fetched_obj_id, $depth + 1));
         }
 
         return $output_arr;

@@ -14,6 +14,7 @@ Router::matchAction(\CRUDDemo\DemoNodeEditAction::class, 0);
 Router::matchAction(\CRUDDemo\DemoNodeTermsAction::class, 0);
 
 Router::matchAction(\CRUDDemo\DemoTermsListAction::class, 0);
+Router::matchAction(\CRUDDemo\DemoTermsTreeAction::class, 0);
 Router::matchAction(\CRUDDemo\DemoTermEditAction::class, 0);
 
 Router::matchAction(\CRUDDemo\DemoAjaxTermsListAction::class, 0);

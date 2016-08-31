@@ -15,6 +15,7 @@ class DemoMainPageAction
         $html .= '<div>';
         $html .= '<a class="btn btn-default" href="' . DemoNodesListAction::getUrl() . '">NODES</a> ';
         $html .= '<a class="btn btn-default" href="' . DemoTermsListAction::getUrl() . '">TERMS</a>';
+        $html .= '<a class="btn btn-default" href="' . DemoTermsTreeAction::getUrl() . '">TERMS TREE</a>';
         $html .= '</div>';
 
         DemoLayoutTemplate::render($html, 'Main page', self::breadcrumbsArr());
