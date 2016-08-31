@@ -142,7 +142,7 @@ class CRUDTree
             }
 
             $html .= '</div>';
-            $html .= '<div class="row"><div class="col-sm-8 col-sm-offset-4"><button style="width: 100%;" type="submit" class="btn btn-default">Поиск</button></div></div>';
+            //$html .= '<div class="row"><div class="col-sm-8 col-sm-offset-4"><button style="width: 100%;" type="submit" class="btn btn-default">Поиск</button></div></div>';
             $html .= '</form>';
             $html .= '</div>';
         }

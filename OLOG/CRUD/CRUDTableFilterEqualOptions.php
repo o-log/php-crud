@@ -4,15 +4,49 @@ namespace OLOG\CRUD;
 
 use OLOG\Assert;
 use OLOG\GETAccess;
+use OLOG\Sanitize;
 
-class CRUDTableFilterEqual implements InterfaceCRUDTableFilter2
+class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
 {
     protected $title;
     protected $field_name;
     protected $filter_iniq_id;
-    protected $widget_obj;
     protected $initial_is_enabled;
     protected $initial_value;
+    protected $options_arr;
+    protected $show_null_checkbox;
+
+    /**
+     * @return mixed
+     */
+    public function getShowNullCheckbox()
+    {
+        return $this->show_null_checkbox;
+    }
+
+    /**
+     * @param mixed $show_null_checkbox
+     */
+    public function setShowNullCheckbox($show_null_checkbox)
+    {
+        $this->show_null_checkbox = $show_null_checkbox;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOptionsArr()
+    {
+        return $this->options_arr;
+    }
+
+    /**
+     * @param mixed $options_arr
+     */
+    public function setOptionsArr($options_arr)
+    {
+        $this->options_arr = $options_arr;
+    }
 
     /**
      * @return mixed
@@ -67,25 +101,63 @@ class CRUDTableFilterEqual implements InterfaceCRUDTableFilter2
         return $this->getFilterIniqId() . '___enabled';
     }
 
+    public function widgetHtmlForValue($field_value, $input_name = null)
+    {
+        $html = '';
+        $options_html = '';
+
+        $options_arr = $this->getOptionsArr();
+
+        foreach($options_arr as $value => $title)
+        {
+            $selected_html_attr = '';
+            if ($field_value == $value) {
+                $selected_html_attr = ' selected';
+            }
+
+            $options_html .= '<option value="' .  $value . '"' . $selected_html_attr . '>' . $title . '</option>';
+        }
+
+        $is_null_checked = '';
+        if(is_null($field_value))
+        {
+            $is_null_checked = ' checked ';
+        }
+
+
+        if($this->getShowNullCheckbox()) {
+            $html .= '<div class="input-group">';
+        }
+
+        $html .= '<select onchange="$(this).closest(\'form\').submit();" name="' . $input_name . '" class="form-control">' . $options_html . '</select>';
+
+        if($this->getShowNullCheckbox()) {
+            $html .= '<div class="input-group-addon">';
+            $html .= '<input type = "checkbox" value="1" name="' . Sanitize::sanitizeAttrValue($input_name) . '___is_null" ' . $is_null_checked . ' /> null';
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+
+        return $html;
+
+    }
+
+
     public function getHtml(){
         $html = '';
 
         //$input_name = self::filterFormFieldName($table_index_on_page, $filter_index);
         $input_name = $this->getFilterIniqId();
 
-        /** @var InterfaceCRUDFormWidget $widget_obj */
-        $widget_obj = $this->getWidgetObj();
-        Assert::assert($widget_obj);
-
         $html .= '<div class="row"><div class="col-md-10">';
 
-        $html .= $widget_obj->htmlForValue($this->getValueFromForm(), $input_name);
+        $html .= $this->widgetHtmlForValue($this->getValueFromForm(), $input_name);
 
         $html .= '</div><div class="col-md-2>">';
 
         $enabled_checked = $this->getInitialIsEnabled() ? ' checked ' : '';
 
-        $html .= '<div class="checkbox"><label><input type="checkbox" name="' . $this->enabledCheckboxName() . '" ' . $enabled_checked . ' value="1"> enabled</label></div>';
+        $html .= '<label style="padding-top: 7px;"><input onkeyup="$(this).closest(\'form\').submit();" type="checkbox" name="' . $this->enabledCheckboxName() . '" ' . $enabled_checked . ' value="1"> enabled</label>';
 
         $html .= '</div></div>';
 
@@ -133,29 +205,14 @@ class CRUDTableFilterEqual implements InterfaceCRUDTableFilter2
         return [$where, $placeholder_values_arr];
     }
 
-    public function __construct($filter_uniq_id, $title, $field_name, $widget_obj, $is_enabled, $initial_value){
+    public function __construct($filter_uniq_id, $title, $field_name, $options_arr, $initial_is_enabled, $initial_value, $show_null_checkbox){
         $this->setFilterIniqId($filter_uniq_id);
         $this->setTitle($title);
         $this->setFieldName($field_name);
-        $this->setWidgetObj($widget_obj);
-        $this->setInitialIsEnabled($is_enabled);
+        $this->setOptionsArr($options_arr);
+        $this->setInitialIsEnabled($initial_is_enabled);
         $this->setInitialValue($initial_value);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getWidgetObj()
-    {
-        return $this->widget_obj;
-    }
-
-    /**
-     * @param mixed $widget_obj
-     */
-    public function setWidgetObj($widget_obj)
-    {
-        $this->widget_obj = $widget_obj;
+        $this->setShowNullCheckbox($show_null_checkbox);
     }
 
     /**
