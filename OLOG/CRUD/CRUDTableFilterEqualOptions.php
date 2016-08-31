@@ -16,78 +16,22 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
     protected $options_arr;
     protected $show_null_checkbox;
 
-    /**
-     * @return mixed
-     */
-    public function getShowNullCheckbox()
-    {
-        return $this->show_null_checkbox;
-    }
+    public function useValuesFromForm(){
+        $value = GETAccess::getOptionalGetValue($this->filterIsPassedInputName(), null);
 
-    /**
-     * @param mixed $show_null_checkbox
-     */
-    public function setShowNullCheckbox($show_null_checkbox)
-    {
-        $this->show_null_checkbox = $show_null_checkbox;
-    }
+        if (is_null($value)){
+            return false;
+        }
 
-    /**
-     * @return mixed
-     */
-    public function getOptionsArr()
-    {
-        return $this->options_arr;
-    }
-
-    /**
-     * @param mixed $options_arr
-     */
-    public function setOptionsArr($options_arr)
-    {
-        $this->options_arr = $options_arr;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInitialValue()
-    {
-        return $this->initial_value;
-    }
-
-    /**
-     * @param mixed $initial_value
-     */
-    public function setInitialValue($initial_value)
-    {
-        $this->initial_value = $initial_value;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInitialIsEnabled()
-    {
-        return $this->initial_is_enabled;
-    }
-
-    /**
-     * @param mixed $initial_is_enabled
-     */
-    public function setInitialIsEnabled($initial_is_enabled)
-    {
-        $this->initial_is_enabled = $initial_is_enabled;
+        return true;
     }
 
     public function getValueFromForm(){
-        $value = GETAccess::getOptionalGetValue($this->getFilterIniqId(), null);
-
-        // if no value passed in request
-        if (is_null($value)){
+        if (!$this->useValuesFromForm()){
             return $this->getInitialValue();
         }
 
+        $value = GETAccess::getOptionalGetValue($this->getFilterIniqId());
         $is_null = GETAccess::getOptionalGetValue($this->getFilterIniqId() . '___is_null'); // TODO: remove scalar
 
         if ($is_null != ''){
@@ -135,6 +79,9 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
 
     }
 
+    public function filterIsPassedInputName(){
+        return $this->getFilterIniqId() . '___passed';
+    }
 
     public function getHtml(){
         $html = '';
@@ -144,6 +91,9 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
 
         //$html .= '<div class="row"><div class="col-md-9">';
         $html .= '<div class="input-group">';
+
+        // отдельное поле, наличие которого сообщает что фильтр присутствует в форме (все другие поля могут отсутсвовать когда фильтр например запрещен и т.п.)
+        $html .= '<input type="hidden" name="' . $this->filterIsPassedInputName() . '" value="1">';
 
         $html .= $this->widgetHtmlForValue($this->getValueFromForm(), $input_name);
 
@@ -171,7 +121,11 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
     }
 
     public function isEnabled(){
-        $is_enabled_from_form = GETAccess::getOptionalGetValue($this->enabledCheckboxName(), $this->getInitialIsEnabled());
+        if (!$this->useValuesFromForm()){
+            return $this->getInitialIsEnabled();
+        }
+
+        $is_enabled_from_form = GETAccess::getOptionalGetValue($this->enabledCheckboxName());
 
         if ($is_enabled_from_form != ''){
             return true;
@@ -269,5 +223,67 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
         $this->field_name = $field_name;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getShowNullCheckbox()
+    {
+        return $this->show_null_checkbox;
+    }
 
+    /**
+     * @param mixed $show_null_checkbox
+     */
+    public function setShowNullCheckbox($show_null_checkbox)
+    {
+        $this->show_null_checkbox = $show_null_checkbox;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOptionsArr()
+    {
+        return $this->options_arr;
+    }
+
+    /**
+     * @param mixed $options_arr
+     */
+    public function setOptionsArr($options_arr)
+    {
+        $this->options_arr = $options_arr;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInitialValue()
+    {
+        return $this->initial_value;
+    }
+
+    /**
+     * @param mixed $initial_value
+     */
+    public function setInitialValue($initial_value)
+    {
+        $this->initial_value = $initial_value;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInitialIsEnabled()
+    {
+        return $this->initial_is_enabled;
+    }
+
+    /**
+     * @param mixed $initial_is_enabled
+     */
+    public function setInitialIsEnabled($initial_is_enabled)
+    {
+        $this->initial_is_enabled = $initial_is_enabled;
+    }
 }
