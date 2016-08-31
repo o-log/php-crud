@@ -11,9 +11,48 @@ class CRUDTableFilterEqual implements InterfaceCRUDTableFilter2
     protected $field_name;
     protected $filter_iniq_id;
     protected $widget_obj;
+    protected $initial_is_enabled;
+    protected $initial_value;
+
+    /**
+     * @return mixed
+     */
+    public function getInitialValue()
+    {
+        return $this->initial_value;
+    }
+
+    /**
+     * @param mixed $initial_value
+     */
+    public function setInitialValue($initial_value)
+    {
+        $this->initial_value = $initial_value;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInitialIsEnabled()
+    {
+        return $this->initial_is_enabled;
+    }
+
+    /**
+     * @param mixed $initial_is_enabled
+     */
+    public function setInitialIsEnabled($initial_is_enabled)
+    {
+        $this->initial_is_enabled = $initial_is_enabled;
+    }
 
     public function getValueFromForm(){
-        $value = GETAccess::getOptionalGetValue($this->getFilterIniqId());
+        $value = GETAccess::getOptionalGetValue($this->getFilterIniqId(), null);
+
+        // if no value passed in request
+        if (is_null($value)){
+            return $this->getInitialValue();
+        }
 
         $is_null = GETAccess::getOptionalGetValue($this->getFilterIniqId() . '___is_null'); // TODO: remove scalar
 
@@ -44,7 +83,9 @@ class CRUDTableFilterEqual implements InterfaceCRUDTableFilter2
 
         $html .= '</div><div class="col-md-2>">';
 
-        $html .= '<label><input type="checkbox" name="' . $this->enabledCheckboxName() . '" value="1"> enabled</label>';
+        $enabled_checked = $this->getInitialIsEnabled() ? ' checked ' : '';
+
+        $html .= '<div class="checkbox"><label><input type="checkbox" name="' . $this->enabledCheckboxName() . '" ' . $enabled_checked . ' value="1"> enabled</label></div>';
 
         $html .= '</div></div>';
 
@@ -52,7 +93,7 @@ class CRUDTableFilterEqual implements InterfaceCRUDTableFilter2
     }
 
     public function isEnabled(){
-        $is_enabled_from_form = GETAccess::getOptionalGetValue($this->enabledCheckboxName());
+        $is_enabled_from_form = GETAccess::getOptionalGetValue($this->enabledCheckboxName(), $this->getInitialIsEnabled());
 
         if ($is_enabled_from_form != ''){
             return true;
@@ -92,11 +133,13 @@ class CRUDTableFilterEqual implements InterfaceCRUDTableFilter2
         return [$where, $placeholder_values_arr];
     }
 
-    public function __construct($filter_uniq_id, $title, $field_name, $widget_obj){
+    public function __construct($filter_uniq_id, $title, $field_name, $widget_obj, $is_enabled, $initial_value){
         $this->setFilterIniqId($filter_uniq_id);
         $this->setTitle($title);
         $this->setFieldName($field_name);
         $this->setWidgetObj($widget_obj);
+        $this->setInitialIsEnabled($is_enabled);
+        $this->setInitialValue($initial_value);
     }
 
     /**
