@@ -14,6 +14,7 @@ use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilter;
 use OLOG\CRUD\CRUDTableFilterEqual;
+use OLOG\CRUD\CRUDTableFilterLike;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
@@ -90,7 +91,8 @@ class DemoTermsListAction
                 new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL),
                 //new CRUDTableFilter('vocabulary_id', CRUDTableFilter::FILTER_EQUAL, DemoTerm::VOCABULARY_MAIN, new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR)),
                 new CRUDTableFilterEqual('34785ty8y45t8', 'Словарь', 'vocabulary_id', new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR, true)),
-                new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
+                //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
+                new CRUDTableFilterLike('3748t7t45gdfg', 'Название содержит', 'title')
             ],
             'weight',
             '8726438755234',
