@@ -16,6 +16,7 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
     protected $options_arr;
     protected $show_null_checkbox;
 
+    // сообщает, нужно ли использовать значения из формы (включая отсутствующие в форме поля - для чекбоксов это означает false) или этот фильтр в форме не приходил и нужно использовать initial значения
     public function useValuesFromForm(){
         $value = GETAccess::getOptionalGetValue($this->filterIsPassedInputName(), null);
 
@@ -26,13 +27,17 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
         return true;
     }
 
-    public function getValueFromForm(){
+    public function nullCheckboxInputName(){
+        return Sanitize::sanitizeAttrValue($this->getFilterIniqId() . '___is_null');
+    }
+
+    public function getValue(){
         if (!$this->useValuesFromForm()){
             return $this->getInitialValue();
         }
 
         $value = GETAccess::getOptionalGetValue($this->getFilterIniqId());
-        $is_null = GETAccess::getOptionalGetValue($this->getFilterIniqId() . '___is_null'); // TODO: remove scalar
+        $is_null = GETAccess::getOptionalGetValue($this->nullCheckboxInputName());
 
         if ($is_null != ''){
             $value = null;
@@ -41,42 +46,31 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
         return $value;
     }
 
-    public function enabledCheckboxName(){
-        return $this->getFilterIniqId() . '___enabled';
+    public function enabledCheckboxInputName(){
+        return Sanitize::sanitizeAttrValue($this->getFilterIniqId() . '___enabled');
     }
 
-    public function widgetHtmlForValue($field_value, $input_name = null)
+    public function widgetHtmlForValue($field_value, $input_name)
     {
         $html = '';
 
+        $html .= '<select onchange="f' . $input_name . '_selectchange(this);" id="' . $input_name . '" name="' . $input_name . '" class="form-control">';
+
         $options_arr = $this->getOptionsArr();
-
-
-        if($this->getShowNullCheckbox()) {
+        foreach($options_arr as $value => $title){
+            $html .= '<option value="' .  $value . '" ' . ($field_value == $value ? 'selected' : '') . '>' . $title . '</option>';
         }
 
-        $html .= '<select onchange="$(this).closest(\'form\').submit();" id="' . $input_name . '" name="' . $input_name . '" class="form-control">';
-        foreach($options_arr as $value => $title)
-        {
-            $selected_html_attr = '';
-            if ($field_value == $value) {
-                $selected_html_attr = ' selected';
-            }
-
-            $html .= '<option value="' .  $value . '"' . $selected_html_attr . '>' . $title . '</option>';
-        }
         $html .= '</select>';
 
         if($this->getShowNullCheckbox()) {
             $html .= '<div class="input-group-addon">';
-            $is_null_checked = is_null($field_value) ? ' checked ' : '';
 
-            $html .= '<input type = "checkbox" value="1" name="' . Sanitize::sanitizeAttrValue($input_name) . '___is_null" ' . $is_null_checked . ' /> null';
+            $html .= '<input type="checkbox" onchange="f' . $input_name . '_nullchange(this);" value="1" id="' . $this->nullCheckboxInputName() . '" name="' . $this->nullCheckboxInputName() . '" ' . (is_null($field_value) ? ' checked ' : '') . ' /> null';
             $html .= '</div>';
         }
 
         return $html;
-
     }
 
     public function filterIsPassedInputName(){
@@ -86,36 +80,58 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
     public function getHtml(){
         $html = '';
 
-        //$input_name = self::filterFormFieldName($table_index_on_page, $filter_index);
         $input_name = $this->getFilterIniqId();
 
-        //$html .= '<div class="row"><div class="col-md-9">';
         $html .= '<div class="input-group">';
 
-        // отдельное поле, наличие которого сообщает что фильтр присутствует в форме (все другие поля могут отсутсвовать когда фильтр например запрещен и т.п.)
+        // отдельное поле, наличие которого сообщает что фильтр присутствует в форме (все другие поля могут отсутствовать когда фильтр например запрещен и т.п.)
         $html .= '<input type="hidden" name="' . $this->filterIsPassedInputName() . '" value="1">';
 
-        $html .= $this->widgetHtmlForValue($this->getValueFromForm(), $input_name);
+        $html .= $this->widgetHtmlForValue($this->getValue(), $input_name);
 
-        //$html .= '</div><div class="col-md-3>">';
-
-        $enabled_checked = $this->getInitialIsEnabled() ? ' checked ' : '';
         $html .= '<div class="input-group-addon">';
-        $html .= '<label><input title="Filter active" onchange="f' . $input_name . '_enabledclick(this);" type="checkbox" id="' . $this->enabledCheckboxName() . '" name="' . $this->enabledCheckboxName() . '" ' . $enabled_checked . ' value="1"></label>';
+        $html .= '<label>';
+        $html .= '<input title="Filter active" onchange="f' . $input_name . '_enabledclick(this);" type="checkbox" id="' . $this->enabledCheckboxInputName() . '" name="' . $this->enabledCheckboxInputName() . '" ' . ($this->isEnabled() ? 'checked' : '') . ' value="1">';
+        $html .= '</label>';
         $html .= '</div>';
 
         $html .= '</div>';
 
-        $html .= '
-        <script>
-        function f' . $input_name . '_enabledclick(checkbox_element){
-            $("#' . $input_name . '").prop("disabled", !$(checkbox_element).prop("checked"));
+        $html .= '<script>
+
+        function f' . $input_name . '_selectchange(select_element){
+            $(select_element).closest("form").submit();
+        }
+        
+        function f' . $input_name . '_nullchange(checkbox_element){
+            f' . $input_name . '_updatedisabled();
             $(checkbox_element).closest("form").submit();
         }
-        </script>
-        ';
+        
+        function f' . $input_name . '_enabledclick(checkbox_element){
+            f' . $input_name . '_updatedisabled();
+            $(checkbox_element).closest("form").submit();
+        }
+        
+        function f' . $input_name . '_updatedisabled(){
+            var enabled = $("#' . $this->enabledCheckboxInputName() . '").prop("checked");
+            if (enabled){
+                $("#' . $this->nullCheckboxInputName() . '").prop("disabled", false);
+                if ($("#' . $this->nullCheckboxInputName() . '").length > 0){ // if widget has null checkbox
+                    var is_null = $("#' . $this->nullCheckboxInputName() . '").prop("checked");
+                    $("#' . $input_name . '").prop("disabled", is_null);
+                } else {
+                    $("#' . $input_name . '").prop("disabled", false);
+                }
+            } else {
+                $("#' . $input_name . '").prop("disabled", true);
+                $("#' . $this->nullCheckboxInputName() . '").prop("disabled", true);
+            }
+        }
 
-        //$html .= '</div></div>';
+        f' . $input_name . '_updatedisabled();
+        
+        </script>';
 
         return $html;
     }
@@ -125,7 +141,7 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
             return $this->getInitialIsEnabled();
         }
 
-        $is_enabled_from_form = GETAccess::getOptionalGetValue($this->enabledCheckboxName());
+        $is_enabled_from_form = GETAccess::getOptionalGetValue($this->enabledCheckboxInputName());
 
         if ($is_enabled_from_form != ''){
             return true;
@@ -140,29 +156,24 @@ class CRUDTableFilterEqualOptions implements InterfaceCRUDTableFilter2
      */
     public function sqlConditionAndPlaceholderValue()
     {
-        $where = '';
-        $placeholder_values_arr = [];
-
-        $is_enabled = $this->isEnabled();
-
-        if (!$is_enabled){
-            return [$where, $placeholder_values_arr];
+        if (!$this->isEnabled()){
+            return ['', []];
         }
 
-
-        $value = $this->getValueFromForm();
-
-        $column_name = $this->getFieldName();
-        $column_name = preg_replace("/[^a-zA-Z0-9_]+/", "", $column_name);
+        $value = $this->getValue();
+        $sanitized_column_name = Sanitize::sanitizeSqlColumnName($this->getFieldName());
 
         if (is_null($value)) {
-            $where .= ' ' . $column_name . ' is null ';
-        } else {
-            $where .= ' ' . $column_name . ' = ? ';
-            $placeholder_values_arr[] = $value;
+            return [
+                ' ' . $sanitized_column_name . ' is null ',
+                []
+            ];
         }
 
-        return [$where, $placeholder_values_arr];
+        return [
+            ' ' . $sanitized_column_name . ' = ? ',
+            [$value]
+        ];
     }
 
     public function __construct($filter_uniq_id, $title, $field_name, $options_arr, $initial_is_enabled, $initial_value, $show_null_checkbox){
