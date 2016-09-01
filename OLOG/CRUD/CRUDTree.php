@@ -172,7 +172,7 @@ class CRUDTree
             //$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
             //$html .= '<button type="button" class="btn btn-default" data-toggle="collapse" data-target="#' . $create_form_element_id . '">Создать</button>';
 
-            $html .= '<a href="#' . $create_form_element_id . '" class="open-' . $create_form_element_id . '">CREATE</a>';
+            $html .= '<a href="#' . $create_form_element_id . '" class="btn btn-default open-' . $create_form_element_id . '">CREATE</a>';
 
             $html .= '<script>
                 $(".open-' . $create_form_element_id . '").magnificPopup({
