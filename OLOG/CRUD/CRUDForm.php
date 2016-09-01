@@ -86,6 +86,23 @@ class CRUDForm
         \OLOG\Redirects::redirectToSelf();
     }
 
+    static public function executeOperations($url_to_redirect_after_save = '', $redirect_get_params_arr = ''){
+        static $__operations_executed = false;
+
+        if ($__operations_executed){
+            return;
+        }
+
+        $__operations_executed = true;
+
+        // TODO: transactions??
+
+        Operations::matchOperation(self::OPERATION_SAVE_EDITOR_FORM, function () use ($url_to_redirect_after_save, $redirect_get_params_arr) {
+            self::saveEditorFormOperation($url_to_redirect_after_save, $redirect_get_params_arr);
+        });
+
+    }
+
     /**
      * ид объекта может быть пустым - тогда при сохранении формы создаст новый объект
      * @param $obj
@@ -108,11 +125,7 @@ class CRUDForm
             $CRUDForm_include_script = false;
         }
 
-        // TODO: transactions??
-
-        Operations::matchOperation(self::OPERATION_SAVE_EDITOR_FORM, function () use ($url_to_redirect_after_save, $redirect_get_params_arr) {
-            self::saveEditorFormOperation($url_to_redirect_after_save, $redirect_get_params_arr);
-        });
+        self::executeOperations($url_to_redirect_after_save, $redirect_get_params_arr);
 
         $form_element_id = 'formElem_' . uniqid();
 

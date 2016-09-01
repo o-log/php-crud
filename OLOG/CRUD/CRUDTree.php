@@ -169,9 +169,6 @@ class CRUDTree
 
         $html .= '<div class="btn-group" role="group">';
         if ($create_form_html) {
-            //$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
-            //$html .= '<button type="button" class="btn btn-default" data-toggle="collapse" data-target="#' . $create_form_element_id . '">Создать</button>';
-
             $html .= '<a href="#' . $create_form_element_id . '" class="btn btn-default open-' . $create_form_element_id . '">CREATE</a>';
 
             $html .= '<script>
@@ -184,9 +181,6 @@ class CRUDTree
         $html .= '</div>';
 
         if ($create_form_html) {
-            //$html .= BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
-            //$html .= '<div class="collapse" id="' . $create_form_element_id . '"><div class="well">' . $create_form_html . '</div></div>';
-
             $html .= '<div style="position: relative; background: #FFF; padding: 50px 20px 30px 20px; width: auto; max-width: 700px; margin: 20px auto;" id="' . $create_form_element_id . '" class="mfp-hide">';
             $html .= $create_form_html;
             $html .= '</div>';
