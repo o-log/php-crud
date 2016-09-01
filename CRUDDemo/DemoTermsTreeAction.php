@@ -97,7 +97,8 @@ class DemoTermsTreeAction
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
                 new CRUDTableFilterLike('3748t7t45gdfg', 'Название содержит', 'title')
             ],
-            1
+            1,
+            CRUDTable::FILTERS_POSITION_LEFT
         );
 
         DemoLayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());

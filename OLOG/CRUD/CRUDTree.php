@@ -15,7 +15,7 @@ use OLOG\Url;
 
 class CRUDTree
 {
-    static public function html($model_class_name, $create_form_html, $column_obj_arr, $parent_id_field_name, $order_by = '', $table_id = '1', $filters_arr = [], $col_with_padding_index = 0)
+    static public function html($model_class_name, $create_form_html, $column_obj_arr, $parent_id_field_name, $order_by = '', $table_id = '1', $filters_arr = [], $col_with_padding_index = 0, $filters_position = CRUDTable::FILTERS_POSITION_NONE)
     {
 
         // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
@@ -49,11 +49,20 @@ class CRUDTree
         $html = '<div>';
         $html .= '<div class="' . $table_container_element_id . ' row">';
 
-        $html .= '<div class="col-sm-12">';
+        if ($filters_position == CRUDTable::FILTERS_POSITION_LEFT) {
+            $html .= '<div class="col-sm-4">';
+            $html .= self::filtersHtml($filters_arr);
+            $html .= '</div>';
+            $html .= '<div class="col-sm-8">';
+        } else {
+            $html .= '<div class="col-sm-12">';
+        }
 
         $html .= self::toolbarHtml($table_id, $create_form_html);
 
-        $html .= self::filtersHtml($filters_arr);
+        if ($filters_position == CRUDTable::FILTERS_POSITION_TOP) {
+            $html .= self::filtersHtml($filters_arr);
+        }
 
         $html .= '<table class="table table-hover">';
         $html .= '<thead>';
