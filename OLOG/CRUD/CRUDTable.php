@@ -128,7 +128,10 @@ class CRUDTable
 
 		// include script only once per page
 		if(!isset($CRUDTable_include_script)){
-			$script = '<script src="//cdnjs.cloudflare.com/ajax/libs/js-url/2.3.0/url.min.js"></script>';
+		    $script = '';
+			$script .= '<script src="//cdnjs.cloudflare.com/ajax/libs/js-url/2.3.0/url.min.js"></script>';
+            $script .= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>';
+            $script .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">';
 
 			$script .= '<script>';
             $script .= Render::callLocaltemplate('templates/crudtable.js');

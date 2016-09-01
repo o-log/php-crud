@@ -29,6 +29,8 @@ class CRUDTree
         // include script only once per page
         if(!isset($CRUDTree_include_script)){
             $script = '<script src="//cdnjs.cloudflare.com/ajax/libs/js-url/2.3.0/url.min.js"></script>';
+            $script .= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>';
+            $script .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">';
 
             $script .= '<script>';
             $script .= Render::callLocaltemplate('templates/crudtable.js');
@@ -168,13 +170,26 @@ class CRUDTree
         $html .= '<div class="btn-group" role="group">';
         if ($create_form_html) {
             //$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
-            $html .= '<button type="button" class="btn btn-default" data-toggle="collapse" data-target="#' . $create_form_element_id . '">Создать</button>';
+            //$html .= '<button type="button" class="btn btn-default" data-toggle="collapse" data-target="#' . $create_form_element_id . '">Создать</button>';
+
+            $html .= '<a href="#' . $create_form_element_id . '" class="open-' . $create_form_element_id . '">CREATE</a>';
+
+            $html .= '<script>
+                $(".open-' . $create_form_element_id . '").magnificPopup({
+                    type: "inline",
+                    midClick: true // allow opening popup on middle mouse click. Always set it to true if you don\'t provide alternative source.
+                    });
+                </script>';
         }
         $html .= '</div>';
 
         if ($create_form_html) {
             //$html .= BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
-            $html .= '<div class="collapse" id="' . $create_form_element_id . '"><div class="well">' . $create_form_html . '</div></div>';
+            //$html .= '<div class="collapse" id="' . $create_form_element_id . '"><div class="well">' . $create_form_html . '</div></div>';
+
+            $html .= '<div style="position: relative; background: #FFF; padding: 50px 20px 30px 20px; width: auto; max-width: 700px; margin: 20px auto;" id="' . $create_form_element_id . '" class="mfp-hide">';
+            $html .= $create_form_html;
+            $html .= '</div>';
         }
 
         return $html;
