@@ -39,14 +39,7 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
         ob_start();?>
 			<script>
 				var <?= $uniqid ?> = new MediumEditor("#<?= $uniqid ?>", {
-					placeholder: false,
-                    paste: {
-                        forcePlainText: true,
-                        cleanPastedHTML: false,
-                        cleanReplacements: [],
-                        cleanAttrs: ['class', 'style', 'dir'],
-                        cleanTags: ['meta']
-                    }
+					placeholder: false
 				});
 
                 <?= $uniqid ?>.subscribe('editableInput', function (event, editable) {
