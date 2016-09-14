@@ -7,10 +7,16 @@ use OLOG\Sanitize;
 class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 {
 	protected $field_name;
+    protected $uniqid;
 
-	public function __construct($field_name)
+	public function __construct($field_name, $uniqid = '')
 	{
 		$this->setFieldName($field_name);
+        if ($uniqid) {
+            $this->setUniqid($uniqid);
+        } else {
+            $this->setUniqid(uniqid('CRUDFormWidgetMediumEditor_'));
+        }
 	}
 
 	public function html($obj)
@@ -22,7 +28,7 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 
 		/* Нужно изменить на нах CDN */
 		$script = '';
-		$uniqid = uniqid('CRUDFormWidgetMediumEditor_');
+		$uniqid = $this->getUniqid();
 		if (!isset($CRUDFormWidgetMediumEditor_include_script)) {
 			$script = '
 				<script src="//cdn.jsdelivr.net/medium-editor/latest/js/medium-editor.min.js"></script>
@@ -69,5 +75,20 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 		$this->field_name = $field_name;
 	}
 
+    /**
+     * @return mixed
+     */
+    public function getUniqid()
+    {
+        return $this->uniqid;
+    }
+
+    /**
+     * @param mixed $uniqid
+     */
+    public function setUniqid($uniqid)
+    {
+        $this->uniqid = $uniqid;
+    }
 
 }
