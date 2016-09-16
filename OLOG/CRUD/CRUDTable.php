@@ -21,6 +21,7 @@ class CRUDTable
     const OPERATION_SWAP_MODEL_WEIGHT = 'OPERATION_SWAP_MODEL_WEIGHT';
 
     const FILTERS_POSITION_LEFT = 'FILTERS_POSITION_LEFT';
+    const FILTERS_POSITION_RIGHT = 'FILTERS_POSITION_RIGHT';
     const FILTERS_POSITION_TOP = 'FILTERS_POSITION_TOP';
     const FILTERS_POSITION_NONE = 'FILTERS_POSITION_NONE';
 
@@ -150,7 +151,7 @@ class CRUDTable
 		$table_container_element_id = 'tableContainer_' . $table_id;
 
         // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
-		$html = '<div>';
+		$html = '<div>'; // container div
         $html .= '<div class="' . $table_container_element_id . ' row">';
 
         if ($filters_position == self::FILTERS_POSITION_LEFT) {
@@ -159,7 +160,7 @@ class CRUDTable
             $html .= '</div>';
         }
 
-        if ($filters_position == self::FILTERS_POSITION_LEFT) {
+        if (($filters_position == self::FILTERS_POSITION_LEFT) || ($filters_position == self::FILTERS_POSITION_RIGHT)) {
             $html .= '<div class="col-sm-8">';
         } else {
             $html .= '<div class="col-sm-12">';
@@ -218,9 +219,16 @@ class CRUDTable
 		$html .= Pager::renderPager($table_id, count($objs_ids_arr));
 
         $html .= '</div>';
-        $html .= '</div>';
 
-        $html .= '</div>';
+        if ($filters_position == self::FILTERS_POSITION_RIGHT) {
+            $html .= '<div class="col-sm-4">';
+            $html .= self::filtersHtml($table_id, $filters_arr);
+            $html .= '</div>';
+        }
+
+        $html .= '</div>'; // row div
+
+        $html .= '</div>'; // container div
 
         $html .= '<script>CRUD.Table.init("' . $table_container_element_id . '", "' . Url::getCurrentUrlNoGetForm() . '");</script>';
 
