@@ -32,6 +32,10 @@ class DemoNodesListAction
                     new CRUDFormRow(
                         'Title',
                         new CRUDFormWidgetInput('title')
+                    ),
+                    new CRUDFormRow(
+                        'body2',
+                        new CRUDFormWidgetInput('body2')
                     )
                 ]
             ),
