@@ -95,8 +95,6 @@ class CRUDForm
 
         $__operations_executed = true;
 
-        // TODO: transactions??
-
         Operations::matchOperation(self::OPERATION_SAVE_EDITOR_FORM, function () use ($url_to_redirect_after_save, $redirect_get_params_arr) {
             self::saveEditorFormOperation($url_to_redirect_after_save, $redirect_get_params_arr);
         });

@@ -98,6 +98,14 @@ class CRUDTable
     }
 
     static public function executeOperations(){
+        static $__operations_executed = false;
+
+        if ($__operations_executed){
+            return;
+        }
+
+        $__operations_executed = true;
+
         Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () {
             self::deleteModelOperation();
         });
