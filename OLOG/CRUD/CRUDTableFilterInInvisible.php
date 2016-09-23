@@ -34,7 +34,7 @@ class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilter2
     {
         $filter_value_arr = $this->getValue();
         if(!count($filter_value_arr)){
-            return;
+            return['', []];
         }
 
         $placeholder_values_arr=[];
@@ -46,7 +46,7 @@ class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilter2
             $in_arr[]='?';
             $placeholder_values_arr[]=$val;
         }
-        $where = $column_name." IN(".implode(',',$in_arr).")";
+        $where = $column_name." IN(".implode(',',$in_arr).") ";
 
         return [$where, $placeholder_values_arr];
 
