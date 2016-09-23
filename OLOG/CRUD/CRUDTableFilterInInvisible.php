@@ -8,7 +8,6 @@ use OLOG\GETAccess;
 class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilter2
 {
     protected $field_name;
-    protected $filter_iniq_id;
     protected $filter_value;
 
     public function getValue(){
@@ -25,9 +24,6 @@ class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilter2
         return $html;
     }
 
-    public function getOperationCode(){
-
-    }
 
 
     /**
@@ -59,24 +55,8 @@ class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilter2
     public function __construct($field_name,  $value){
         $this->setFieldName($field_name);
         $this->setValue($value);
-
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFilterIniqId()
-    {
-        return $this->filter_iniq_id;
-    }
-
-    /**
-     * @param mixed $filter_iniq_id
-     */
-    public function setFilterIniqId($filter_iniq_id)
-    {
-        $this->filter_iniq_id = $filter_iniq_id;
-    }
 
     /**
      * @return mixed
