@@ -5,17 +5,9 @@ namespace OLOG\CRUD;
 use OLOG\Assert;
 use OLOG\GETAccess;
 
-class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilter2
+class CRUDTableFilterNotNullInvisible implements InterfaceCRUDTableFilter2
 {
     protected $field_name;
-    protected $filter_value;
-
-    public function getValue(){
-        return $this->filter_value;
-    }
-    public function setValue($val){
-        $this->filter_value=$val;
-    }
 
     public function getHtml(){
         $html = '';
@@ -28,27 +20,15 @@ class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilter2
      */
     public function sqlConditionAndPlaceholderValue()
     {
-        $filter_value_arr = $this->getValue();
-        if(!count($filter_value_arr)){
-            return['', []];
-        }
-
-        $placeholder_values_arr=[];
         $column_name = $this->getFieldName();
 
-        $in_arr=[];
-        foreach ($filter_value_arr  as $val){
-            $in_arr[]='?';
-            $placeholder_values_arr[]=$val;
-        }
-        $where = $column_name." IN(".implode(',',$in_arr).") ";
+        $where = $column_name . " is not null ";
 
-        return [$where, $placeholder_values_arr];
+        return [$where, []];
     }
 
-    public function __construct($field_name,  $value){
+    public function __construct($field_name){
         $this->setFieldName($field_name);
-        $this->setValue($value);
     }
 
     /**
