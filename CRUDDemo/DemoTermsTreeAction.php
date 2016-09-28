@@ -78,7 +78,7 @@ class DemoTermsTreeAction
                     'weight',
                     new CRUDTableWidgetWeight(
                         [
-                            'parent_id' => null
+                            'parent_id' => '{this->parent_id}'
                         ]
                     )
                 ),

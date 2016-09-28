@@ -35,7 +35,8 @@ class CRUDTableWidgetWeight implements InterfaceCRUDTableWidget
         $o .= '<input type="hidden" name="' . self::FORMFIELD_CONTEXT_FIELDS_NAME . '" value="' . Sanitize::sanitizeAttrValue(implode(',', array_keys($this->context_fields_arr))) . '">';
 
         foreach ($this->context_fields_arr as $context_field_name => $context_field_value){
-            $o .= NullablePostFields::hiddenFieldHtml($context_field_name, $context_field_value);
+            $context_field_compiled_value = CRUDCompiler::compile($context_field_value, ['this' => $obj]);
+            $o .= NullablePostFields::hiddenFieldHtml($context_field_name, $context_field_compiled_value);
         }
 
         $o .= '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
