@@ -49,6 +49,7 @@ CRUD.Table = CRUD.Table || {
             var pagination_elem_selector = '.' + table_container_element_id + ' .pagination';
             $(filter_elem_selector).on('submit', function (e) {
                 e.preventDefault();
+                e.stopPropagation(); // for a case when filters form is within another form (model creation form for example)
                 var params = $(this).serialize();
                 $(this).data('params', params);
                 var filters = $(this).data('params') || '';
