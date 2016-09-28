@@ -5,6 +5,9 @@ namespace OLOG\CRUD;
 use OLOG\Assert;
 
 class CRUDCompiler {
+
+    const NULL_STRING = 'NULL';
+
     /**
      * компиляция строки: разворачивание обращений к полям объектов
      * @param $str
@@ -42,7 +45,7 @@ class CRUDCompiler {
                 $obj_id = $magic_matches[2];
                 $obj_field_name = $magic_matches[3];
 
-                if ($obj_id != 'NULL') { // TODO: review?
+                if ($obj_id != self::NULL_STRING) { // TODO: review?
                     $obj = CRUDObjectLoader::createAndLoadObject($class_name, $obj_id);
                     $replacement = self::getReplacement($obj, $obj_field_name);
                 } else {
@@ -57,7 +60,6 @@ class CRUDCompiler {
             // т.е. для прочитает первые скобки, а потом два заменит на результат и первые, и вторые
             $str = preg_replace('@{([^}{]+)}@', $replacement, $str, 1);
         }
-
         return $str;
     }
 
@@ -74,7 +76,7 @@ class CRUDCompiler {
         }
 
         if (is_null($replacement)){
-            $replacement = 'NULL'; // TODO: review?
+            $replacement = self::NULL_STRING ; // TODO: review?
         }
 
         return $replacement;
