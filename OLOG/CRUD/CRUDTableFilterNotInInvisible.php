@@ -41,7 +41,7 @@ class CRUDTableFilterNotInInvisible implements InterfaceCRUDTableFilter2
             $in_arr[]='?';
             $placeholder_values_arr[]=$val;
         }
-        $where = $column_name."NOT IN(".implode(',',$in_arr).") ";
+        $where = $column_name." not IN(".implode(',',$in_arr).") ";
 
         return [$where, $placeholder_values_arr];
     }
