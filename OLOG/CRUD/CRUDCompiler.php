@@ -6,7 +6,7 @@ use OLOG\Assert;
 
 class CRUDCompiler {
 
-    const NULL_STRING = 'NULL';
+    const NULL_STRING = '##NULL##';
 
     /**
      * компиляция строки: разворачивание обращений к полям объектов
@@ -49,7 +49,7 @@ class CRUDCompiler {
                     $obj = CRUDObjectLoader::createAndLoadObject($class_name, $obj_id);
                     $replacement = self::getReplacement($obj, $obj_field_name);
                 } else {
-                    $replacement = '';
+                    $replacement = 'ERROR_UNKNOWN_OBJECT';
                 }
             }
 
@@ -59,6 +59,9 @@ class CRUDCompiler {
             // выдаст "video_width Х video_width"
             // т.е. для прочитает первые скобки, а потом два заменит на результат и первые, и вторые
             $str = preg_replace('@{([^}{]+)}@', $replacement, $str, 1);
+        }
+        if (self::NULL_STRING == $str){
+            $str = null;
         }
         return $str;
     }
