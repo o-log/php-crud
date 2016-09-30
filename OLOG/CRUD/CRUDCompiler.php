@@ -6,7 +6,7 @@ use OLOG\Assert;
 
 class CRUDCompiler {
 
-    const NULL_STRING = 'NULLVALUE';
+    const NULL_STRING = 'NULLSTRING';
 
     /**
      * компиляция строки: разворачивание обращений к полям объектов
