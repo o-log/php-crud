@@ -15,8 +15,8 @@ class CRUDCompiler {
      * @return mixed
      * @throws \Exception
      */
-    public static function compile($str, array $data){
-
+    public static function compile($str, array $data)
+    {
         // TODO: clean and finish
 
         $matches = [];
@@ -60,26 +60,26 @@ class CRUDCompiler {
             // т.е. для прочитает первые скобки, а потом два заменит на результат и первые, и вторые
             $str = preg_replace('@{([^}{]+)}@', $replacement, $str, 1);
         }
-        if (self::NULL_STRING == $str){
+        if (self::NULL_STRING == $str) {
             $str = null;
         }
         return $str;
     }
 
-    public static function getReplacement($obj, $obj_field_name){
+    public static function getReplacement($obj, $obj_field_name)
+    {
         \OLOG\Assert::assert($obj);
 
         $matches = [];
-        if (preg_match('@^(\w+)\(\)$@', $obj_field_name, $matches)){ // имя поля заканчивается скобками - значит это имя метода
+        if (preg_match('@^(\w+)\(\)$@', $obj_field_name, $matches)) { // имя поля заканчивается скобками - значит это имя метода
             $method_name = $matches[1];
             Assert::assert(method_exists($obj, $method_name));
             $replacement = call_user_func([$obj, $method_name]);
         } else {
             $replacement = CRUDFieldsAccess::getObjectFieldValue($obj, $obj_field_name);
         }
-
-        if (is_null($replacement)){
-            $replacement = self::NULL_STRING ; // TODO: review?
+        if (is_null($replacement)) {
+            $replacement = self::NULL_STRING;
         }
 
         return $replacement;
