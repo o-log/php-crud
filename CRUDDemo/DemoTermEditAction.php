@@ -12,6 +12,7 @@ use OLOG\CRUD\CRUDFormWidgetRadios;
 use OLOG\CRUD\CRUDFormWidgetReferenceAjax;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilter;
+use OLOG\CRUD\CRUDTableFilterEqualInvisible;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDFormWidgetReference;
@@ -102,7 +103,7 @@ class DemoTermEditAction
                 new CRUDTableColumn('Delete', new CRUDTableWidgetDelete())
             ],
             [
-                new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_EQUAL, $term_id)
+                new CRUDTableFilterEqualInvisible('parent_id', $term_id)
             ],
             'weight'
 
