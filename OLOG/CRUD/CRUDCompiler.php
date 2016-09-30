@@ -49,7 +49,7 @@ class CRUDCompiler {
                     $obj = CRUDObjectLoader::createAndLoadObject($class_name, $obj_id);
                     $replacement = self::getReplacement($obj, $obj_field_name);
                 } else {
-                    $replacement = 'ERROR_UNKNOWN_OBJECT';
+                    $replacement = ''; // пустая строка для случаев типа '{' . Sport::class . '.{this->sport_id}->title}'  и this->sport_id не установленно
                 }
             }
 
