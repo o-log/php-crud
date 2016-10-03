@@ -70,6 +70,14 @@
                 )
             ),
             new CRUDTableColumn(
+                'Weight',
+                new CRUDTableWidgetWeight(
+                    [
+                        'parent_id' => '{this->parent_id}'
+                    ]
+                )
+            ),
+            new CRUDTableColumn(
                 'Delete',
                 new CRUDTableWidgetDelete()
             ),
@@ -100,6 +108,16 @@ new CRUDTableWidgetText('{DemoTerm.{this->term_id}->title}')
 
 new CRUDTableWidgetText('{' . DemoTerm::class . '.{this->term_id}->title}')
 
+В виджете весов иногда необходимо учитывать дополнительные параметры по котороым вычисляются веса объектов
+ в таблице. Для этого мы передаем массив контекстов
+
+Например
+
+new CRUDTableWidgetWeight([ 'parent_id' => '{this->parent_id}' ]) 
+
+В этом случае при обработки изменения весов веса будут считаться для записей с parent_id  таким же как и у текущего объекта 
+     
+ 
 # Вывод редактора объекта
 
 Вот пример кода, который генерирует html редактора объекта:
