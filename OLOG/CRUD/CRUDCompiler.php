@@ -61,7 +61,7 @@ class CRUDCompiler {
             $str = preg_replace('@{([^}{]+)}@', $replacement, $str, 1);
         }
         if (self::NULL_STRING == $str) {
-            $str = null;
+            return null;
         }
         return $str;
     }
