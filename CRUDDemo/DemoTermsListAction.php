@@ -5,21 +5,17 @@ namespace CRUDDemo;
 use OLOG\BT\BT;
 use OLOG\CRUD\CRUDForm;
 use OLOG\CRUD\CRUDFormRow;
-use OLOG\CRUD\CRUDFormWidgetAceTextarea;
-use OLOG\CRUD\CRUDFormWidgetDate;
-use OLOG\CRUD\CRUDFormWidgetDateTime;
 use OLOG\CRUD\CRUDFormWidgetRadios;
 use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
-use OLOG\CRUD\CRUDTableFilter;
+use OLOG\CRUD\CRUDTableFilterEqualInvisible;
 use OLOG\CRUD\CRUDTableFilterEqualOptions;
 use OLOG\CRUD\CRUDTableFilterLike;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
-use OLOG\CRUD\CRUDFormWidgetTextarea;
 use OLOG\CRUD\CRUDTableWidgetWeight;
 
 class DemoTermsListAction
@@ -88,7 +84,7 @@ class DemoTermsListAction
                 )
             ],
             [
-                new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL),
+                new CRUDTableFilterEqualInvisible('parent_id', null),
                 //new CRUDTableFilter('vocabulary_id', CRUDTableFilter::FILTER_EQUAL, DemoTerm::VOCABULARY_MAIN, new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR)),
                 new CRUDTableFilterEqualOptions('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, null, true),
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')

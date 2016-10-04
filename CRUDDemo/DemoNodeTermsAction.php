@@ -7,12 +7,11 @@ use OLOG\CRUD\CRUDFormInvisibleRow;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
-use OLOG\CRUD\CRUDTableFilter;
+use OLOG\CRUD\CRUDTableFilterEqualInvisible;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDFormWidgetReference;
-use OLOG\CRUD\CRUDFormWidgetTextarea;
 
 class DemoNodeTermsAction
 {
@@ -50,7 +49,7 @@ class DemoNodeTermsAction
                 new CRUDTableColumn('Term', new CRUDTableWidgetText('{' . DemoTerm::class . '.{this->term_id}->title}')),
                 new CRUDTableColumn('Delete', new CRUDTableWidgetDelete())
             ],
-            [new CRUDTableFilter('node_id', CRUDTableFilter::FILTER_EQUAL,  $node_id)]
+            [new CRUDTableFilterEqualInvisible('node_id', $node_id)]
         );
 
         DemoLayoutTemplate::render($html, 'Node ' . $node_id, DemoNodeEditAction::breadcrumbsArr($node_id));

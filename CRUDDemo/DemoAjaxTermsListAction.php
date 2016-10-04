@@ -3,10 +3,10 @@
 namespace CRUDDemo;
 
 use OLOG\CRUD\CRUDTableColumn;
-use OLOG\CRUD\CRUDTableFilter;
+use OLOG\CRUD\CRUDTableFilterEqualInvisible;
+use OLOG\CRUD\CRUDTableFilterLike;
 use OLOG\CRUD\CRUDTableWidgetReferenceSelect;
 use OLOG\CRUD\CRUDTableWidgetText;
-use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 
 class DemoAjaxTermsListAction
 {
@@ -43,8 +43,8 @@ class DemoAjaxTermsListAction
                 )
             ],
             [
-                new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL),
-                new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '%'),
+                new CRUDTableFilterEqualInvisible('parent_id', null),
+                new CRUDTableFilterLike('38tiuwgerf', 'Название', 'title')
             ],
             '',
             25683745
