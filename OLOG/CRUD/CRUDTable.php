@@ -314,7 +314,7 @@ class CRUDTable
 
                     $html .= '</div>';
                     $html .= '</div>';
-                } elseif ($filter_obj instanceof InterfaceCRUDTableFilter2) {
+                } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
                     // do nothing with invisible filters
                 } else {
                     throw new \Exception('filter doesnt implement interface ...');
