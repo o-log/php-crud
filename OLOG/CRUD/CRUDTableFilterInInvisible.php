@@ -5,10 +5,15 @@ namespace OLOG\CRUD;
 use OLOG\Assert;
 use OLOG\GETAccess;
 
-class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilter2
+class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilterInvisible
 {
     protected $field_name;
     protected $filter_value;
+
+    public function __construct($field_name,  $value){
+        $this->setFieldName($field_name);
+        $this->setValue($value);
+    }
 
     public function getValue(){
         return $this->filter_value;
@@ -17,10 +22,12 @@ class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilter2
         $this->filter_value=$val;
     }
 
+    /*
     public function getHtml(){
         $html = '';
         return $html;
     }
+    */
 
     /**
      * Возвращает пару из sql-условия и массива значений плейсхолдеров. Массив значений может быть пустой если плейсхолдеры не нужны.
@@ -46,26 +53,25 @@ class CRUDTableFilterInInvisible implements InterfaceCRUDTableFilter2
         return [$where, $placeholder_values_arr];
     }
 
-    public function __construct($field_name,  $value){
-        $this->setFieldName($field_name);
-        $this->setValue($value);
-    }
-
     /**
      * @return mixed
      */
+    /*
     public function getTitle()
     {
         return '';
     }
+    */
 
     /**
      * @param mixed $title
      */
+    /*
     public function setTitle($title)
     {
         $this->title = $title;
     }
+    */
 
     /**
      * @return mixed
