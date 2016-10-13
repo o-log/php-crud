@@ -89,6 +89,8 @@ class CRUDTable
                 $filter_index++;
             } elseif ($filter_obj instanceof InterfaceCRUDTableFilter2) {
                 // DO NOTHING - FILTER WILL READ ITS VALUE WHEN REQUIRED
+            } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
+                // DO NOTHING - FILTER WILL READ ITS VALUE WHEN REQUIRED
             } else {
                 throw new \Exception('filter doesnt implement InterfaceCRUDTableFilter nor InterfaceCRUDTableFilter2');
             }
