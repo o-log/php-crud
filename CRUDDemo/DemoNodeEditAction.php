@@ -42,7 +42,7 @@ class DemoNodeEditAction
                 ),
                 new CRUDFormRow(
                     'Title',
-                    new CRUDFormWidgetTextarea('title')
+                    new CRUDFormWidgetTextarea('title', true)
                 ),
                 new CRUDFormRow(
                     'image_path_in_images nullable',
