@@ -1,5 +1,6 @@
 <?php
 
+/*
 namespace OLOG\CRUD;
 
 interface InterfaceCRUDTableFilter
@@ -10,3 +11,4 @@ interface InterfaceCRUDTableFilter
     public function setValue($value);
     public function getWidgetObj();
 }
+*/

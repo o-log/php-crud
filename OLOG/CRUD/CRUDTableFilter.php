@@ -1,5 +1,6 @@
 <?php
 
+/*
 namespace OLOG\CRUD;
 
 class CRUDTableFilter implements InterfaceCRUDTableFilter
@@ -14,17 +15,11 @@ class CRUDTableFilter implements InterfaceCRUDTableFilter
     protected $value;
     protected $widget_obj;
 
-    /**
-     * @return mixed
-     */
     public function getWidgetObj()
     {
         return $this->widget_obj;
     }
 
-    /**
-     * @param mixed $widget_obj
-     */
     public function setWidgetObj($widget_obj)
     {
         $this->widget_obj = $widget_obj;
@@ -38,53 +33,34 @@ class CRUDTableFilter implements InterfaceCRUDTableFilter
         $this->setWidgetObj($widget_obj);
     }
 
-    /**
-     * @return mixed
-     */
     public function getFieldName()
     {
         return $this->field_name;
     }
 
-    /**
-     * @param mixed $field_name
-     */
     public function setFieldName($field_name)
     {
         $this->field_name = $field_name;
     }
 
-    /**
-     * @return mixed
-     */
     public function getOperationCode()
     {
         return $this->operation_code;
     }
 
-    /**
-     * @param mixed $operation_code
-     */
     public function setOperationCode($operation_code)
     {
         $this->operation_code = $operation_code;
     }
 
-    /**
-     * @return mixed
-     */
     public function getValue()
     {
         return $this->value;
     }
 
-    /**
-     * @param mixed $value
-     */
     public function setValue($value)
     {
         $this->value = $value;
     }
-    
-    
 }
+*/

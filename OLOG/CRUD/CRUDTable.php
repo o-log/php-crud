@@ -76,8 +76,8 @@ class CRUDTable
     {
         $filter_index = 0;
 
-        /** @var InterfaceCRUDTableFilter $filter_obj */
         foreach ($filters_arr as $filter_obj) {
+            /*
             if ($filter_obj instanceof InterfaceCRUDTableFilter) {
 
                 $filter_field_name = self::filterFormFieldName($table_id, $filter_index);
@@ -87,7 +87,9 @@ class CRUDTable
                 }
 
                 $filter_index++;
-            } elseif ($filter_obj instanceof InterfaceCRUDTableFilter2) {
+            } else
+            */
+            if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
                 // DO NOTHING - FILTER WILL READ ITS VALUE WHEN REQUIRED
             } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
                 // DO NOTHING - FILTER WILL READ ITS VALUE WHEN REQUIRED
@@ -257,8 +259,8 @@ class CRUDTable
 
             $filter_index = 0;
 
-            /** @var InterfaceCRUDTableFilter $filter_obj */
             foreach ($filters_arr as $filter_obj){
+                /*
                 if ($filter_obj instanceof InterfaceCRUDTableFilter) {
 
                     $html .= '<div class="col-md-12">';
@@ -278,7 +280,6 @@ class CRUDTable
                             $input_name = self::filterFormFieldName($table_index_on_page, $filter_index);
 
                             if ($filter_obj->getWidgetObj()) {
-                                /** @var InterfaceCRUDFormWidget $widget_obj */
                                 $widget_obj = $filter_obj->getWidgetObj();
                                 $html .= $widget_obj->htmlForValue($filter_obj->getValue(), $input_name);
                             } else {
@@ -305,7 +306,9 @@ class CRUDTable
                     $html .= '</div>';
                     $html .= '</div>';
                     $filter_index++;
-                } elseif ($filter_obj instanceof InterfaceCRUDTableFilter2) {
+                } else
+                */
+                if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
                     $html .= '<div class="col-md-12">';
                     $html .= '<div class="form-group">';
 
@@ -322,7 +325,7 @@ class CRUDTable
             }
 
             $html .= '</div>';
-            $html .= '<div class="row"><div class="col-sm-8 col-sm-offset-4"><button style="width: 100%;" type="submit" class="btn btn-default">Поиск</button></div></div>';
+            //$html .= '<div class="row"><div class="col-sm-8 col-sm-offset-4"><button style="width: 100%;" type="submit" class="btn btn-default">Поиск</button></div></div>';
             $html .= '</form>';
             $html .= '</div>';
         }

@@ -83,8 +83,8 @@ class CRUDInternalTableObjectsSelector
 
         $where = ' 1 = 1 ';
 
-        /** @var InterfaceCRUDTableFilter $filter_obj */
         foreach ($filters_arr as $filter_obj) {
+            /*
             if ($filter_obj instanceof InterfaceCRUDTableFilter) {
 
                 $column_name = $filter_obj->getFieldName();
@@ -124,7 +124,9 @@ class CRUDInternalTableObjectsSelector
                     default:
                         throw new \Exception('unknown filter code');
                 }
-            } elseif ($filter_obj instanceof InterfaceCRUDTableFilter2) {
+            } else
+            */
+            if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
                 list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
                 if ($filter_sql_condition != ''){
                     $where .= ' and ' . $filter_sql_condition;
