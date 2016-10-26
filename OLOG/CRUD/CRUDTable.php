@@ -25,7 +25,6 @@ class CRUDTable
     const FILTERS_POSITION_TOP = 'FILTERS_POSITION_TOP';
     const FILTERS_POSITION_NONE = 'FILTERS_POSITION_NONE';
 
-
     static protected function deleteModelOperation()
     {
         $model_class_name = POSTAccess::getRequiredPostValue(CRUDTableWidgetDelete::FIELD_CLASS_NAME);
@@ -70,7 +69,6 @@ class CRUDTable
     static protected function filterFormFieldName($table_id, $filter_index){
 		return 'table_' . $table_id . '_filter_' . $filter_index;
 	}
-
 
     static public function readFiltersValuesFromRequest($table_id, $filters_arr)
     {
@@ -128,7 +126,7 @@ class CRUDTable
 	 * @param string $order_by
 	 * @return string
 	 */
-	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '1', $filters_position = self::FILTERS_POSITION_NONE)
+	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '', $filters_position = self::FILTERS_POSITION_NONE)
 	{
 
 	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
@@ -142,7 +140,7 @@ class CRUDTable
 		// include script only once per page
 		if(!isset($CRUDTable_include_script)){
 		    $script = '';
-			$script .= '<script src="//cdnjs.cloudflare.com/ajax/libs/js-url/2.3.0/url.min.js"></script>';
+			$script .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/js-url/2.3.0/url.min.js"></script>';
             $script .= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>';
             $script .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">';
 
@@ -161,6 +159,9 @@ class CRUDTable
 		//
 
 		$table_container_element_id = 'tableContainer_' . $table_id;
+		if ($table_id) {
+			$table_container_element_id = $table_id;
+		}
 
         // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
 		$html = '<div>'; // container div
@@ -251,7 +252,6 @@ class CRUDTable
     {
         $html = '';
 
-
         if ($filters_arr) {
             $html .= '<div class="">';
             $html .= '<form class="filters-form form-horizontal">';
@@ -332,6 +332,7 @@ class CRUDTable
 
         return $html;
     }
+
     static protected function toolbarHtml($table_index_on_page, $create_form_html, $filters_arr)
     {
         if ($create_form_html == ''){

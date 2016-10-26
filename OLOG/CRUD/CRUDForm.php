@@ -110,7 +110,7 @@ class CRUDForm
      * @return string html-код формы редактирования
      * @throws \Exception
      */
-    static public function html($obj, $element_obj_arr, $url_to_redirect_after_save = '', $redirect_get_params_arr = [])
+    static public function html($obj, $element_obj_arr, $url_to_redirect_after_save = '', $redirect_get_params_arr = [], $form_id = '')
     {
         static $CRUDForm_include_script;
 
@@ -125,7 +125,10 @@ class CRUDForm
 
         self::executeOperations($url_to_redirect_after_save, $redirect_get_params_arr);
 
-        $form_element_id = 'formElem_' . uniqid();
+	    $form_element_id = 'formElem_' . uniqid();
+	    if ($form_id) {
+		    $form_element_id = $form_id;
+	    }
 
         $html = '';
 

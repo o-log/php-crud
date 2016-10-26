@@ -5,7 +5,7 @@ CRUD.Form = CRUD.Form || {
 		init: function (form_element_id) {
 			var $form = $('#' + form_element_id);
 			CRUD.Form.required(form_element_id);
-			$form.on('submit', function (e) {
+			$form.find('[type="submit"]').on('click', function (e) {
 				if (CRUD.Form.validator(form_element_id) == true) {
 				} else {
 					e.preventDefault();
@@ -53,7 +53,7 @@ CRUD.Form = CRUD.Form || {
 				} else {
 					var radio_name = $this.attr('name');
 					if ($form.find('[name="' + radio_name + '"]:checked').length == 0) {
-						if ($.inArray($this.attr('name'), errors) < 0 ) {
+						if ($.inArray($this.attr('name'), errors) < 0) {
 							errors.push($this.attr('name'));
 						}
 					}
