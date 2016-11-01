@@ -8,6 +8,7 @@ use OLOG\GETAccess;
 use OLOG\Model\InterfaceWeight;
 use OLOG\Operations;
 use OLOG\POSTAccess;
+use OLOG\Preloader;
 use OLOG\Redirects;
 use OLOG\Render;
 use OLOG\Sanitize;
@@ -144,6 +145,7 @@ class CRUDTable
             $script .= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>';
             $script .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">';
 
+			$script .= Preloader::preloaderJsHtml();
 			$script .= '<script>';
             $script .= Render::callLocaltemplate('templates/crudtable.js');
 			$script .= '</script>';
