@@ -96,13 +96,17 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         <script>
             $('#<?= $choose_form_element_id ?>').on('hidden.bs.modal', function () {
 	            $('#<?= $choose_form_element_id ?> .modal-body').html('');
-            }).on('shown.bs.modal', function (e) {
+            });
+
+            $('#<?= $choose_form_element_id ?>').on('shown.bs.modal', function (e) {
                 $.ajax({
                     url: "<?= $this->getAjaxActionUrl() ?>"
                 }).success(function(received_html) {
                     $('#<?= $choose_form_element_id ?> .modal-body').html(received_html);
                 });
-            }).on('click', '.js-ajax-form-select', function (e) {
+            });
+
+            $('#<?= $choose_form_element_id ?>').on('click', '.js-ajax-form-select', function (e) {
             	e.preventDefault();
                 var select_id = $(this).data('id');
                 var select_title = $(this).data('title');
