@@ -3,6 +3,7 @@
 namespace OLOG\CRUD;
 
 use OLOG\BT\BT;
+use OLOG\Preloader;
 use OLOG\Sanitize;
 
 class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
@@ -63,8 +64,9 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         }
 
         $html = '';
+	    $html .= Preloader::preloaderJsHtml();
 
-        $select_element_id = 'js_select_' . rand(1, 999999);
+	    $select_element_id = 'js_select_' . rand(1, 999999);
 		$choose_form_element_id = 'collapse_' . rand(1, 999999);
 
         $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($input_name) . '" value="' . $field_value . '" data-field="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text" ' . $is_required_str . '/>';
@@ -99,10 +101,12 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
             });
 
             $('#<?= $choose_form_element_id ?>').on('shown.bs.modal', function (e) {
+	            preloader.show();
                 $.ajax({
                     url: "<?= $this->getAjaxActionUrl() ?>"
                 }).success(function(received_html) {
                     $('#<?= $choose_form_element_id ?> .modal-body').html(received_html);
+	                preloader.hide();
                 });
             });
 

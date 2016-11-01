@@ -2,10 +2,13 @@
 
 namespace OLOG\CRUD\templates;
 
+use OLOG\Preloader;
+
 class CRUDCreateFormScript
 {
 	public static function render()
 	{
+		Preloader::preloaderJsHtml();
 		?>
 		<script>
 			var CRUD = CRUD || {};
@@ -29,19 +32,19 @@ class CRUDCreateFormScript
 
 					requestAjax: function (table_elem, query, data) {
 
-						CRUD.Table.preloader.show();
+						preloader.show();
 
 						$.ajax({
 							type: "POST",
 							url: query,
 							data: data
 						}).success(function (received_html) {
-							CRUD.Table.preloader.hide();
+							preloader.hide();
 
 							var received_table_html = $(received_html).find(table_elem).html();
 							$(table_elem).html(received_table_html);
 						}).fail(function () {
-							CRUD.Table.preloader.hide();
+							preloader.hide();
 						});
 					}
 				};
