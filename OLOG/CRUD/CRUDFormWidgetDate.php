@@ -28,10 +28,10 @@ class CRUDFormWidgetDate implements InterfaceCRUDFormWidget
         $script = '';
         if (!isset($CRUDFormWidgetDate_include_script)) {
             $script = '
-								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
-								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/locale/ru.js"></script>
-				<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
-								<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/ru.js"></script>
+				<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
+								<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
 			';
             $CRUDFormWidgetDate_include_script = false;
         }
@@ -67,9 +67,11 @@ class CRUDFormWidgetDate implements InterfaceCRUDFormWidget
                 sideBySide: true,
                 showTodayButton: true
             }).on("dp.change", function(obj){
-                if (obj.date) {
-                    $("#<?= $uniqid ?>_input").val(obj.date.format("YYYY-MM-DD")).trigger('change');
-                }
+	            if (obj.date) {
+		            $("#<?= $uniqid ?>_input").val(obj.date.format("YYYY-MM-DD")).trigger('change');
+	            } else {
+		            $("#<?= $uniqid ?>_input").val('').trigger('change');
+	            }
             });
         </script>
         <?php
