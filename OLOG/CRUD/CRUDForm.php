@@ -110,7 +110,7 @@ class CRUDForm
      * @return string html-код формы редактирования
      * @throws \Exception
      */
-    static public function html($obj, $element_obj_arr, $url_to_redirect_after_save = '', $redirect_get_params_arr = [], $form_id = '')
+    static public function html($obj, $element_obj_arr, $url_to_redirect_after_save = '', $redirect_get_params_arr = [], $form_id = '', $operation_code = self::OPERATION_SAVE_EDITOR_FORM)
     {
         static $CRUDForm_include_script;
 
@@ -134,7 +134,7 @@ class CRUDForm
 
         $html .= '<form id="' . $form_element_id . '" class="form-horizontal" role="form" method="post" action="' . Sanitize::sanitizeUrl(\OLOG\Url::getCurrentUrl()) . '">';
 
-        $html .= Operations::operationCodeHiddenField(self::OPERATION_SAVE_EDITOR_FORM);
+        $html .= Operations::operationCodeHiddenField($operation_code);
 
         $html .= '<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
         $html .= '<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue(CRUDFieldsAccess::getObjId($obj)) . '">';
