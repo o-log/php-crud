@@ -72,8 +72,6 @@ class CRUDFormWidgetTimestamp implements InterfaceCRUDFormWidget
 				} else {
 					$("#<?= $uniqid ?>_input").val('').trigger('change');
 				}
-			}).on('dp.update', function () {
-				$(this).datepicker('dp.hide');
 			});
 		</script>
 		<?php
