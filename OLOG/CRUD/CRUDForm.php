@@ -110,7 +110,7 @@ class CRUDForm
      * @return string html-код формы редактирования
      * @throws \Exception
      */
-    static public function html($obj, $element_obj_arr, $url_to_redirect_after_save = '', $redirect_get_params_arr = [], $form_id = '', $operation_code = self::OPERATION_SAVE_EDITOR_FORM)
+    static public function html($obj, $element_obj_arr, $url_to_redirect_after_save = '', $redirect_get_params_arr = [], $form_id = '', $operation_code = self::OPERATION_SAVE_EDITOR_FORM, $hide_submit_button = false)
     {
         static $CRUDForm_include_script;
 
@@ -147,7 +147,9 @@ class CRUDForm
 
         $html .= '<div class="row">';
         $html .= '<div class="col-sm-8 col-sm-offset-4">';
-        $html .= '<button style="width: 100%" type="submit" class="btn btn-primary">Сохранить</button>';
+        if (!$hide_submit_button) {
+            $html .= '<button style="width: 100%" type="submit" class="btn btn-primary">Сохранить</button>';
+        }
         $html .= '</div>';
         $html .= '</div>';
 
