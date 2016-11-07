@@ -10,13 +10,15 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
     protected $options_arr;
     protected $show_null_checkbox;
     protected $is_required;
+    protected $disabled;
 
-    public function __construct($field_name, $options_arr, $show_null_checkbox = false, $is_required = false)
+    public function __construct($field_name, $options_arr, $show_null_checkbox = false, $is_required = false, $disabled = false)
     {
         $this->setFieldName($field_name);
         $this->setOptionsArr($options_arr);
         $this->setShowNullCheckbox($show_null_checkbox);
         $this->setIsRequired($is_required);
+        $this->setDisabled($disabled);
     }
 
     public function html($obj)
@@ -45,6 +47,11 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
 
         $options_arr = $this->getOptionsArr();
 
+        $disabled = '';
+        if ($this->getDisabled()) {
+            $disabled = 'disabled';
+        }
+
         foreach ($options_arr as $value => $title) {
             $selected_html_attr = '';
             if (!is_null($field_value) && $field_value == $value) {
@@ -56,7 +63,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
                 $is_required_str = ' required ';
             }
 
-            $html .= '<label class="radio-inline"><input type="radio" name="' . Sanitize::sanitizeAttrValue($input_name) . '" value="' . Sanitize::sanitizeAttrValue($value) . '" ' . $selected_html_attr . ' ' . $is_required_str . ' > ' . $title . '</label>';
+            $html .= '<label class="radio-inline"><input type="radio" name="' . Sanitize::sanitizeAttrValue($input_name) . '" value="' . Sanitize::sanitizeAttrValue($value) . '" ' . $selected_html_attr . ' ' . $is_required_str . ' ' .$disabled. '> ' . $title . '</label>';
         }
         //$html .= '</div>';
 
@@ -159,4 +166,19 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
         $this->show_null_checkbox = $show_null_checkbox;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDisabled()
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * @param mixed $disabled
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+    }
 }
