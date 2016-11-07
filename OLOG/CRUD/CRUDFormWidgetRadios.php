@@ -167,7 +167,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function getDisabled()
     {
@@ -175,7 +175,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
     }
 
     /**
-     * @param mixed $disabled
+     * @param bool $disabled
      */
     public function setDisabled($disabled)
     {

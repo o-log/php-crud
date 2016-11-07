@@ -8,11 +8,14 @@ class CRUDFormWidgetTextarea implements InterfaceCRUDFormWidget
 {
     protected $field_name;
     protected $is_required;
+    protected $disabled;
 
-    public function __construct($field_name, $is_required = false)
+
+    public function __construct($field_name, $is_required = false, $disabled = false)
     {
         $this->setFieldName($field_name);
         $this->setIsRequired($is_required);
+        $this->setDisabled($disabled);
     }
 
     public function html($obj)
@@ -23,7 +26,13 @@ class CRUDFormWidgetTextarea implements InterfaceCRUDFormWidget
         if ($this->is_required) {
             $is_required_str = ' required ';
         }
-        return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '"  '. $is_required_str . ' class="form-control" rows="5">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
+
+        $disabled = '';
+        if ($this->getDisabled()) {
+            $disabled = 'disabled';
+        }
+
+        return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '"  '. $is_required_str . ' class="form-control" rows="5"  ' . $disabled . '>' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
     }
 
     /**
@@ -58,4 +67,19 @@ class CRUDFormWidgetTextarea implements InterfaceCRUDFormWidget
         $this->is_required = $is_required;
     }
 
+    /**
+     * @return bool
+     */
+    public function getDisabled()
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * @param bool $disabled
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+    }
 }
