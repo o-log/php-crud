@@ -70,6 +70,7 @@ class CRUDForm
 
         if ($url_to_redirect_after_save != '') {
             $redirect_url = $url_to_redirect_after_save;
+            $redirect_url = CRUDCompiler::compile($redirect_url, ['this' => $obj]);
 
             $params_arr = [];
             foreach ($redirect_get_params_arr as $param => $value) {
