@@ -59,61 +59,54 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
 
         $input_name = $this->getFilterIniqId();
 
+	    $html .= '<div class="js-filter">';
         // отдельное поле, наличие которого сообщает что фильтр присутствует в форме (все другие поля могут отсутствовать когда фильтр например запрещен и т.п.)
         $html .= '<input type="hidden" name="' . $this->filterIsPassedInputName() . '" value="1">';
 
-	    $html .= '<input type="hidden" name="' . $input_name . '" value="' .  $this->getValue() . '">';
+	    $html .= '<input type="hidden" name="' . $this->enabledCheckboxInputName() . '" value="' . ($this->isEnabled() ? '1' : '') . '">';
+	    $html .= '<input type="radio" value="" name="' . $input_name . '" id="' . $input_name . '_all" onchange="f' . $input_name . '_changeFiltres(this);" ' . ($this->isEnabled() ? '' : 'checked') . ' style="z-index: -11;position: absolute;opacity: 0;">';
+	    $html .= '<label for="' . $input_name . '_all"><span class="btn btn-default ' . ($this->isEnabled() ? '' : 'active') . '">Все</span></label>';
+
 	    $options_arr = $this->getOptionsArr();
 	    foreach($options_arr as $value => $title){
-		    $html .= '<button type="button" onclick="f' . $input_name . '_change(this);" value="' .  $value . '" ' . ($this->getValue() == $value ? 'disabled' : '') . '>' . $title . '</button>';
+		    $html .= '<input type="radio" value="' . $value . '" name="' . $input_name . '" id="' . $input_name . '_' . $value . '" onchange="f' . $input_name . '_changeFiltres(this);" style="z-index: -11;position: absolute;opacity: 0;">';
+		    $html .= '<label for="' . $input_name . '_' . $value . '"><span class="btn btn-default">' . $title . '</span></label>';
 	    }
 
 	    if($this->getShowNullCheckbox()) {
-		    $html .= '<input type="checkbox" onchange="f' . $input_name . '_nullchange(this);" value="1" id="' . $this->nullCheckboxInputName() . '" name="' . $this->nullCheckboxInputName() . '" ' . (is_null($this->getValue()) ? ' checked ' : '') . ' /> null';
+		    $html .= '<input type="hidden" name="' . $this->nullCheckboxInputName() . '" value="' . (is_null($this->getValue()) ? '' : '1') . '">';
+		    $html .= '<input type="radio" value="" name="' . $input_name . '" id="' . $input_name . '_is_null" onchange="f' . $input_name . '_changeFiltres(this);" style="z-index: -11;position: absolute;opacity: 0;">';
+		    $html .= '<label for="' . $input_name . '_is_null"><span class="btn btn-default">Не указано</span></label>';
 	    }
+	    $html .= '</div>';
 
-        $html .= '<input title="Filter active" onchange="f' . $input_name . '_enabledclick(this);" type="checkbox" id="' . $this->enabledCheckboxInputName() . '" name="' . $this->enabledCheckboxInputName() . '" ' . ($this->isEnabled() ? 'checked' : '') . ' value="1">';
+		ob_start(); ?>
+        <script>
+        function f<?= $input_name ?>_changeFiltres(select_element){
+	        var $this = $(select_element);
+	        var $form = $this.closest('form');
+	        var $filter = $this.closest('.js-filter');
 
-        $html .= '<script>
+	        $filter.find('.btn').removeClass('active');
+	        $filter.find('[for="' + $this.attr('id') + '"]').find('.btn').addClass('active');
 
-        function f' . $input_name . '_change(select_element){
-            $(select_element).closest("form").find("[name=' . $input_name . ']").val($(select_element).val());
-            $(select_element).closest("form").submit();
-        }
+	        if ($this.is('#<?= $input_name ?>_all')) {
+		        $filter.find('[name="<?= $this->enabledCheckboxInputName() ?>"]').val('');
+	        } else {
+		        $filter.find('[name="<?= $this->enabledCheckboxInputName() ?>"]').val('1');
+	        }
 
-        function f' . $input_name . '_selectchange(select_element){
-            $(select_element).closest("form").submit();
-        }
-        
-        function f' . $input_name . '_nullchange(checkbox_element){
-            f' . $input_name . '_updatedisabled();
-            $(checkbox_element).closest("form").submit();
-        }
-        
-        function f' . $input_name . '_enabledclick(checkbox_element){
-            f' . $input_name . '_updatedisabled();
-            $(checkbox_element).closest("form").submit();
-        }
-        
-        function f' . $input_name . '_updatedisabled(){
-            var enabled = $("#' . $this->enabledCheckboxInputName() . '").prop("checked");
-            if (enabled){
-                $("#' . $this->nullCheckboxInputName() . '").prop("disabled", false);
-                if ($("#' . $this->nullCheckboxInputName() . '").length > 0){ // if widget has null checkbox
-                    var is_null = $("#' . $this->nullCheckboxInputName() . '").prop("checked");
-                    $("#' . $input_name . '").prop("disabled", is_null);
-                } else {
-                    $("#' . $input_name . '").prop("disabled", false);
-                }
-            } else {
-                $("#' . $input_name . '").prop("disabled", true);
-                $("#' . $this->nullCheckboxInputName() . '").prop("disabled", true);
-            }
-        }
+	        if ($this.is('#<?= $input_name ?>_is_null')) {
+		        $filter.find('[name="<?= $this->nullCheckboxInputName() ?>"]').val('1');
+	        } else {
+		        $filter.find('[name="<?= $this->nullCheckboxInputName() ?>"]').val('');
+	        }
 
-        f' . $input_name . '_updatedisabled();
-        
-        </script>';
+	        $form.submit();
+        }
+        </script>
+		<?php
+	    $html .= ob_get_clean();
 
         return $html;
     }

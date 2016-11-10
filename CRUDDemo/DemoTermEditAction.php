@@ -48,6 +48,13 @@ class DemoTermEditAction
                         2 => 'two'
                     ], true, true)
                 ),
+	            new CRUDFormRow(
+		            'Gender',
+		            new CRUDFormWidgetRadios('gender', [
+			            1 => 'male',
+			            2 => 'female'
+		            ], true)
+	            ),
                 new CRUDFormRow(
                     'Options',
                     new CRUDFormWidgetOptions('options', [
