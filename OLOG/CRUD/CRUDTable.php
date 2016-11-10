@@ -73,35 +73,6 @@ class CRUDTable
 		return 'table_' . $table_id . '_filter_' . $filter_index;
 	}
 
-    static public function readFiltersValuesFromRequest($table_id, $filters_arr)
-    {
-        $filter_index = 0;
-
-        foreach ($filters_arr as $filter_obj) {
-            /*
-            if ($filter_obj instanceof InterfaceCRUDTableFilter) {
-
-                $filter_field_name = self::filterFormFieldName($table_id, $filter_index);
-
-                if (array_key_exists($filter_field_name, $_GET)) {
-                    $filter_obj->setValue(urldecode($_GET[$filter_field_name]));
-                }
-
-                $filter_index++;
-            } else
-            */
-            if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
-                // DO NOTHING - FILTER WILL READ ITS VALUE WHEN REQUIRED
-            } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
-                // DO NOTHING - FILTER WILL READ ITS VALUE WHEN REQUIRED
-            } else {
-                throw new \Exception('filter doesnt implement InterfaceCRUDTableFilter nor InterfaceCRUDTableFilter2');
-            }
-        }
-
-        return $filters_arr;
-    }
-
     static public function executeOperations(){
         static $__operations_executed = false;
 
@@ -154,9 +125,6 @@ class CRUDTable
 
 			$CRUDTable_include_script = false;
 		}
-
-        //$filters_arr = self::readFiltersValuesFromRequest($table_id, $filters_arr);
-
 
 		//
 		// вывод таблицы
@@ -314,10 +282,6 @@ class CRUDTable
                 */
 
                 if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
-	                if ($filter_obj->getHtml() == '') {
-		                continue;
-	                }
-
                     $html .= '<div class="col-md-12">';
                     $html .= '<div class="form-group">';
 
@@ -363,11 +327,6 @@ class CRUDTable
 
 		    foreach ($filters_arr as $filter_obj) {
 			    if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
-
-				    if ($filter_obj->getHtml() == '') {
-					    continue;
-				    }
-
 				    echo '<li>';
 				    echo '<label>' . $filter_obj->getTitle() . '</label>';
 				    echo '<div>' . $filter_obj->getHtml() . '</div>';
