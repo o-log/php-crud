@@ -312,25 +312,16 @@ class CRUDTable
 		    return '';
 	    }
 
-	    $html = HTML::div('', '', function () use ($table_index_on_page, $filters_arr) {
-		    echo '
-		    <style>
-		    .filters-inline {margin: 0;padding: 0;list-style: none;}
-		    .filters-inline > li {display: inline-block;vertical-align: top;margin: 0;}
-		    .filters-inline > li > label {display: inline-block;vertical-align: middle;margin-right: 10px;}
-		    .filters-inline > li > div {display: inline-block;vertical-align: middle;}
-		    .filters-inline > li > div * {width: auto !important;}
-		    </style>
-		    ';
+	    $html = HTML::div('filters-inline', '', function () use ($table_index_on_page, $filters_arr) {
 
-		    echo '<form class="filters-form form-horizontal"><ul class="filters-inline">';
+		    echo '<form class="filters-form">';
 
 		    foreach ($filters_arr as $filter_obj) {
 			    if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
-				    echo '<li>';
-				    echo '<label>' . $filter_obj->getTitle() . '</label>';
-				    echo '<div>' . $filter_obj->getHtml() . '</div>';
-				    echo '</li>';
+				    echo '<div style="display: inline-block;">';
+				    echo '<label style="display: inline-block;">' . $filter_obj->getTitle() . '</label>';
+				    echo '<span style="display: inline-block;">' . $filter_obj->getHtml() . '</span>';
+				    echo '</div>';
 
 			    } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
 				    // do nothing with invisible filters
@@ -339,8 +330,7 @@ class CRUDTable
 			    }
 		    }
 
-
-		    echo '</ul></form>';
+		    echo '</form>';
 	    });
 
 	    return $html;
