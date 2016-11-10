@@ -312,18 +312,18 @@ class CRUDTable
 		    return '';
 	    }
 
-	    $html = HTML::div('row', '', function () use ($table_index_on_page, $filters_arr) {
+	    $html = HTML::div('', '', function () use ($table_index_on_page, $filters_arr) {
 		    echo '
 		    <style>
-		    .filters-inline {margin: 20px 0 0 0;padding: 0;list-style: none;}
-		    .filters-inline > li {display: inline-block;vertical-align: top;margin: 0 20px 20px 0;}
+		    .filters-inline {margin: 0;padding: 0;list-style: none;}
+		    .filters-inline > li {display: inline-block;vertical-align: top;margin: 0;}
 		    .filters-inline > li > label {display: inline-block;vertical-align: middle;margin-right: 10px;}
 		    .filters-inline > li > div {display: inline-block;vertical-align: middle;}
 		    .filters-inline > li > div * {width: auto !important;}
 		    </style>
 		    ';
 
-		    echo '<div class="col-md-12"><form class="filters-form form-horizontal"><ul class="filters-inline">';
+		    echo '<form class="filters-form form-horizontal"><ul class="filters-inline">';
 
 		    foreach ($filters_arr as $filter_obj) {
 			    if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
@@ -340,7 +340,7 @@ class CRUDTable
 		    }
 
 
-		    echo '</ul></form></div>';
+		    echo '</ul></form>';
 	    });
 
 	    return $html;
