@@ -92,7 +92,7 @@ class DemoTermsListAction
             ],
             'weight',
             '8726438755234',
-            CRUDTable::FILTERS_POSITION_RIGHT
+            CRUDTable::FILTERS_POSITION_INLINE
         );
 
         DemoLayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());
