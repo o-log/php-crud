@@ -13,6 +13,7 @@ use OLOG\CRUD\CRUDTableFilterEqualInvisible;
 use OLOG\CRUD\CRUDTableFilterEqualOptions;
 use OLOG\CRUD\CRUDTableFilterEqualOptionsInline;
 use OLOG\CRUD\CRUDTableFilterLike;
+use OLOG\CRUD\CRUDTableFilterLikeInline;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetOptions;
 use OLOG\CRUD\CRUDTableWidgetText;
@@ -98,7 +99,7 @@ class DemoTermsListAction
                 new CRUDTableFilterEqualOptionsInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, null, true),
 	            new CRUDTableFilterEqualOptionsInline('345634g3tg534', 'gender', 'gender', DemoTerm::GENDER_ARR, false, null, true),
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
-                new CRUDTableFilterLike('3748t7t45gdfg', 'Название содержит', 'title')
+                new CRUDTableFilterLikeInline('3748t7t45gdfg', 'Название содержит', 'title')
             ],
             'weight',
             '8726438755234',
