@@ -11,8 +11,10 @@ use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilterEqualInvisible;
 use OLOG\CRUD\CRUDTableFilterEqualOptions;
+use OLOG\CRUD\CRUDTableFilterEqualOptionsInline;
 use OLOG\CRUD\CRUDTableFilterLike;
 use OLOG\CRUD\CRUDTableWidgetDelete;
+use OLOG\CRUD\CRUDTableWidgetOptions;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
@@ -64,6 +66,13 @@ class DemoTermsListAction
                         DemoTermEditAction::getUrl('{this->id}')
                         )
                 ),
+	            new CRUDTableColumn(
+		            'Vocabulary',
+		            new CRUDTableWidgetOptions(
+			            '{this->vocabulary_id}',
+			            DemoTerm::VOCABULARIES_ARR
+		            )
+	            ),
                 new CRUDTableColumn(
                     'Parent',
                     new CRUDTableWidgetText(
@@ -86,13 +95,14 @@ class DemoTermsListAction
             [
                 new CRUDTableFilterEqualInvisible('parent_id', null),
                 //new CRUDTableFilter('vocabulary_id', CRUDTableFilter::FILTER_EQUAL, DemoTerm::VOCABULARY_MAIN, new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR)),
-                new CRUDTableFilterEqualOptions('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, null, true),
+                new CRUDTableFilterEqualOptionsInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, null, true),
+	            new CRUDTableFilterEqualOptionsInline('345634g3tg534', 'gender', 'gender', DemoTerm::GENDER_ARR, false, null, true),
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
                 new CRUDTableFilterLike('3748t7t45gdfg', 'Название содержит', 'title')
             ],
             'weight',
             '8726438755234',
-            CRUDTable::FILTERS_POSITION_RIGHT
+            CRUDTable::FILTERS_POSITION_INLINE
         );
 
         DemoLayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());
