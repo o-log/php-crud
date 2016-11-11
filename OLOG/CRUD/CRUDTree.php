@@ -93,17 +93,27 @@ class CRUDTree
             foreach ($column_obj_arr as $col_index => $column_obj) {
                 Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
 
-                $html .= '<td>';
-
-                if ($col_index == $col_with_padding_index){
-                    $html .= '<div style="padding-left: ' . ($obj_data['depth'] * 30) . 'px;">';
-                }
-
                 /** @var InterfaceCRUDTableWidget $widget_obj */
                 $widget_obj = $column_obj->getWidgetObj();
 
                 Assert::assert($widget_obj);
                 Assert::assert($widget_obj instanceof InterfaceCRUDTableWidget);
+
+                $col_width_attr = '';
+
+                if ($widget_obj instanceof CRUDTableWidgetDelete){
+                    $col_width_attr = ' width="1px" ';
+                }
+
+                if ($widget_obj instanceof CRUDTableWidgetWeight){
+                    $col_width_attr = ' width="1px" ';
+                }
+
+                $html .= '<td ' . $col_width_attr . '>';
+
+                if ($col_index == $col_with_padding_index){
+                    $html .= '<div style="padding-left: ' . ($obj_data['depth'] * 30) . 'px;">';
+                }
 
                 $html .= $widget_obj->html($obj_obj);
 

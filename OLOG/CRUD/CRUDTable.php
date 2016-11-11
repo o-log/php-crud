@@ -182,17 +182,23 @@ class CRUDTable
 				echo '<tr>';
 				foreach ($column_obj_arr as $column_obj) {
 					Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
+				    /** @var InterfaceCRUDTableWidget $widget_obj */
+				    $widget_obj = $column_obj->getWidgetObj();
+                    Assert::assert($widget_obj);
+                    Assert::assert($widget_obj instanceof InterfaceCRUDTableWidget);
 
-					echo '<td>';
+                    $col_width_attr = '';
 
-					/** @var InterfaceCRUDTableWidget $widget_obj */
-					$widget_obj = $column_obj->getWidgetObj();
+                    if ($widget_obj instanceof CRUDTableWidgetDelete){
+                        $col_width_attr = ' width="1px" ';
+                    }
 
-					Assert::assert($widget_obj);
-					Assert::assert($widget_obj instanceof InterfaceCRUDTableWidget);
+                    if ($widget_obj instanceof CRUDTableWidgetWeight){
+                        $col_width_attr = ' width="1px" ';
+                    }
 
+                    echo '<td ' . $col_width_attr . '>';
 					echo $widget_obj->html($obj_obj);
-
 					echo '</td>';
 
 				}
@@ -318,8 +324,8 @@ class CRUDTable
 
 		    foreach ($filters_arr as $filter_obj) {
 			    if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
-				    echo '<div style="display: inline-block;">';
-				    echo '<label style="display: inline-block;">' . $filter_obj->getTitle() . '</label>';
+				    echo '<div style="display: inline-block; margin-right: 10px;">';
+				    echo '<label style="display: inline-block; margin-right: 5px;">' . $filter_obj->getTitle() . '</label>';
 				    echo '<span style="display: inline-block;">' . $filter_obj->getHtml() . '</span>';
 				    echo '</div>';
 
