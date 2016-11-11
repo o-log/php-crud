@@ -71,7 +71,7 @@ class DemoTermsListAction
                     )
                 ),
                 new CRUDTableColumn(
-                    'weight',
+                    '',
                     new CRUDTableWidgetWeight(
                         [
                             'parent_id' => null
@@ -79,7 +79,7 @@ class DemoTermsListAction
                     )
                 ),
                 new CRUDTableColumn(
-                    'Delete',
+                    '',
                     new CRUDTableWidgetDelete()
                 )
             ],

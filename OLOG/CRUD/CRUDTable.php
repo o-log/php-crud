@@ -211,15 +211,25 @@ class CRUDTable
 			foreach ($column_obj_arr as $column_obj) {
 				Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
 
-				$html .= '<td>';
-
 				/** @var InterfaceCRUDTableWidget $widget_obj */
 				$widget_obj = $column_obj->getWidgetObj();
 
 				Assert::assert($widget_obj);
 				Assert::assert($widget_obj instanceof InterfaceCRUDTableWidget);
 
-				$html .= $widget_obj->html($obj_obj);
+                $col_width_attr = '';
+
+                if ($widget_obj instanceof CRUDTableWidgetDelete){
+                    $col_width_attr = ' width="1px" ';
+                }
+
+                if ($widget_obj instanceof CRUDTableWidgetWeight){
+                    $col_width_attr = ' width="1px" ';
+                }
+
+                $html .= '<td ' . $col_width_attr . '>';
+
+                $html .= $widget_obj->html($obj_obj);
 
 				$html .= '</td>';
 
