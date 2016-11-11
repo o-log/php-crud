@@ -4,6 +4,7 @@ namespace OLOG\CRUD;
 
 use OLOG\Assert;
 use OLOG\GETAccess;
+use OLOG\HTML;
 use OLOG\Sanitize;
 
 class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
@@ -55,31 +56,30 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
     }
 
     public function getHtml(){
-        $html = '';
+        $html = HTML::div('js-filter', '', function () {
+	        $input_name = $this->getFilterIniqId();
+	        /**
+	         * отдельное поле, наличие которого сообщает что фильтр присутствует в форме
+	         * (все другие поля могут отсутствовать когда фильтр например запрещен и т.п.)
+	         */
+	        echo '<input type="hidden" name="' . $this->filterIsPassedInputName() . '" value="1">';
 
-        $input_name = $this->getFilterIniqId();
+	        echo '<input type="hidden" name="' . $this->enabledCheckboxInputName() . '" value="' . ($this->isEnabled() ? '1' : '') . '">';
+	        echo '<span onclick="f' . $input_name . '_changeFiltres(this);" class="btn btn-default ' . ($this->isEnabled() ? '' : 'active') . '">Все</span>';
 
-	    $html .= '<div class="js-filter">';
-        // отдельное поле, наличие которого сообщает что фильтр присутствует в форме (все другие поля могут отсутствовать когда фильтр например запрещен и т.п.)
-        $html .= '<input type="hidden" name="' . $this->filterIsPassedInputName() . '" value="1">';
+	        echo '<input type="hidden" name="' . $input_name . '" value="">';
+	        $options_arr = $this->getOptionsArr();
+	        foreach($options_arr as $value => $title){
+		        echo '<span data-value="' . $value . '" data-enabled="1" onclick="f' . $input_name . '_changeFiltres(this);" class="btn btn-default ' . ($this->getValue() == $value ? 'active' : '') . '">' . $title . '</span>';
+	        }
 
-	    $html .= '<input type="hidden" name="' . $this->enabledCheckboxInputName() . '" value="' . ($this->isEnabled() ? '1' : '') . '">';
-	    $html .= '<input type="radio" value="" name="' . $input_name . '" id="' . $input_name . '_all" onchange="f' . $input_name . '_changeFiltres(this);" ' . ($this->isEnabled() ? '' : 'checked') . ' style="z-index: -11;position: absolute;opacity: 0;">';
-	    $html .= '<label for="' . $input_name . '_all"><span class="btn btn-default ' . ($this->isEnabled() ? '' : 'active') . '">Все</span></label>';
+	        if($this->getShowNullCheckbox()) {
+		        echo '<input type="hidden" name="' . $this->nullCheckboxInputName() . '" value="' . (is_null($this->getValue()) ? '' : '1') . '">';
+		        echo '<span data-isnull="1" data-enabled="1" onclick="f' . $input_name . '_changeFiltres(this);" class="btn btn-default ' . ((is_null($this->getValue()) && (!$this->isEnabled())) ? '' : 'active') . '">Не указано</span>';
+	        }
+        });
 
-	    $options_arr = $this->getOptionsArr();
-	    foreach($options_arr as $value => $title){
-		    $html .= '<input type="radio" value="' . $value . '" name="' . $input_name . '" id="' . $input_name . '_' . $value . '" onchange="f' . $input_name . '_changeFiltres(this);" style="z-index: -11;position: absolute;opacity: 0;">';
-		    $html .= '<label for="' . $input_name . '_' . $value . '"><span class="btn btn-default">' . $title . '</span></label>';
-	    }
-
-	    if($this->getShowNullCheckbox()) {
-		    $html .= '<input type="hidden" name="' . $this->nullCheckboxInputName() . '" value="' . (is_null($this->getValue()) ? '' : '1') . '">';
-		    $html .= '<input type="radio" value="" name="' . $input_name . '" id="' . $input_name . '_is_null" onchange="f' . $input_name . '_changeFiltres(this);" style="z-index: -11;position: absolute;opacity: 0;">';
-		    $html .= '<label for="' . $input_name . '_is_null"><span class="btn btn-default">Не указано</span></label>';
-	    }
-	    $html .= '</div>';
-
+	    $input_name = $this->getFilterIniqId();
 		ob_start(); ?>
         <script>
         function f<?= $input_name ?>_changeFiltres(select_element){
@@ -88,27 +88,23 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
 	        var $filter = $this.closest('.js-filter');
 
 	        $filter.find('.btn').removeClass('active');
-	        $filter.find('[for="' + $this.attr('id') + '"]').find('.btn').addClass('active');
+	        $this.addClass('active');
 
-	        if ($this.is('#<?= $input_name ?>_all')) {
-		        $filter.find('[name="<?= $this->enabledCheckboxInputName() ?>"]').val('');
-	        } else {
-		        $filter.find('[name="<?= $this->enabledCheckboxInputName() ?>"]').val('1');
-	        }
+	        var enabled = $this.data('enabled') || '';
+	        var value = $this.data('value') || '';
+	        var isnull = $this.data('isnull') || '';
 
-	        if ($this.is('#<?= $input_name ?>_is_null')) {
-		        $filter.find('[name="<?= $this->nullCheckboxInputName() ?>"]').val('1');
-	        } else {
-		        $filter.find('[name="<?= $this->nullCheckboxInputName() ?>"]').val('');
-	        }
+	        $filter.find('[name="<?= $this->enabledCheckboxInputName() ?>"]').val(enabled);
+	        $filter.find('[name="<?= $input_name ?>"]').val(value);
+	        $filter.find('[name="<?= $this->nullCheckboxInputName() ?>"]').val(isnull);
 
 	        $form.submit();
         }
         </script>
 		<?php
-	    $html .= ob_get_clean();
+	    $script = ob_get_clean();
 
-        return $html;
+        return $html . $script;
     }
 
     public function isEnabled(){
