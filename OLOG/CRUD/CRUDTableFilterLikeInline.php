@@ -14,44 +14,17 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
     public function getValueFromForm(){
         $value = GETAccess::getOptionalGetValue($this->getFilterIniqId());
 
-        // LIKE filter doesn't use nulls
-
         return $value;
     }
 
-    //public function enabledCheckboxName(){
-        //return $this->getFilterIniqId() . '___enabled';
-    //}
-
     public function getHtml(){
-        $html = '';
-
         $input_name = $this->getFilterIniqId();
 
-        //$html .= '<div class="row"><div class="col-md-10">';
-
+	    $html = '';
         $html .= '<input onkeyup="$(this).closest(\'form\').submit();" name="' . $input_name . '"/>';
-
-        //$html .= '</div><div class="col-md-2>">';
-
-        //$html .= '<label><input type="checkbox" name="' . $this->enabledCheckboxName() . '" value="1"> enabled</label>';
-
-        //$html .= '</div></div>';
 
         return $html;
     }
-
-    /*
-    public function isEnabled(){
-        $is_enabled_from_form = GETAccess::getOptionalGetValue($this->enabledCheckboxName());
-
-        if ($is_enabled_from_form != ''){
-            return true;
-        }
-
-        return false;
-    }
-    */
 
     /**
      * Возвращает пару из sql-условия и массива значений плейсхолдеров. Массив значений может быть пустой если плейсхолдеры не нужны.
@@ -63,14 +36,6 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
         $placeholder_values_arr = [];
 
         // для этого виджета галка включения не выводится: если в поле пустая строка - он игрорируется
-
-        /*
-        $is_enabled = $this->isEnabled();
-
-        if (!$is_enabled){
-            return [$where, $placeholder_values_arr];
-        }
-        */
 
         $value = $this->getValueFromForm();
 
