@@ -78,11 +78,10 @@ CRUD.Table = CRUD.Table || {
 				url: query
 			}).success(function (received_html) {
 				preloader.hide();
+				var $box = $('<div>', {html: received_html});
 
-				var received_table_html = $(received_html).find(table_elem_selector).html();
-				$(table_elem_selector).html(received_table_html);
-
-				$(pagination_elem_selector).html($(received_html).find(pagination_elem_selector).html());
+				$(table_elem_selector).html($box.find(table_elem_selector).html());
+				$(pagination_elem_selector).html($box.find(pagination_elem_selector).html());
 
 				CRUD.Table.clickTableRow(table_container_element_id);
 			}).fail(function () {
