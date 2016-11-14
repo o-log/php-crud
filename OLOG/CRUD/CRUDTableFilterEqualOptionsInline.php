@@ -67,15 +67,15 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
 	        echo '<input type="hidden" name="' . $this->enabledCheckboxInputName() . '" value="' . ($this->isEnabled() ? '1' : '') . '">';
 	        echo '<span onclick="f' . $input_name . '_changeFiltres(this);" class="btn btn-xs btn-default ' . ($this->isEnabled() ? '' : 'active') . '">Все</span>';
 
-	        echo '<input type="hidden" name="' . $input_name . '" value="">';
+	        echo '<input type="hidden" name="' . $input_name . '" value="' . ($this->isEnabled() ? $this->getValue() : '') . '">';
 	        $options_arr = $this->getOptionsArr();
 	        foreach($options_arr as $value => $title){
-		        echo '<span data-value="' . $value . '" data-enabled="1" onclick="f' . $input_name . '_changeFiltres(this);" class="btn btn-xs btn-default ' . ($this->getValue() == $value ? 'active' : '') . '">' . $title . '</span>';
+		        echo '<span data-value="' . $value . '" data-enabled="1" onclick="f' . $input_name . '_changeFiltres(this);" class="btn btn-xs btn-default ' . (($this->isEnabled() && ($this->getValue() == $value)) ? 'active' : '') . '">' . $title . '</span>';
 	        }
 
 	        if($this->getShowNullCheckbox()) {
-		        echo '<input type="hidden" name="' . $this->nullCheckboxInputName() . '" value="' . (is_null($this->getValue()) ? '' : '1') . '">';
-		        echo '<span data-isnull="1" data-enabled="1" onclick="f' . $input_name . '_changeFiltres(this);" class="btn btn-xs btn-default ' . ((is_null($this->getValue()) && (!$this->isEnabled())) ? '' : 'active') . '">Не указано</span>';
+		        echo '<input type="hidden" name="' . $this->nullCheckboxInputName() . '" value="' . ((is_null($this->getValue()) && ($this->isEnabled())) ? '1' : '') . '">';
+		        echo '<span data-isnull="1" data-enabled="1" onclick="f' . $input_name . '_changeFiltres(this);" class="btn btn-xs btn-default ' . ((is_null($this->getValue()) && ($this->isEnabled())) ? 'active' : '') . '">Не указано</span>';
 	        }
         });
 
