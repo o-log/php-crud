@@ -15,13 +15,7 @@ class CRUDForm
     const FIELD_CLASS_NAME = '_FIELD_CLASS_NAME';
     const FIELD_OBJECT_ID = '_FIELD_OBJECT_ID';
 
-    /**
-     * @param string $url_to_redirect_after_save
-     * @param array $redirect_get_params_arr
-     * @throws \Exception
-     */
-    static protected function saveEditorFormOperation($url_to_redirect_after_save = '', $redirect_get_params_arr = [])
-    {
+    static public function saveOrUpdateObjectFromFormData() {
         $model_class_name = POSTAccess::getRequiredPostValue(self::FIELD_CLASS_NAME);
         $object_id = POSTAccess::getOptionalPostValue(self::FIELD_OBJECT_ID);
 
@@ -50,10 +44,6 @@ class CRUDForm
             }
         }
 
-        //
-        // сохранение или создание
-        //
-
         $obj = null;
         if ($object_id) {
             $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $object_id);
@@ -63,10 +53,11 @@ class CRUDForm
 
         $obj = CRUDFieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr, $null_fields_arr);
         $obj->save();
+    }
 
-        /* TODO: внести логирование в save?
-        \OLOG\Logger\Logger::logObjectEvent($obj, 'CRUD сохранение');
-        */
+    static protected function saveEditorFormOperation($url_to_redirect_after_save = '', $redirect_get_params_arr = [])
+    {
+        self::saveOrUpdateObjectFromFormData();
 
         if ($url_to_redirect_after_save != '') {
             $redirect_url = $url_to_redirect_after_save;
