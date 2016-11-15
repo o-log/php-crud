@@ -46,18 +46,22 @@ class CRUDForm
 
         $obj = null;
         if ($object_id) {
-            $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $object_id);
+            $obj = CRUDObjectLoader::loadObject($model_class_name, $object_id);
         } else {
             $obj = new $model_class_name;
         }
 
         $obj = CRUDFieldsAccess::setObjectFieldsFromArray($obj, $new_prop_values_arr, $null_fields_arr);
         $obj->save();
+        return $obj->getId();
     }
 
     static protected function saveEditorFormOperation($url_to_redirect_after_save = '', $redirect_get_params_arr = [])
     {
-        self::saveOrUpdateObjectFromFormData();
+        $model_class_name = POSTAccess::getRequiredPostValue(self::FIELD_CLASS_NAME);
+
+        $object_id = self::saveOrUpdateObjectFromFormData();
+        $obj = CRUDObjectLoader::loadObject($model_class_name, $object_id);
 
         if ($url_to_redirect_after_save != '') {
             $redirect_url = $url_to_redirect_after_save;

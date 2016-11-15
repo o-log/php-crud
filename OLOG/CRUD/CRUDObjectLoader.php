@@ -5,7 +5,7 @@ namespace OLOG\CRUD;
 class CRUDObjectLoader
 {
 
-    public static function createAndLoadObject($model_class_name, $obj_id)
+    public static function loadObject($model_class_name, $obj_id)
     {
         \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceFactory::class);
 

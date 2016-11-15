@@ -46,7 +46,7 @@ class CRUDCompiler {
                 $obj_field_name = $magic_matches[3];
 
                 if ($obj_id != self::NULL_STRING) { // TODO: review?
-                    $obj = CRUDObjectLoader::createAndLoadObject($class_name, $obj_id);
+                    $obj = CRUDObjectLoader::loadObject($class_name, $obj_id);
                     $replacement = self::getReplacement($obj, $obj_field_name);
                 } else {
                     $replacement = ''; // пустая строка для случаев типа '{' . Sport::class . '.{this->sport_id}->title}'  и this->sport_id не установленно
