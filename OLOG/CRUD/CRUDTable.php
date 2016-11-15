@@ -5,6 +5,7 @@ namespace OLOG\CRUD;
 use OLOG\Assert;
 use OLOG\BT\BT;
 use OLOG\GETAccess;
+use OLOG\HTML;
 use OLOG\Model\InterfaceWeight;
 use OLOG\Operations;
 use OLOG\POSTAccess;
@@ -25,6 +26,7 @@ class CRUDTable
     const FILTERS_POSITION_RIGHT = 'FILTERS_POSITION_RIGHT';
     const FILTERS_POSITION_TOP = 'FILTERS_POSITION_TOP';
     const FILTERS_POSITION_NONE = 'FILTERS_POSITION_NONE';
+	const FILTERS_POSITION_INLINE = 'FILTERS_POSITION_INLINE';
 
     static protected function deleteModelOperation()
     {
@@ -70,35 +72,6 @@ class CRUDTable
     static protected function filterFormFieldName($table_id, $filter_index){
 		return 'table_' . $table_id . '_filter_' . $filter_index;
 	}
-
-    static public function readFiltersValuesFromRequest($table_id, $filters_arr)
-    {
-        $filter_index = 0;
-
-        foreach ($filters_arr as $filter_obj) {
-            /*
-            if ($filter_obj instanceof InterfaceCRUDTableFilter) {
-
-                $filter_field_name = self::filterFormFieldName($table_id, $filter_index);
-
-                if (array_key_exists($filter_field_name, $_GET)) {
-                    $filter_obj->setValue(urldecode($_GET[$filter_field_name]));
-                }
-
-                $filter_index++;
-            } else
-            */
-            if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
-                // DO NOTHING - FILTER WILL READ ITS VALUE WHEN REQUIRED
-            } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
-                // DO NOTHING - FILTER WILL READ ITS VALUE WHEN REQUIRED
-            } else {
-                throw new \Exception('filter doesnt implement InterfaceCRUDTableFilter nor InterfaceCRUDTableFilter2');
-            }
-        }
-
-        return $filters_arr;
-    }
 
     static public function executeOperations(){
         static $__operations_executed = false;
@@ -153,9 +126,6 @@ class CRUDTable
 			$CRUDTable_include_script = false;
 		}
 
-        $filters_arr = self::readFiltersValuesFromRequest($table_id, $filters_arr);
-        $objs_ids_arr = CRUDInternalTableObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $order_by);
-
 		//
 		// вывод таблицы
 		//
@@ -166,84 +136,90 @@ class CRUDTable
 		}
 
         // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
-		$html = '<div>'; // container div
-        $html .= '<div class="' . $table_container_element_id . ' row">';
 
-        if ($filters_position == self::FILTERS_POSITION_LEFT) {
-            $html .= '<div class="col-sm-4">';
-            $html .= self::filtersHtml($table_id, $filters_arr);
-            $html .= '</div>';
-        }
+		$html = HTML::div($table_container_element_id, '', function() use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $order_by, $table_id, $filters_position) {
 
-        if (($filters_position == self::FILTERS_POSITION_LEFT) || ($filters_position == self::FILTERS_POSITION_RIGHT)) {
-            $html .= '<div class="col-sm-8">';
-        } else {
-            $html .= '<div class="col-sm-12">';
-        }
+			echo '<div class="row">';
 
-		$html .= self::toolbarHtml($table_id, $create_form_html, $filters_arr);
-
-        if ($filters_position == self::FILTERS_POSITION_TOP) {
-            $html .= self::filtersHtml($table_id, $filters_arr);
-        }
-
-		$html .= '<table class="table table-hover">';
-		$html .= '<thead>';
-		$html .= '<tr>';
-
-		/** @var InterfaceCRUDTableColumn $column_obj */
-		foreach ($column_obj_arr as $column_obj) {
-			Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
-			$html .= '<th>' . Sanitize::sanitizeTagContent($column_obj->getTitle()) . '</th>';
-		}
-
-		$html .= '</tr>';
-		$html .= '</thead>';
-
-		$html .= '<tbody>';
-
-		foreach ($objs_ids_arr as $obj_id) {
-			$obj_obj = CRUDObjectLoader::loadObject($model_class_name, $obj_id);
-
-			$html .= '<tr>';
-
-			/** @var InterfaceCRUDTableColumn $column_obj */
-			foreach ($column_obj_arr as $column_obj) {
-				Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
-
-				$html .= '<td>';
-
-				/** @var InterfaceCRUDTableWidget $widget_obj */
-				$widget_obj = $column_obj->getWidgetObj();
-
-				Assert::assert($widget_obj);
-				Assert::assert($widget_obj instanceof InterfaceCRUDTableWidget);
-
-				$html .= $widget_obj->html($obj_obj);
-
-				$html .= '</td>';
-
+			if ($filters_position == self::FILTERS_POSITION_LEFT) {
+				echo '<div class="col-sm-4">';
+				echo self::filtersHtml($table_id, $filters_arr);
+				echo '</div>';
 			}
 
-			$html .= '</tr>';
-		}
+			$col_sm_class = '12';
+			if (($filters_position == self::FILTERS_POSITION_LEFT) || ($filters_position == self::FILTERS_POSITION_RIGHT)) {
+				$col_sm_class = '8';
+			}
+			echo '<div class="col-sm-' . $col_sm_class . '">';
 
-		$html .= '</tbody>';
-		$html .= '</table>';
+			echo self::toolbarHtml($table_id, $create_form_html, $filters_arr);
 
-		$html .= Pager::renderPager($table_id, count($objs_ids_arr));
+			if ($filters_position == self::FILTERS_POSITION_TOP) {
+				echo self::filtersHtml($table_id, $filters_arr);
+			}
 
-        $html .= '</div>';
+			if ($filters_position == self::FILTERS_POSITION_INLINE) {
+				echo self::filtersHtmlInline($table_id, $filters_arr);
+			}
 
-        if ($filters_position == self::FILTERS_POSITION_RIGHT) {
-            $html .= '<div class="col-sm-4">';
-            $html .= self::filtersHtml($table_id, $filters_arr);
-            $html .= '</div>';
-        }
+			echo '<table class="table table-hover">';
 
-        $html .= '</div>'; // row div
+			/** @var InterfaceCRUDTableColumn $column_obj */
+			echo '<thead><tr>';
+			foreach ($column_obj_arr as $column_obj) {
+				Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
+				echo '<th>' . Sanitize::sanitizeTagContent($column_obj->getTitle()) . '</th>';
+			}
+			echo '</tr></thead>';
 
-        $html .= '</div>'; // container div
+			echo '<tbody>';
+			$objs_ids_arr = CRUDInternalTableObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $order_by);
+			foreach ($objs_ids_arr as $obj_id) {
+				$obj_obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $obj_id);
+
+				/** @var InterfaceCRUDTableColumn $column_obj */
+				echo '<tr>';
+				foreach ($column_obj_arr as $column_obj) {
+					Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
+				    /** @var InterfaceCRUDTableWidget $widget_obj */
+				    $widget_obj = $column_obj->getWidgetObj();
+                    Assert::assert($widget_obj);
+                    Assert::assert($widget_obj instanceof InterfaceCRUDTableWidget);
+
+                    $col_width_attr = '';
+
+                    if ($widget_obj instanceof CRUDTableWidgetDelete){
+                        $col_width_attr = ' width="1px" ';
+                    }
+
+                    if ($widget_obj instanceof CRUDTableWidgetWeight){
+                        $col_width_attr = ' width="1px" ';
+                    }
+
+                    echo '<td ' . $col_width_attr . '>';
+					echo $widget_obj->html($obj_obj);
+					echo '</td>';
+
+				}
+				echo '</tr>';
+			}
+			echo '</tbody>';
+
+			echo '</table>';
+
+			echo Pager::renderPager($table_id, count($objs_ids_arr));
+
+			echo '</div>';
+
+			if ($filters_position == self::FILTERS_POSITION_RIGHT) {
+				echo '<div class="col-sm-4">';
+				echo self::filtersHtml($table_id, $filters_arr);
+				echo '</div>';
+			}
+
+			echo '</div>';
+		});
 
         $html .= '<script>CRUD.Table.init("' . $table_container_element_id . '", "' . Url::getCurrentUrlNoGetForm() . '");</script>';
 
@@ -310,6 +286,7 @@ class CRUDTable
                     $filter_index++;
                 } else
                 */
+
                 if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
                     $html .= '<div class="col-md-12">';
                     $html .= '<div class="form-group">';
@@ -333,6 +310,36 @@ class CRUDTable
         }
 
         return $html;
+    }
+
+    static protected function filtersHtmlInline($table_index_on_page, $filters_arr)
+    {
+	    if (empty($filters_arr)) {
+		    return '';
+	    }
+
+	    $html = HTML::div('filters-inline', '', function () use ($table_index_on_page, $filters_arr) {
+
+		    echo '<form class="filters-form">';
+
+		    foreach ($filters_arr as $filter_obj) {
+			    if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
+				    echo '<div style="display: inline-block;margin-right: 10px;">';
+				    echo '<span style="display: inline-block;margin-right: 5px;">' . $filter_obj->getTitle() . '</span>';
+				    echo '<span style="display: inline-block;">' . $filter_obj->getHtml() . '</span>';
+				    echo '</div>';
+
+			    } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
+				    // do nothing with invisible filters
+			    } else {
+				    throw new \Exception('filter doesnt implement interface ...');
+			    }
+		    }
+
+		    echo '</form>';
+	    });
+
+	    return $html;
     }
 
     static protected function toolbarHtml($table_index_on_page, $create_form_html, $filters_arr)

@@ -70,7 +70,7 @@ class DemoTermsTreeAction
                     )
                 ),
                 new CRUDTableColumn(
-                    'weight',
+                    '',
                     new CRUDTableWidgetWeight(
                         [
                             'parent_id' => '{this->parent_id}'
@@ -78,7 +78,7 @@ class DemoTermsTreeAction
                     )
                 ),
                 new CRUDTableColumn(
-                    'Delete',
+                    '',
                     new CRUDTableWidgetDelete()
                 )
             ],

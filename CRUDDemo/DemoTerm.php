@@ -30,6 +30,14 @@ class DemoTerm implements
         self::VOCABULARY_PEOPLE => 'people'
     ];
 
+	const GENDER_MALE = 1;
+	const GENDER_FEMALE = 2;
+
+	const GENDER_ARR = [
+		self::GENDER_MALE => 'male',
+		self::GENDER_FEMALE => 'female'
+	];
+
     protected $chooser = null;
     protected $options = null;
     protected $vocabulary_id = 1;
