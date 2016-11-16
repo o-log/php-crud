@@ -37,7 +37,7 @@ class CRUDFormWidgetReference implements InterfaceCRUDFormWidget
 
         $options_arr = [];
         foreach ($referenced_obj_ids_arr as $id){
-            $obj = CRUDObjectLoader::loadObject($referenced_class_name, $id);
+            $obj = CRUDObjectLoader::createAndLoadObject($referenced_class_name, $id);
             $options_arr[$id] = CRUDFieldsAccess::getObjectFieldValue($obj, $referenced_class_title_field);
         }
 

@@ -53,7 +53,7 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
         }
 
         if (!is_null($field_value)) {
-            $referenced_obj = CRUDObjectLoader::loadObject($referenced_class_name, $field_value);
+            $referenced_obj = CRUDObjectLoader::createAndLoadObject($referenced_class_name, $field_value);
             $referenced_obj_title = CRUDFieldsAccess::getObjectFieldValue($referenced_obj, $referenced_class_title_field);
             $disabled_btn_link = '';
         }

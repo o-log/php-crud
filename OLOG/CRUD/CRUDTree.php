@@ -85,7 +85,7 @@ class CRUDTree
 
         foreach ($objs_ids_arr as $obj_data) {
             $obj_id = $obj_data['id'];
-            $obj_obj = CRUDObjectLoader::loadObject($model_class_name, $obj_id);
+            $obj_obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $obj_id);
 
             $html .= '<tr>';
 

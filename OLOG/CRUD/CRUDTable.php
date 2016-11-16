@@ -35,7 +35,7 @@ class CRUDTable
 
         $model_id = POSTAccess::getRequiredPostValue(CRUDTableWidgetDelete::FIELD_OBJECT_ID);
 
-        $obj = CRUDObjectLoader::loadObject($model_class_name, $model_id);
+        $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
         $obj->delete();
 
         $redirect_url = POSTAccess::getOptionalPostValue(CRUDTableWidgetDelete::FIELD_REDIRECT_AFTER_DELETE_URL, '');
@@ -63,7 +63,7 @@ class CRUDTable
         }
 
         /** @var InterfaceWeight $obj */
-        $obj = CRUDObjectLoader::loadObject($model_class_name, $model_id);
+        $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
         $obj->swapWeights($context_arr);
 
         \OLOG\Redirects::redirectToSelf();
@@ -176,7 +176,7 @@ class CRUDTable
 			echo '<tbody>';
 			$objs_ids_arr = CRUDInternalTableObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $order_by);
 			foreach ($objs_ids_arr as $obj_id) {
-				$obj_obj = CRUDObjectLoader::loadObject($model_class_name, $obj_id);
+				$obj_obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $obj_id);
 
 				/** @var InterfaceCRUDTableColumn $column_obj */
 				echo '<tr>';
