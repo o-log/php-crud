@@ -107,17 +107,6 @@ class CRUDForm
      */
     static public function html($obj, $element_obj_arr, $url_to_redirect_after_save = '', $redirect_get_params_arr = [], $form_id = '', $operation_code = self::OPERATION_SAVE_EDITOR_FORM, $hide_submit_button = false)
     {
-        static $CRUDForm_include_script;
-
-        $script = '';
-        if(!isset($CRUDForm_include_script)){
-            $script .= '<script>';
-            $script .= Render::callLocaltemplate('templates/crudform.js');
-            $script .= '</script>';
-            $script .= '<style>.required-class {border: 1px solid red;}.required-class[type="radio"]:before {font-size: 1em;content: \'*\';color: red;}</style>';
-            $CRUDForm_include_script = false;
-        }
-
         self::executeOperations($url_to_redirect_after_save, $redirect_get_params_arr);
 
 	    $form_element_id = 'formElem_' . uniqid();
@@ -149,8 +138,10 @@ class CRUDForm
         $html .= '</div>';
 
         $html .= '</form>';
-        $html .= '<script>CRUD.Form.init("' . $form_element_id . '");</script>';
 
-        return $script . $html;
+	    // Загрузка скриптов
+	    $html .= CRUDFormScript::getHtml($form_element_id);
+
+        return $html;
     }
 }

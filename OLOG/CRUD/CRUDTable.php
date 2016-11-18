@@ -104,33 +104,13 @@ class CRUDTable
 	{
 
 	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
-
-		static $CRUDTable_include_script;
-
         self::executeOperations();
-
-        $script = '';
-
-		// include script only once per page
-		if(!isset($CRUDTable_include_script)){
-		    $script = '';
-			$script .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/js-url/2.3.0/url.min.js"></script>';
-            $script .= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>';
-            $script .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">';
-
-			$script .= Preloader::preloaderJsHtml();
-			$script .= '<script>';
-            $script .= Render::callLocaltemplate('templates/crudtable.js');
-			$script .= '</script>';
-
-			$CRUDTable_include_script = false;
-		}
 
 		//
 		// вывод таблицы
 		//
 
-		$table_container_element_id = 'tableContainer_' . $table_id;
+		$table_container_element_id = uniqid('tableContainer_');
 		if ($table_id) {
 			$table_container_element_id = $table_id;
 		}
@@ -221,9 +201,10 @@ class CRUDTable
 			echo '</div>';
 		});
 
-        $html .= '<script>CRUD.Table.init("' . $table_container_element_id . '", "' . Url::getCurrentUrlNoGetForm() . '");</script>';
+		// Загрузка скриптов
+		$html .= CRUDTableScript::getHtml($table_container_element_id, Url::getCurrentUrlNoGetForm());
 
-		return $script . $html;
+		return $html;
 	}
 
     static protected function filtersHtml($table_index_on_page, $filters_arr)

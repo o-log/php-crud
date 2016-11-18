@@ -3,6 +3,7 @@
 namespace CRUDDemo;
 
 use OLOG\BT\BT;
+use OLOG\CRUD\CRUDCreateFormScript;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTableColumn;
@@ -10,8 +11,6 @@ use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
-use OLOG\CRUD\templates\CRUDCreateFormScript;
-use OLOG\Render;
 
 class DemoNodesListAction
 {
@@ -26,15 +25,6 @@ class DemoNodesListAction
 
 		$table_id = 'tableContainer_NodeList';
 		$form_id = 'formElem_NodeList';
-
-		ob_start();
-		CRUDCreateFormScript::render();
-		?>
-		<script>
-			CRUD.CreateForm.init('#<?= $form_id ?>','.<?= $table_id ?>');
-		</script>
-		<?php
-		$script = ob_get_clean();
 
 		$html = '';
 
@@ -83,7 +73,8 @@ class DemoNodesListAction
 			$table_id
 		);
 
-		$html .= $script;
+		// Загрузка скриптов
+		$html .= CRUDCreateFormScript::getHtml($form_id, $table_id);
 
 		DemoLayoutTemplate::render($html, 'Nodes', self::getBreadcrumbsArr());
 	}

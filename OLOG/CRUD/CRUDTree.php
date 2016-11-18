@@ -20,26 +20,7 @@ class CRUDTree
     {
 
         // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
-
-        static $CRUDTree_include_script;
-
         CRUDTable::executeOperations();
-
-        $script = '';
-
-        // include script only once per page
-        if(!isset($CRUDTree_include_script)){
-            $script = '<script src="//cdnjs.cloudflare.com/ajax/libs/js-url/2.3.0/url.min.js"></script>';
-            $script .= '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>';
-            $script .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">';
-
-	        $script .= Preloader::preloaderJsHtml();
-            $script .= '<script>';
-            $script .= Render::callLocaltemplate('templates/crudtable.js');
-            $script .= '</script>';
-
-            $CRUDTree_include_script = false;
-        }
 
         $objs_ids_arr = CRUDInternalTableObjectsSelector::getRecursiveObjIdsArrForClassName($model_class_name, $parent_id_field_name, $filters_arr, $order_by);
 
@@ -136,9 +117,11 @@ class CRUDTree
 
         $html .= '</div>';
 
-        $html .= '<script>CRUD.Table.init("' . $table_container_element_id . '", "' . Url::getCurrentUrlNoGetForm() . '");</script>';
 
-        return $script . $html;
+	    // Загрузка скриптов
+	    $html .= CRUDTableScript::getHtml($table_container_element_id, Url::getCurrentUrlNoGetForm());
+
+        return $html;
     }
 
     static protected function filtersHtml($filters_arr)
