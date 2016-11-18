@@ -40,9 +40,9 @@ class CRUDCreateFormScript
 								data: data
 							}).success(function (received_html) {
 								OLOG.preloader.hide();
-
-								var received_table_html = $(received_html).find(table_elem).html();
-								$(table_elem).html(received_table_html);
+								
+								var $box = $('<div>', {html: received_html});
+								$(table_elem).html($box.find(table_elem).html());
 							}).fail(function () {
 								OLOG.preloader.hide();
 							});
