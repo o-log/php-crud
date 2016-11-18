@@ -104,23 +104,7 @@ class CRUDTable
 	{
 
 	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
-
-		static $CRUDTable_include_script;
-
         self::executeOperations();
-
-        $script = '';
-
-		// include script only once per page
-		if(!isset($CRUDTable_include_script)){
-		    $script = '';
-			$script .= Preloader::preloaderJsHtml();
-			$script .= '<script>';
-            $script .= Render::callLocaltemplate('templates/crudtable.js');
-			$script .= '</script>';
-
-			$CRUDTable_include_script = false;
-		}
 
 		//
 		// вывод таблицы
@@ -217,9 +201,10 @@ class CRUDTable
 			echo '</div>';
 		});
 
-        $html .= '<script>CRUD.Table.init("' . $table_container_element_id . '", "' . Url::getCurrentUrlNoGetForm() . '");</script>';
+		// Загрузка скриптов
+		$html .= CRUDTableScript::getHtml($table_container_element_id, Url::getCurrentUrlNoGetForm());
 
-		return $script . $html;
+		return $html;
 	}
 
     static protected function filtersHtml($table_index_on_page, $filters_arr)
