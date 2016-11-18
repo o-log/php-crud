@@ -16,6 +16,7 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
     protected $initial_value;
     protected $options_arr;
     protected $show_null_checkbox;
+	protected $btn_all_text;
 
     // сообщает, нужно ли использовать значения из формы (включая отсутствующие в форме поля - для чекбоксов это означает false) или этот фильтр в форме не приходил и нужно использовать initial значения
     public function useValuesFromForm(){
@@ -65,7 +66,7 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
 	        echo '<input type="hidden" name="' . $this->filterIsPassedInputName() . '" value="1">';
 
 	        echo '<input type="hidden" name="' . $this->enabledCheckboxInputName() . '" value="' . ($this->isEnabled() ? '1' : '') . '">';
-	        echo '<span onclick="f' . $input_name . '_changeFiltres(this);" class="btn btn-xs btn-default ' . ($this->isEnabled() ? '' : 'active') . '">Все</span>';
+	        echo '<span onclick="f' . $input_name . '_changeFiltres(this);" class="btn btn-xs btn-default ' . ($this->isEnabled() ? '' : 'active') . '">' . $this->getBtnAllText() . '</span>';
 
 	        echo '<input type="hidden" name="' . $input_name . '" value="' . ($this->isEnabled() ? $this->getValue() : '') . '">';
 	        $options_arr = $this->getOptionsArr();
@@ -147,7 +148,7 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
         ];
     }
 
-    public function __construct($filter_uniq_id, $title, $field_name, $options_arr, $initial_is_enabled, $initial_value, $show_null_checkbox){
+    public function __construct($filter_uniq_id, $title, $field_name, $options_arr, $initial_is_enabled, $initial_value, $show_null_checkbox, $btn_all_text = 'Все'){
         $this->setFilterIniqId($filter_uniq_id);
         $this->setTitle($title);
         $this->setFieldName($field_name);
@@ -155,6 +156,7 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
         $this->setInitialIsEnabled($initial_is_enabled);
         $this->setInitialValue($initial_value);
         $this->setShowNullCheckbox($show_null_checkbox);
+	    $this->setBtnAllText($btn_all_text);
     }
 
     /**
@@ -268,4 +270,22 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
     {
         $this->initial_is_enabled = $initial_is_enabled;
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function getBtnAllText()
+	{
+		return $this->btn_all_text;
+	}
+
+	/**
+	 * @param mixed $btn_all_text
+	 */
+	public function setBtnAllText($btn_all_text)
+	{
+		$this->btn_all_text = $btn_all_text;
+	}
+
+
 }

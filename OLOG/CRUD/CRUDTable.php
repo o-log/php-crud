@@ -306,7 +306,11 @@ class CRUDTable
 		    foreach ($filters_arr as $filter_obj) {
 			    if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
 				    echo '<div style="display: inline-block;margin-right: 10px;">';
-				    echo '<span style="display: inline-block;margin-right: 5px;">' . $filter_obj->getTitle() . '</span>';
+
+				    if ($filter_obj->getTitle()) {
+					    echo '<span style="display: inline-block;margin-right: 5px;">' . $filter_obj->getTitle() . '</span>';
+				    }
+
 				    echo '<span style="display: inline-block;">' . $filter_obj->getHtml() . '</span>';
 				    echo '</div>';
 

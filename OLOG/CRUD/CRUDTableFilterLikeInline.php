@@ -10,6 +10,7 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
     protected $title;
     protected $field_name;
     protected $filter_iniq_id;
+	protected $placeholder;
 
     public function getValueFromForm(){
         $value = GETAccess::getOptionalGetValue($this->getFilterIniqId());
@@ -21,7 +22,7 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
         $input_name = $this->getFilterIniqId();
 
 	    $html = '';
-        $html .= '<input onkeyup="$(this).closest(\'form\').submit();" name="' . $input_name . '"/>';
+        $html .= '<input placeholder="' . $this->getPlaceholder() . '" onkeyup="$(this).closest(\'form\').submit();" name="' . $input_name . '"/>';
 
         return $html;
     }
@@ -50,10 +51,11 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
         return [$where, $placeholder_values_arr];
     }
 
-    public function __construct($filter_uniq_id, $title, $field_name){
+    public function __construct($filter_uniq_id, $title, $field_name, $placeholder = ''){
         $this->setFilterIniqId($filter_uniq_id);
         $this->setTitle($title);
         $this->setFieldName($field_name);
+	    $this->setPlaceholder($placeholder);
     }
 
     /**
@@ -104,5 +106,20 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
         $this->field_name = $field_name;
     }
 
+	/**
+	 * @return mixed
+	 */
+	public function getPlaceholder()
+	{
+		return $this->placeholder;
+	}
+
+	/**
+	 * @param mixed $placeholder
+	 */
+	public function setPlaceholder($placeholder)
+	{
+		$this->placeholder = $placeholder;
+	}
 
 }
