@@ -5,6 +5,7 @@ namespace CRUDDemo;
 use OLOG\BT\BT;
 use OLOG\CRUD\CRUDFormInvisibleRow;
 use OLOG\CRUD\CRUDFormRow;
+use OLOG\CRUD\CRUDFormVerticalRow;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDFormWidgetRadios;
@@ -33,11 +34,12 @@ class DemoTermEditAction
         $html .= \OLOG\CRUD\CRUDForm::html(
             $term_obj,
             [
-                new CRUDFormRow(
+                new CRUDFormVerticalRow(
                     'Title',
-                    new CRUDFormWidgetInput('title', false, true)
+                    new CRUDFormWidgetInput('title', false, true),
+                    'Comment string'
                 ),
-                new CRUDFormRow(
+                new CRUDFormVerticalRow(
                     'weight',
                     new CRUDFormWidgetInput('weight', false, true)
                 ),

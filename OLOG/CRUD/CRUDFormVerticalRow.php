@@ -6,30 +6,50 @@ class CRUDFormVerticalRow implements InterfaceCRUDFormRow
 {
     protected $title;
     protected $widget_obj;
+    protected $comment_str;
 
-    public function __construct($title, InterfaceCRUDFormWidget $widget_obj)
+    /**
+     * @return mixed
+     */
+    public function getCommentStr()
+    {
+        return $this->comment_str;
+    }
+
+    /**
+     * @param mixed $comment_str
+     */
+    public function setCommentStr($comment_str)
+    {
+        $this->comment_str = $comment_str;
+    }
+
+    public function __construct($title, InterfaceCRUDFormWidget $widget_obj, $comment_str = '')
     {
         $this->setTitle($title);
         $this->setWidgetObj($widget_obj);
+        $this->setCommentStr($comment_str);
     }
 
     public function html($obj){
-        //$field_name = CRUDConfigReader::getRequiredSubkey($element_config_arr, self::KEY_FORM_ROW_FIELD_NAME);
-        //$field_title = CRUDConfigReader::getOptionalSubkey($element_config_arr, self::KEY_FORM_ROW_TITLE, $field_name);
-
         $html = '';
 
         $html .= '<div class="form-group">';
-        $html .= '<div class="col-sm-12" style="font-weight: bold;">' . $this->getTitle() . '</div>';
+        $html .= '<div class="col-sm-12"><label>' . $this->getTitle() . '</label></div>';
 
         $html .= '<div class="col-sm-12">';
-        //$widget_config_arr = CRUDConfigReader::getRequiredSubkey($element_config_arr, 'WIDGET');
 
         $widget_obj = $this->getWidgetObj();
 
         // TODO: check widget interface
 
         $html .= $widget_obj->html($obj);
+
+        if ($this->getCommentStr()) {
+            $html .= '<div class="col-sm-12">';
+            $html .= '<span class="help-block">' . $this->getCommentStr() . '</span>';
+            $html .= '</div>';
+        }
 
         $html .= '</div>';
         $html .= '</div>';
@@ -68,6 +88,4 @@ class CRUDFormVerticalRow implements InterfaceCRUDFormRow
     {
         $this->widget_obj = $widget_obj;
     }
-
-
 }
