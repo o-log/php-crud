@@ -8,7 +8,7 @@ class CRUDCreateFormScript
 {
 	public static function render()
 	{
-		Preloader::preloaderJsHtml();
+		echo Preloader::preloaderJsHtml();
 		?>
 		<script>
 			var CRUD = CRUD || {};
@@ -27,24 +27,24 @@ class CRUDCreateFormScript
 							CRUD.CreateForm.requestAjax(table_elem, url, data);
 						});
 
-						console.log($table, $form);
+						//console.log($table, $form);
 					},
 
 					requestAjax: function (table_elem, query, data) {
 
-						preloader.show();
+						OLOG.preloader.show();
 
 						$.ajax({
 							type: "POST",
 							url: query,
 							data: data
 						}).success(function (received_html) {
-							preloader.hide();
+							OLOG.preloader.hide();
 
 							var received_table_html = $(received_html).find(table_elem).html();
 							$(table_elem).html(received_table_html);
 						}).fail(function () {
-							preloader.hide();
+							OLOG.preloader.hide();
 						});
 					}
 				};

@@ -59,7 +59,7 @@ CRUD.Table = CRUD.Table || {
 				if ($(this).attr('href') == "#") {
 					return false;
 				}
-				var params = url('query', $(this).attr('href'));
+				var params = $(this).attr('href').split('?')[1];
 				$(this).data('params', params);
 				var filters = $(filter_elem_selector).data('params') || '';
 				var pagination = $(this).data('params') || '';
@@ -72,12 +72,12 @@ CRUD.Table = CRUD.Table || {
 			var table_elem_selector = '.' + table_container_element_id + ' .table';
 			var pagination_elem_selector = '.' + table_container_element_id + ' .pagination';
 
-			preloader.show();
+			OLOG.preloader.show();
 
 			$.ajax({
 				url: query
 			}).success(function (received_html) {
-				preloader.hide();
+				OLOG.preloader.hide();
 				var $box = $('<div>', {html: received_html});
 
 				$(table_elem_selector).html($box.find(table_elem_selector).html());
@@ -85,7 +85,7 @@ CRUD.Table = CRUD.Table || {
 
 				CRUD.Table.clickTableRow(table_container_element_id);
 			}).fail(function () {
-				preloader.hide();
+				OLOG.preloader.hide();
 			});
 		}
 
