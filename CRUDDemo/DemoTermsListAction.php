@@ -97,9 +97,9 @@ class DemoTermsListAction
                 new CRUDTableFilterEqualInvisible('parent_id', null),
                 //new CRUDTableFilter('vocabulary_id', CRUDTableFilter::FILTER_EQUAL, DemoTerm::VOCABULARY_MAIN, new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR)),
                 new CRUDTableFilterEqualOptionsInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, null, true),
-	            new CRUDTableFilterEqualOptionsInline('345634g3tg534', 'gender', 'gender', DemoTerm::GENDER_ARR, false, null, true),
+	            new CRUDTableFilterEqualOptionsInline('345634g3tg534', '', 'gender', DemoTerm::GENDER_ARR, false, null, true, 'М. и Ж.'),
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
-                new CRUDTableFilterLikeInline('3748t7t45gdfg', 'Название содержит', 'title')
+                new CRUDTableFilterLikeInline('3748t7t45gdfg', '', 'title', 'Название содержит')
             ],
             'weight',
             '8726438755234',
