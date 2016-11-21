@@ -7,32 +7,14 @@ use OLOG\Sanitize;
 
 class CRUDTableWidgetCheckbox implements InterfaceCRUDTableWidget
 {
-    protected $value;
     protected $field_name;
 
     const FIELD_CLASS_NAME = '_class_name';
     const FIELD_OBJECT_ID = '_id';
     const FIELD_NAME = '_field_name';
 
-    public function __construct($value, $field_name) {
-        $this->setValue(intval($value));
+    public function __construct($field_name) {
         $this->setFieldName($field_name);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value) {
-        $this->value = $value;
-
     }
 
     /**
@@ -52,8 +34,7 @@ class CRUDTableWidgetCheckbox implements InterfaceCRUDTableWidget
     }
 
     public function html($obj) {
-        $value = CRUDCompiler::compile($this->getValue(), ['this' => $obj]);
-        $checked = $value ?  'checked' : '';
+        $checked = CRUDFieldsAccess::getObjectFieldValue($obj, $this->getFieldName() ) ?  'checked' : '';
 
         $html = '<form  id style="display: inline;" class="form-inline" method="post"  action="' . \OLOG\Url::getCurrentUrl() . '">';
         $html .='<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
