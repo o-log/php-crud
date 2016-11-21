@@ -14,7 +14,7 @@ class CRUDTableWidgetCheckbox implements InterfaceCRUDTableWidget
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getFieldName()
     {
@@ -22,7 +22,7 @@ class CRUDTableWidgetCheckbox implements InterfaceCRUDTableWidget
     }
 
     /**
-     * @param mixed $field_name
+     * @param string $field_name
      */
     public function setFieldName($field_name)
     {
