@@ -5,10 +5,6 @@ class CRUDTableWidgetCheckbox implements InterfaceCRUDTableWidget
 {
     protected $field_name;
 
-    const FIELD_CLASS_NAME = '_class_name';
-    const FIELD_OBJECT_ID = '_id';
-    const FIELD_NAME = '_field_name';
-
     public function __construct($field_name) {
         $this->setFieldName($field_name);
     }
@@ -32,9 +28,9 @@ class CRUDTableWidgetCheckbox implements InterfaceCRUDTableWidget
     public function html($obj) {
         $checked = CRUDFieldsAccess::getObjectFieldValue($obj, $this->getFieldName() ) ?  'checked' : '';
         if($checked) {
-            $html = '<button style ="text-decoration: none;" class="glyphicon glyphicon-check btn btn-link btn-xs"></button>';
+            $html = '<span style ="text-decoration: none;" class="glyphicon glyphicon-check"></span>';
         } else {
-            $html = '<button style ="text-decoration: none;" class="glyphicon glyphicon-unchecked btn btn-link btn-xs"></button>';
+            $html = '<span style ="text-decoration: none;" class="glyphicon glyphicon-unchecked"></span>';
         }
 
         return $html;
