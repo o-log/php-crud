@@ -21,7 +21,6 @@ class CRUDTable
 	const OPERATION_ADD_MODEL = 'OPERATION_ADD_MODEL';
     const OPERATION_DELETE_MODEL = 'OPERATION_DELETE_MODEL';
     const OPERATION_SWAP_MODEL_WEIGHT = 'OPERATION_SWAP_MODEL_WEIGHT';
-    const OPERATION_CHECK_FIELD = 'OPERATION_CHECK_FIELD';
 
     const FILTERS_POSITION_LEFT = 'FILTERS_POSITION_LEFT';
     const FILTERS_POSITION_RIGHT = 'FILTERS_POSITION_RIGHT';
@@ -70,18 +69,6 @@ class CRUDTable
         \OLOG\Redirects::redirectToSelf();
     }
 
-    static protected function checkModelField() {
-        $model_class_name = POSTAccess::getRequiredPostValue(CRUDTableWidgetDelete::FIELD_CLASS_NAME);
-        $model_id = POSTAccess::getRequiredPostValue(CRUDTableWidgetCheckbox::FIELD_OBJECT_ID);
-        $field_name = POSTAccess::getRequiredPostValue(CRUDTableWidgetCheckbox::FIELD_NAME);
-
-        $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
-        $obj_field_val = CRUDFieldsAccess::getObjectFieldValue($obj, $field_name);
-        CRUDFieldsAccess::setObjectFieldsFromArray($obj, [$field_name => intval(!$obj_field_val)]);
-        $obj->save();
-        \OLOG\Redirects::redirectToSelf();
-    }
-
     static protected function filterFormFieldName($table_id, $filter_index){
 		return 'table_' . $table_id . '_filter_' . $filter_index;
 	}
@@ -101,10 +88,6 @@ class CRUDTable
 
         Operations::matchOperation(self::OPERATION_SWAP_MODEL_WEIGHT, function () {
             self::swapModelWeightOperation();
-        });
-
-        Operations::matchOperation(self::OPERATION_CHECK_FIELD, function () {
-            self::checkModelField();
         });
     }
 

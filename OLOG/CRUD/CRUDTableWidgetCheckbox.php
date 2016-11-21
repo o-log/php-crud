@@ -1,9 +1,5 @@
 <?php
-
 namespace OLOG\CRUD;
-
-use OLOG\Operations;
-use OLOG\Sanitize;
 
 class CRUDTableWidgetCheckbox implements InterfaceCRUDTableWidget
 {
@@ -35,19 +31,12 @@ class CRUDTableWidgetCheckbox implements InterfaceCRUDTableWidget
 
     public function html($obj) {
         $checked = CRUDFieldsAccess::getObjectFieldValue($obj, $this->getFieldName() ) ?  'checked' : '';
-
-        $html = '<form  id style="display: inline;" class="form-inline" method="post"  action="' . \OLOG\Url::getCurrentUrl() . '">';
-        $html .='<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
-        $html .='<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue(CRUDFieldsAccess::getObjId($obj)) . '">';
-        $html .='<input type="hidden" name="' . self::FIELD_NAME . '" value="' . Sanitize::sanitizeAttrValue($this->field_name) . '">';
         if($checked) {
-            $html .= '<button style ="text-decoration: none;" class="glyphicon glyphicon-check btn btn-link btn-xs" onClick="submit()" ></button>';
+            $html = '<button style ="text-decoration: none;" class="glyphicon glyphicon-check btn btn-link btn-xs"></button>';
         } else {
-            $html .= '<button style ="text-decoration: none;" class="glyphicon glyphicon-unchecked btn btn-link btn-xs" onClick="submit()"></button>';
+            $html = '<button style ="text-decoration: none;" class="glyphicon glyphicon-unchecked btn btn-link btn-xs"></button>';
         }
 
-        $html .= Operations::operationCodeHiddenField(CRUDTable::OPERATION_CHECK_FIELD);
-        $html .= '</form>';
         return $html;
     }
 }
