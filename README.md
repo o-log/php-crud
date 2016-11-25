@@ -96,7 +96,7 @@
 
 new CRUDTableWidgetText('{this->title}')
 new CRUDTableWidgetText('{this->getReverseTitle()}')
-new CRUDTableWidgetText('{this->id}')
+new CRUDTableWidgetHtml('{this->id}<br/>{this->title}')
 
 К другим объектам, на которые ссылается текущий, можно обратиться следующим образом:
 
