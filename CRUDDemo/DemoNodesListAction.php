@@ -8,6 +8,7 @@ use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableWidgetDelete;
+use OLOG\CRUD\CRUDTableWidgetHtmlWithLink;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
@@ -49,7 +50,7 @@ class DemoNodesListAction
 			[
 				new CRUDTableColumn(
 					'Title',
-					new CRUDTableWidgetText('{this->title}')
+					new CRUDTableWidgetHtmlWithLink('{this->title}<br>{this->getReverseTitle()}', DemoNodeEditAction::getUrl('{this->id}'))
 				),
 				new CRUDTableColumn(
 					'Reverse title',
