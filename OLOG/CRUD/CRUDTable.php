@@ -177,7 +177,7 @@ class CRUDTable
                         $col_width_attr = ' width="1px" ';
                     }
 
-                    echo '<td ' . $col_width_attr . '>';
+                    echo '<td ' . $col_width_attr . ' style="word-break: break-all;">';
 					echo $widget_obj->html($obj_obj);
 					echo '</td>';
 
