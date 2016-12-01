@@ -58,14 +58,6 @@ class DemoNodesListAction
 				),
 				new CRUDTableColumn(
 					'',
-					new CRUDTableWidgetTextWithLink(
-						'Edit',
-						DemoNodeEditAction::getUrl('{this->id}'),
-						'btn btn-xs btn-default'
-					)
-				),
-				new CRUDTableColumn(
-					'',
 					new CRUDTableWidgetDelete()
 				),
 			],
