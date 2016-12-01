@@ -41,7 +41,7 @@ class CRUDTableScript
 									var url = $link.attr("href");
 									var link_style = "z-index: 1;position: absolute;top: 0;bottom: 0;left: 0;right: 0;display: block;";
 									$tr.find("td").each(function () {
-										var $td = $(this).css({"position":"relative;"});
+										var $td = $(this).css({"position":"relative"});
 										var $childrenTag = $td.find(">*");
 										if ($childrenTag[0] && $childrenTag[0].tagName == "FORM") {
 											return false;
