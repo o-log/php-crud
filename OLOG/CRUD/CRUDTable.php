@@ -293,7 +293,7 @@ class CRUDTable
         return $html;
     }
 
-    static protected function filtersHtmlInline($table_index_on_page, $filters_arr)
+    static public function filtersHtmlInline($table_index_on_page, $filters_arr)
     {
 	    if (empty($filters_arr)) {
 		    return '';

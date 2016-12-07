@@ -10,7 +10,9 @@ use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilterEqualOptions;
+use OLOG\CRUD\CRUDTableFilterEqualOptionsInline;
 use OLOG\CRUD\CRUDTableFilterLike;
+use OLOG\CRUD\CRUDTableFilterLikeInline;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
@@ -88,12 +90,12 @@ class DemoTermsTreeAction
             [
                 //new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL),
                 //new CRUDTableFilter('vocabulary_id', CRUDTableFilter::FILTER_EQUAL, DemoTerm::VOCABULARY_MAIN, new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR)),
-                new CRUDTableFilterEqualOptions('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, true, DemoTerm::VOCABULARY_MAIN, false),
+                new CRUDTableFilterEqualOptionsInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, true, DemoTerm::VOCABULARY_MAIN, false),
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
-                new CRUDTableFilterLike('3748t7t45gdfg', 'Название содержит', 'title')
+                new CRUDTableFilterLikeInline('3748t7t45gdfg', 'Название содержит', 'title')
             ],
             1,
-            CRUDTable::FILTERS_POSITION_LEFT
+            CRUDTable::FILTERS_POSITION_INLINE
         );
 
         DemoLayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());

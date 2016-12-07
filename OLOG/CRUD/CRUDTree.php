@@ -49,6 +49,10 @@ class CRUDTree
             $html .= self::filtersHtml($filters_arr);
         }
 
+        if ($filters_position == CRUDTable::FILTERS_POSITION_INLINE) {
+            $html .= CRUDTable::filtersHtmlInline($table_id, $filters_arr);
+        }
+
         $html .= '<table class="table table-hover">';
         $html .= '<thead>';
         $html .= '<tr>';
