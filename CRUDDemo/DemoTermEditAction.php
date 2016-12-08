@@ -102,9 +102,9 @@ class DemoTermEditAction
                 ]
             ),
             [
-                new CRUDTableColumn('Title', new CRUDTableWidgetTextWithLink('{this->title}', DemoTermEditAction::getUrl('{this->id}'))),
-                new CRUDTableColumn('Weight', new CRUDTableWidgetWeight(['parent_id' => $term_id])),
-                new CRUDTableColumn('Delete', new CRUDTableWidgetDelete())
+                new CRUDTableColumn('', new CRUDTableWidgetTextWithLink('{this->title}', DemoTermEditAction::getUrl('{this->id}'))),
+                new CRUDTableColumn('', new CRUDTableWidgetWeight(['parent_id' => $term_id])),
+                new CRUDTableColumn('', new CRUDTableWidgetDelete())
             ],
             [
                 new CRUDTableFilterEqualInvisible('parent_id', $term_id)
