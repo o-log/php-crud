@@ -158,7 +158,7 @@ class CRUDTable
                 echo '<thead><tr>';
                 foreach ($column_obj_arr as $column_obj) {
                     Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
-                    echo '<th>' . Sanitize::sanitizeTagContent($column_obj->getTitle()) . '</th>';
+                    echo '<th>' . $column_obj->getTitle() . '</th>';
                 }
                 echo '</tr></thead>';
             }
