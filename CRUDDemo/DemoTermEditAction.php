@@ -75,7 +75,7 @@ class DemoTermEditAction
                         DemoTerm::class,
                         'title',
                         DemoAjaxTermsListAction::getUrl(),
-                        DemoTermEditAction::getUrl('REFERENCED_ID')
+                        DemoTermEditAction::getUrl(CRUDFormWidgetReferenceAjax::REFERENCED_ID_PLACEHOLDER)
 
                     )
                 )

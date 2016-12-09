@@ -8,6 +8,8 @@ use OLOG\Sanitize;
 
 class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
 {
+    const REFERENCED_ID_PLACEHOLDER = 'REFERENCED_ID';
+
     protected $field_name;
     protected $ajax_action_url;
     protected $referenced_class_name;
@@ -132,7 +134,7 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
             $('#<?= $select_element_id ?>_btn_link').on('click', function (e) {
                 var url = '<?= $this->getEditorUrl() ?>';
                 var id = $('#<?= $select_element_id ?>').val();
-                url = url.replace('REFERENCED_ID', id);
+                url = url.replace('<?= self::REFERENCED_ID_PLACEHOLDER ?>', id);
 
                 window.location = url;
             });
