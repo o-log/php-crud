@@ -5,7 +5,7 @@ namespace OLOG\CRUD;
 use OLOG\Assert;
 use OLOG\GETAccess;
 
-class CRUDTableFilterEqualInvisible implements InterfaceCRUDTableFilter2
+class CRUDTableFilterEqualInvisible implements InterfaceCRUDTableFilterInvisible
 {
     protected $field_name;
     protected $filter_value;

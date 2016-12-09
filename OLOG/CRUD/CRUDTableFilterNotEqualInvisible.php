@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-class CRUDTableFilterNotEqualInvisible implements InterfaceCRUDTableFilter2
+class CRUDTableFilterNotEqualInvisible implements InterfaceCRUDTableFilterInvisible
 {
     protected $field_name;
     protected $filter_value;
