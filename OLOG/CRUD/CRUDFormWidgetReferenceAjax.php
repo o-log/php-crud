@@ -83,7 +83,7 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
             $html .= '</span>';
         }
 
-        $html .= '<div class="form-control" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text">' . $referenced_obj_title . '</div>';
+        $html .= '<div class="form-control" style="overflow: scroll;" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_text">' . $referenced_obj_title . '</div>';
 
         if ($this->getEditorUrl()) {
             $html .= '<span class="input-group-btn">';
