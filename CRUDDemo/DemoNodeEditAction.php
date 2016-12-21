@@ -81,7 +81,7 @@ class DemoNodeEditAction
                 ),
 				new CRUDFormVerticalRow(
 					'пример Medium Editor',
-					new CRUDFormWidgetMediumEditor('body2')
+					new CRUDFormWidgetMediumEditor('body2', '', 'placeholder: false, toolbar: {buttons: ["bold","anchor"]}')
 				),
                 new CRUDFormVerticalRow(
                     'пример Ace Editor',

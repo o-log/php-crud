@@ -8,16 +8,35 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 {
 	protected $field_name;
     protected $uniqid;
+    protected $editor_options_str;
 
-	public function __construct($field_name, $uniqid = '')
+	public function __construct($field_name, $uniqid = '', $editor_options_str = 'placeholder: false')
 	{
 		$this->setFieldName($field_name);
+		$this->setEditorOptionsStr($editor_options_str);
+
         if ($uniqid) {
             $this->setUniqid($uniqid);
         } else {
             $this->setUniqid(uniqid('CRUDFormWidgetMediumEditor_'));
         }
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getEditorOptionsStr()
+    {
+        return $this->editor_options_str;
+    }
+
+    /**
+     * @param mixed $editor_options_str
+     */
+    public function setEditorOptionsStr($editor_options_str)
+    {
+        $this->editor_options_str = $editor_options_str;
+    }
 
 	public function html($obj)
 	{
@@ -41,10 +60,13 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 
 		$html .= '<textarea id="' . $uniqid . '_textarea" name="' . Sanitize::sanitizeAttrValue($field_name) . '" style="display: none;">' . $field_value . '</textarea>';
 		$html .= '<div id="' . $uniqid . '" class="form-control" style="height: auto;">' . $field_value . '</div>';
+
+
+
         ob_start();?>
 			<script>
 				var <?= $uniqid ?> = new MediumEditor("#<?= $uniqid ?>", {
-					placeholder: false
+					<?= $this->getEditorOptionsStr() ?>
 				});
 
                 <?= $uniqid ?>.subscribe('editableInput', function (event, editable) {
