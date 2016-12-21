@@ -72,7 +72,7 @@ class CRUDForm
             }
 
             if (!empty($redirect_get_params_arr)) {
-                $redirect_url = $url_to_redirect_after_save . '?' . http_build_query($params_arr);
+                $redirect_url = $redirect_url . '?' . http_build_query($params_arr);
             }
             \OLOG\Redirects::redirect($redirect_url);
         }
