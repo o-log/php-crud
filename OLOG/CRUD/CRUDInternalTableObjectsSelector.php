@@ -67,7 +67,7 @@ class CRUDInternalTableObjectsSelector
      * @param $context_arr array Массив пар "имя поля" - "значение поля"
      * @return array Массив идентикаторов объектов.
      */
-    static public function getObjIdsArrForClassName($table_index_on_page, $model_class_name, $filters_arr, $order_by = '')
+    static public function getObjIdsArrForClassName($table_index_on_page, $model_class_name, $filters_arr, $order_by = '', $execute_total_rows_count_query = false, &$total_rows_count = 0)
     {
         \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceLoad::class);
 
@@ -84,48 +84,6 @@ class CRUDInternalTableObjectsSelector
         $where = ' 1 = 1 ';
 
         foreach ($filters_arr as $filter_obj) {
-            /*
-            if ($filter_obj instanceof InterfaceCRUDTableFilter) {
-
-                $column_name = $filter_obj->getFieldName();
-                $operation_code = $filter_obj->getOperationCode();
-                $value = $filter_obj->getValue();
-
-                $column_name = preg_replace("/[^a-zA-Z0-9_]+/", "", $column_name);
-
-                switch ($operation_code) {
-                    case CRUDTableFilter::FILTER_EQUAL:
-                        $where .= ' and ' . $column_name . ' = ? ';
-                        $query_param_values_arr[] = $value;
-                        break;
-
-                    case CRUDTableFilter::FILTER_IS_NULL:
-                        $where .= ' and ' . $column_name . ' is null ';
-                        break;
-
-                    case CRUDTableFilter::FILTER_LIKE:
-                        $where .= ' and ' . $column_name . ' like ? ';
-                        $query_param_values_arr[] = '%' . $value . '%';
-                        break;
-
-                    case CRUDTableFilter::FILTER_IN:
-                        if (count($value)) {
-                            $in_placeholders_arr = [];
-
-                            foreach ($value as $in_single_value) {
-                                $in_placeholders_arr[] = '?';
-                                $query_param_values_arr[] = $in_single_value;
-                            }
-
-                            $where .= ' and ' . $column_name . ' in (' . implode(', ', $in_placeholders_arr) . ') ';
-                        }
-                        break;
-
-                    default:
-                        throw new \Exception('unknown filter code');
-                }
-            } else
-            */
             if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
                 list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
                 if ($filter_sql_condition != ''){
@@ -151,9 +109,17 @@ class CRUDInternalTableObjectsSelector
 
         $obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
             $db_id,
-            "select " . $db_id_field_name . " from " . $db_table_name . ' where ' . $where . ' order by ' . $order_by . ' limit ' . intval($page_size) . ' offset ' . intval($start),
+            'select ' . $db_id_field_name . ' from ' . $db_table_name . ' where ' . $where . ' order by ' . $order_by . ' limit ' . intval($page_size) . ' offset ' . intval($start),
             $query_param_values_arr
         );
+
+        if ($execute_total_rows_count_query){
+            $total_rows_count = \OLOG\DB\DBWrapper::readField(
+                $db_id,
+                'select count(*) from ' . $db_table_name . ' where ' . $where,
+                $query_param_values_arr
+            );
+        }
 
         return $obj_ids_arr;
     }

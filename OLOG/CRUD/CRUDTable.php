@@ -100,7 +100,7 @@ class CRUDTable
 	 * @param string $order_by
 	 * @return string
 	 */
-	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '', $filters_position = self::FILTERS_POSITION_NONE)
+	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '', $filters_position = self::FILTERS_POSITION_NONE, $display_total_rows_count = false)
 	{
 
 	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
@@ -117,7 +117,7 @@ class CRUDTable
 
         // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
 
-		$html = HTML::div($table_container_element_id, '', function() use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $order_by, $table_id, $filters_position) {
+		$html = HTML::div($table_container_element_id, '', function() use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $order_by, $table_id, $filters_position, $display_total_rows_count) {
 
 			echo '<div class="row">';
 
@@ -164,7 +164,10 @@ class CRUDTable
             }
 
 			echo '<tbody>';
-			$objs_ids_arr = CRUDInternalTableObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $order_by);
+
+            $total_rows_count = 0;
+			$objs_ids_arr = CRUDInternalTableObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $order_by, $display_total_rows_count, $total_rows_count);
+
 			foreach ($objs_ids_arr as $obj_id) {
 				$obj_obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $obj_id);
 
@@ -198,7 +201,7 @@ class CRUDTable
 
 			echo '</table>';
 
-			echo Pager::renderPager($table_id, count($objs_ids_arr));
+			echo Pager::renderPager($table_id, count($objs_ids_arr), $display_total_rows_count, $total_rows_count);
 
 			echo '</div>';
 

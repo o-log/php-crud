@@ -72,14 +72,14 @@ class Pager
 	 * @param int $elements_count
 	 * @return string
 	 */
-	static public function renderPager($table_index_on_page, $elements_count = null)
+	static public function renderPager($table_index_on_page, $elements_count = null, $display_total_rows_count = false, $total_rows_count = 0)
 	{
 		$pager_needed = false;
 		if (self::hasPrevPage($table_index_on_page)){
 			$pager_needed = true;
 		}
 
-		if (is_null($elements_count) || self::hasNextPage($table_index_on_page, $elements_count)){
+		if (is_null($elements_count) || self::hasNextPage($table_index_on_page, $elements_count) || $display_total_rows_count){
 			$pager_needed = true;
 		}
 
@@ -87,7 +87,7 @@ class Pager
 			return '';
 		}
 
-		$html = '<ul class="pagination">';
+        $html = '<ul class="pagination">';
 
 		// TODO: looses existing get form
 		$page_url = \OLOG\Url::getCurrentUrlNoGetForm();
@@ -107,6 +107,10 @@ class Pager
 		} else {
 			$html .= '<li class="disabled"><a href="#"><span class="glyphicon glyphicon-arrow-right"></span></a></li>';
 		}
+
+        if ($display_total_rows_count) {
+            $html .= '<li class="disabled"><a href="#">Всего записей: ' . $total_rows_count . '</a></li>';
+        }
 
 		$html .= "</ul>";
 
