@@ -2,9 +2,8 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Assert;
-use OLOG\GETAccess;
 use OLOG\HTML;
+use OLOG\REQUESTWrapper;
 use OLOG\Sanitize;
 
 class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
@@ -20,7 +19,7 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
 
     // сообщает, нужно ли использовать значения из формы (включая отсутствующие в форме поля - для чекбоксов это означает false) или этот фильтр в форме не приходил и нужно использовать initial значения
     public function useValuesFromForm(){
-        $value = GETAccess::getOptionalGetValue($this->filterIsPassedInputName(), null);
+        $value = REQUESTWrapper::optionalFieldValue($this->filterIsPassedInputName(), null);
 
         if (is_null($value)){
             return false;
@@ -38,8 +37,8 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
             return $this->getInitialValue();
         }
 
-        $value = GETAccess::getOptionalGetValue($this->getFilterIniqId());
-        $is_null = GETAccess::getOptionalGetValue($this->nullCheckboxInputName());
+        $value = REQUESTWrapper::optionalFieldValue($this->getFilterIniqId());
+        $is_null = REQUESTWrapper::optionalFieldValue($this->nullCheckboxInputName());
 
         if ($is_null != ''){
             $value = null;
@@ -113,7 +112,7 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
             return $this->getInitialIsEnabled();
         }
 
-        $is_enabled_from_form = GETAccess::getOptionalGetValue($this->enabledCheckboxInputName());
+        $is_enabled_from_form = REQUESTWrapper::optionalFieldValue($this->enabledCheckboxInputName());
 
         if ($is_enabled_from_form != ''){
             return true;

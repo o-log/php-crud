@@ -8,6 +8,7 @@ use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableWidgetDelete;
+use OLOG\CRUD\CRUDTableWidgetHtml;
 use OLOG\CRUD\CRUDTableWidgetHtmlWithLink;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;

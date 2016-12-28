@@ -15,11 +15,14 @@ use OLOG\CRUD\CRUDTableFilterEqualOptionsInline;
 use OLOG\CRUD\CRUDTableFilterLike;
 use OLOG\CRUD\CRUDTableFilterLikeInline;
 use OLOG\CRUD\CRUDTableWidgetDelete;
+use OLOG\CRUD\CRUDTableWidgetHtml;
 use OLOG\CRUD\CRUDTableWidgetOptions;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDTableWidgetWeight;
+use OLOG\Operations;
+use OLOG\Url;
 
 class DemoTermsListAction
 {
@@ -33,6 +36,8 @@ class DemoTermsListAction
         \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
 
         $html = '';
+
+        $table_id = '8726438755234';
 
         $html .= \OLOG\CRUD\CRUDTable::html(
             \CRUDDemo\DemoTerm::class,
@@ -82,16 +87,18 @@ class DemoTermsListAction
                 ),
                 new CRUDTableColumn(
                     '',
-                    new CRUDTableWidgetWeight(
-                        [
-                            'parent_id' => null
-                        ]
-                    )
+                    new CRUDTableWidgetHtml('<form action="' . Url::getCurrentUrl() . '" class="editor-form">
+                    <input type="hidden" name="' . Operations::FIELD_NAME_OPERATION_CODE . '" value="' . CRUDTable::OPERATION_UPDATE_MODEL_FIELD . '">
+                    <input type="hidden" name="' . CRUDTable::FIELD_FIELD_NAME. '" value="vocabulary_id">
+                    <input type="hidden" name="' . CRUDTable::FIELD_CRUDTABLE_ID . '" value="' . $table_id . '">
+                    <input type="hidden" name="' . CRUDTable::FIELD_MODEL_ID . '" value="{this->id}">
+                    <input name="' . CRUDTable::FIELD_FIELD_VALUE . '" value="{this->vocabulary_id}">
+                    <input type="submit">
+                    </form>
+                    ')
                 ),
-                new CRUDTableColumn(
-                    '',
-                    new CRUDTableWidgetDelete()
-                )
+                new CRUDTableColumn('', new CRUDTableWidgetWeight(['parent_id' => null])),
+                new CRUDTableColumn('', new CRUDTableWidgetDelete())
             ],
             [
                 new CRUDTableFilterEqualInvisible('parent_id', null),
@@ -102,12 +109,61 @@ class DemoTermsListAction
                 new CRUDTableFilterLikeInline('3748t7t45gdfg', '', 'title', 'Название содержит')
             ],
             'weight',
-            '8726438755234',
+            $table_id,
             CRUDTable::FILTERS_POSITION_INLINE,
             true
         );
 
-        DemoLayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());
+        $html .= '
+        <script>
+            var query_url = "' . Url::getCurrentUrlNoGetForm(). '";
+            var table_class = "' . $table_id . '";
+
+            // навешиваем обработчик на всю таблицу, чтобы он не пострадал при перезагрузке контента таблицы аяксом
+            $("." + table_class).on("submit", ".editor-form", function (e) {
+                e.preventDefault();
+                e.stopPropagation(); // for a case when table is within another form (model creation form for example)
+                
+                var filter_elem_selector = "." + table_class + " .filters-form";
+                var filters_arr = $(filter_elem_selector).serializeArray();
+                
+                var post_data = [];
+                $.merge(post_data, filters_arr);
+
+                var editor_form_arr = $(this).serializeArray();
+                $.merge(post_data, editor_form_arr);
+
+                var pagination_elem_selector = "." + table_class + " .pagination";
+                var pagination = $(pagination_elem_selector).data("params") || "";
+
+                OLOG.preloader.show();
+
+                $.ajax({
+                    url: query_url,
+                    type: "post",
+                    data: post_data
+                }).success(function (received_html) {
+                    OLOG.preloader.hide();
+                    var $box = $("<div>", {html: received_html});
+
+                    var table_elem_selector = "." + table_class + " .table";
+                    $(table_elem_selector).html($box.find(table_elem_selector).html());
+
+                    var pagination_elem_selector = "." + table_class + " .pagination";
+                    $(pagination_elem_selector).html($box.find(pagination_elem_selector).html());
+
+                    CRUD.Table.clickTableRow(table_class);
+                }).fail(function () {
+                    OLOG.preloader.hide();
+                });
+
+            });
+            
+        </script>
+        ';
+
+
+    DemoLayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());
     }
     
     static public function breadcrumbsArr(){

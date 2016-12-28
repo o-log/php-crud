@@ -4,6 +4,7 @@ namespace OLOG\CRUD;
 
 use OLOG\Assert;
 use OLOG\BT\BT;
+use OLOG\DB\DBWrapper;
 use OLOG\GETAccess;
 use OLOG\HTML;
 use OLOG\Model\InterfaceWeight;
@@ -12,15 +13,18 @@ use OLOG\POSTAccess;
 use OLOG\Preloader;
 use OLOG\Redirects;
 use OLOG\Render;
+use OLOG\REQUESTWrapper;
 use OLOG\Sanitize;
 use OLOG\Url;
 
 class CRUDTable
 {
 	const KEY_LIST_COLUMNS = 'LIST_COLUMNS';
+
 	const OPERATION_ADD_MODEL = 'OPERATION_ADD_MODEL';
     const OPERATION_DELETE_MODEL = 'OPERATION_DELETE_MODEL';
     const OPERATION_SWAP_MODEL_WEIGHT = 'OPERATION_SWAP_MODEL_WEIGHT';
+    const OPERATION_UPDATE_MODEL_FIELD = 'OPERATION_UPDATE_MODEL_FIELD';
 
     const FILTERS_POSITION_LEFT = 'FILTERS_POSITION_LEFT';
     const FILTERS_POSITION_RIGHT = 'FILTERS_POSITION_RIGHT';
@@ -28,8 +32,15 @@ class CRUDTable
     const FILTERS_POSITION_NONE = 'FILTERS_POSITION_NONE';
 	const FILTERS_POSITION_INLINE = 'FILTERS_POSITION_INLINE';
 
+    const FIELD_CRUDTABLE_ID = 'crudtable_id';
+    const FIELD_FIELD_NAME = 'field_name';
+    const FIELD_FIELD_VALUE = 'field_value';
+    const FIELD_MODEL_ID = 'model_id';
+
     static protected function deleteModelOperation()
     {
+        // TODO: do not pass DB table name in form - pass crud table id instead, get model class name from crud table
+        // TODO: also check model owner
         $model_class_name = POSTAccess::getRequiredPostValue(CRUDTableWidgetDelete::FIELD_CLASS_NAME);
         \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
 
@@ -49,6 +60,8 @@ class CRUDTable
 
     static protected function swapModelWeightOperation()
     {
+        // TODO: do not pass DB table name in form - pass crud table id instead, get model class name from crud table
+        // TODO: also check model owner
         $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
         \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceWeight::class);
 
@@ -69,11 +82,57 @@ class CRUDTable
         \OLOG\Redirects::redirectToSelf();
     }
 
+    static protected function updateModelFieldOperation($table_id, $model_class_name)
+    {
+        $table_id_from_request = REQUESTWrapper::optionalFieldValue(self::FIELD_CRUDTABLE_ID, '');
+
+        // проверяем, что операция выполняется для таблицы из запроса, потому что класс модели мы берем из таблицы
+        if ($table_id_from_request != $table_id){
+            return;
+        }
+
+        $db_table_name = $model_class_name::DB_TABLE_NAME; // TODO: check constant availability
+
+        $db_table_field = REQUESTWrapper::requiredFieldValue(self::FIELD_FIELD_NAME);
+        $value = REQUESTWrapper::requiredFieldValue(self::FIELD_FIELD_VALUE);
+        $model_id = REQUESTWrapper::requiredFieldValue(self::FIELD_MODEL_ID);
+
+        // TODO: owner check!!!
+
+        DBWrapper::query(
+            $model_class_name::DB_ID, // check class availability
+            'update ' . Sanitize::sanitizeSqlColumnName($db_table_name) . ' set ' . Sanitize::sanitizeSqlColumnName($db_table_field) . ' = ? where id = ?',
+            [$value, $model_id]
+        );
+
+        // TODO: do not pass DB table name in form - pass crud table id instead, get model class name from crud table
+        // TODO: also check model owner
+        /*
+        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
+        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceWeight::class);
+
+        $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
+
+        $context_fields_names_str = POSTAccess::getRequiredPostValue(CRUDTableWidgetWeight::FORMFIELD_CONTEXT_FIELDS_NAME);
+        $context_fields_names_arr = explode(',', $context_fields_names_str);
+
+        $context_arr = [];
+        foreach ($context_fields_names_arr as $context_field_name){
+            $context_arr[$context_field_name] = NullablePostFields::optionalFieldValue($context_field_name);
+        }
+
+        $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
+        $obj->swapWeights($context_arr);
+
+        \OLOG\Redirects::redirectToSelf();
+        */
+    }
+
     static protected function filterFormFieldName($table_id, $filter_index){
 		return 'table_' . $table_id . '_filter_' . $filter_index;
 	}
 
-    static public function executeOperations(){
+    static public function executeOperations($table_id, $model_class_name){
         static $__operations_executed = false;
 
         if ($__operations_executed){
@@ -88,6 +147,10 @@ class CRUDTable
 
         Operations::matchOperation(self::OPERATION_SWAP_MODEL_WEIGHT, function () {
             self::swapModelWeightOperation();
+        });
+
+        Operations::matchOperation(self::OPERATION_UPDATE_MODEL_FIELD, function () use ($table_id,  $model_class_name) {
+            self::updateModelFieldOperation($table_id, $model_class_name);
         });
     }
 
@@ -104,7 +167,7 @@ class CRUDTable
 	{
 
 	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
-        self::executeOperations();
+        self::executeOperations($table_id, $model_class_name);
 
 		//
 		// вывод таблицы
