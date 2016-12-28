@@ -22,6 +22,7 @@ class CRUDTableScript
 							CRUD.Table.clickTableRow(table_class);
 							CRUD.Table.filterAjaxLoad(table_class, query_url);
 							CRUD.Table.paginationAjaxLoad(table_class, query_url);
+							CRUD.Table.editTableData(table_class);
 						},
 
 						clickTableRow: function (table_class) {
@@ -34,7 +35,7 @@ class CRUDTableScript
 										return false;
 									}
 									// Проверка на наличие только одной ссылки
-									if ($tr.find("a").length > 1) {
+									if ( ($tr.find("a").length > 1) || ($tr.find('.js-options-editor').length > 0) ) {
 										return false;
 									}
 									var $link = $tr.find("a:first");
@@ -84,24 +85,59 @@ class CRUDTableScript
 							});
 						},
 
-						requestAjax: function (table_class, query) {
+						requestAjax: function (table_class, url) {
 							var table_elem_selector = '.' + table_class + ' .table';
 							var pagination_elem_selector = '.' + table_class + ' .pagination';
 
-							OLOG.preloader.show();
-
 							$.ajax({
-								url: query
-							}).success(function (received_html) {
-								OLOG.preloader.hide();
-								var $box = $('<div>', {html: received_html});
+								url: url,
+								beforeSend: function () {
+									OLOG.preloader.show();
+								},
+								complete: function () {
+									OLOG.preloader.hide();
+								},
+								success: function (received_html) {
+									// Изменение URL
+									window.history.pushState(null, null, url);
 
-								$(table_elem_selector).html($box.find(table_elem_selector).html());
-								$(pagination_elem_selector).html($box.find(pagination_elem_selector).html());
+									var $box = $('<div>', {html: received_html});
+									$(table_elem_selector).html($box.find(table_elem_selector).html());
+									$(pagination_elem_selector).html($box.find(pagination_elem_selector).html());
+									CRUD.Table.clickTableRow(table_class);
+								}
+							});
+						},
 
-								CRUD.Table.clickTableRow(table_class);
-							}).fail(function () {
-								OLOG.preloader.hide();
+						editTableData: function (table_class) {
+							// навешиваем обработчик на всю таблицу, чтобы он не пострадал при перезагрузке контента таблицы аяксом
+							$('.' + table_class).on('submit', '.js-options-editor', function (e) {
+								e.preventDefault();
+								e.stopPropagation();
+
+								$.ajax({
+									url: location.pathname + location.search,
+									type: "post",
+									data: $(this).serializeArray(),
+									beforeSend: function () {
+										OLOG.preloader.show();
+									},
+									complete: function () {
+										OLOG.preloader.hide();
+									},
+									success: function (received_html) {
+										var $box = $("<div>", {html: received_html});
+										var table_elem_selector = "." + table_class + " .table";
+										var pagination_elem_selector = "." + table_class + " .pagination";
+
+										$(table_elem_selector).html($box.find(table_elem_selector).html());
+										$(pagination_elem_selector).html($box.find(pagination_elem_selector).html());
+
+										CRUD.Table.clickTableRow(table_class);
+									}
+								});
+							}).on('click', '.js-options-editor > button', function (e) {
+								$(this).nextAll('input[name="' + $(this).attr('name') + '"]').val($(this).attr('value'));
 							});
 						}
 
