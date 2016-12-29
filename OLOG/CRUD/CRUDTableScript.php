@@ -18,10 +18,15 @@ class CRUDTableScript
 
 				CRUD.Table = CRUD.Table || {
 
-						init: function (table_class, query_url) {
+						data: {},
+
+						init: function (table_class, url) {
+							CRUD.Table.data[table_class] = {};
+							CRUD.Table.data[table_class].ajax_url = url;
+
 							CRUD.Table.clickTableRow(table_class);
-							CRUD.Table.filterAjaxLoad(table_class, query_url);
-							CRUD.Table.paginationAjaxLoad(table_class, query_url);
+							CRUD.Table.filterAjaxLoad(table_class);
+							CRUD.Table.paginationAjaxLoad(table_class);
 							CRUD.Table.editTableData(table_class);
 						},
 
@@ -53,22 +58,19 @@ class CRUDTableScript
 							});
 						},
 
-						filterAjaxLoad: function (table_class, query_url) {
+						filterAjaxLoad: function (table_class) {
 							var filter_elem_selector = '.' + table_class + ' .filters-form';
 							var pagination_elem_selector = '.' + table_class + ' .pagination';
 							$(filter_elem_selector).on('submit', function (e) {
 								e.preventDefault();
-								e.stopPropagation(); // for a case when filters form is within another form (model creation form for example)
-								var params = $(this).serialize();
-								$(this).data('params', params);
-								var filters = $(this).data('params') || '';
-								var pagination = $(pagination_elem_selector).data('params') || '';
-								var query = query_url + '?' + filters + '&' + pagination;
-								CRUD.Table.requestAjax(table_class, query);
+								e.stopPropagation();
+								CRUD.Table.data[table_class].filter = $(this).serialize();
+								CRUD.Table.data[table_class].pagination = '';
+								CRUD.Table.getRequeat(table_class);
 							});
 						},
 
-						paginationAjaxLoad: function (table_class, query_url) {
+						paginationAjaxLoad: function (table_class) {
 							var filter_elem_selector = '.' + table_class + ' .filters-form';
 							var pagination_elem_selector = '.' + table_class + ' .pagination';
 							$(pagination_elem_selector).on('click', 'a', function (e) {
@@ -76,21 +78,52 @@ class CRUDTableScript
 								if ($(this).attr('href') == "#") {
 									return false;
 								}
-								var params = $(this).attr('href').split('?')[1];
-								$(this).data('params', params);
-								var filters = $(filter_elem_selector).data('params') || '';
-								var pagination = $(this).data('params') || '';
-								var query = query_url + '?' + filters + '&' + pagination;
-								CRUD.Table.requestAjax(table_class, query);
+								CRUD.Table.data[table_class].pagination = $(this).attr('href').split('?')[1];
+								//var params = $(this).attr('href').split('?')[1];
+								//$(this).data('params', params);
+								//var filters = $(filter_elem_selector).data('params') || '';
+								//var pagination = $(this).data('params') || '';
+								//var query = query_url + '?' + filters + '&' + pagination;
+								CRUD.Table.getRequeat(table_class);
 							});
 						},
 
-						requestAjax: function (table_class, url) {
+						tableRender: function (table_class, received_html) {
 							var table_elem_selector = '.' + table_class + ' .table';
 							var pagination_elem_selector = '.' + table_class + ' .pagination';
+							var $box = $('<div>', {html: received_html});
 
+							$(table_elem_selector).html($box.find(table_elem_selector).html());
+							$(pagination_elem_selector).html($box.find(pagination_elem_selector).html());
+
+							CRUD.Table.clickTableRow(table_class);
+						},
+
+						getAjaxUrl: function (table_class) {
+							var ajax_url = CRUD.Table.data[table_class].ajax_url;
+
+							if (CRUD.Table.data[table_class].filter || CRUD.Table.data[table_class].pagination) {
+								ajax_url += '?';
+							}
+
+							if (CRUD.Table.data[table_class].filter) {
+								ajax_url += CRUD.Table.data[table_class].filter;
+								if (CRUD.Table.data[table_class].pagination) {
+									ajax_url += '&';
+								}
+							}
+
+							if (CRUD.Table.data[table_class].pagination) {
+								ajax_url += CRUD.Table.data[table_class].pagination;
+							}
+
+							return ajax_url;
+						},
+
+						getRequeat: function (table_class) {
 							$.ajax({
-								url: url,
+								url: CRUD.Table.getAjaxUrl(table_class),
+								dataType: 'html',
 								beforeSend: function () {
 									OLOG.preloader.show();
 								},
@@ -98,13 +131,7 @@ class CRUDTableScript
 									OLOG.preloader.hide();
 								},
 								success: function (received_html) {
-									// Изменение URL
-									window.history.pushState(null, null, url);
-
-									var $box = $('<div>', {html: received_html});
-									$(table_elem_selector).html($box.find(table_elem_selector).html());
-									$(pagination_elem_selector).html($box.find(pagination_elem_selector).html());
-									CRUD.Table.clickTableRow(table_class);
+									CRUD.Table.tableRender(table_class, received_html);
 								}
 							});
 						},
@@ -116,7 +143,7 @@ class CRUDTableScript
 								e.stopPropagation();
 
 								$.ajax({
-									url: location.pathname + location.search,
+									url: CRUD.Table.getAjaxUrl(table_class),
 									type: "post",
 									data: $(this).serializeArray(),
 									beforeSend: function () {
@@ -126,14 +153,7 @@ class CRUDTableScript
 										OLOG.preloader.hide();
 									},
 									success: function (received_html) {
-										var $box = $("<div>", {html: received_html});
-										var table_elem_selector = "." + table_class + " .table";
-										var pagination_elem_selector = "." + table_class + " .pagination";
-
-										$(table_elem_selector).html($box.find(table_elem_selector).html());
-										$(pagination_elem_selector).html($box.find(pagination_elem_selector).html());
-
-										CRUD.Table.clickTableRow(table_class);
+										CRUD.Table.tableRender(table_class, received_html);
 									}
 								});
 							}).on('click', '.js-options-editor > button', function (e) {
