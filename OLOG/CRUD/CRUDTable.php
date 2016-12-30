@@ -100,28 +100,6 @@ class CRUDTable
             'update ' . Sanitize::sanitizeSqlColumnName($db_table_name) . ' set ' . Sanitize::sanitizeSqlColumnName($db_table_field) . ' = ? where id = ?',
             [$value, $model_id]
         );
-
-        // TODO: do not pass DB table name in form - pass crud table id instead, get model class name from crud table
-        // TODO: also check model owner
-        /*
-        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
-        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceWeight::class);
-
-        $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
-
-        $context_fields_names_str = POSTAccess::getRequiredPostValue(CRUDTableWidgetWeight::FORMFIELD_CONTEXT_FIELDS_NAME);
-        $context_fields_names_arr = explode(',', $context_fields_names_str);
-
-        $context_arr = [];
-        foreach ($context_fields_names_arr as $context_field_name){
-            $context_arr[$context_field_name] = NullablePostFields::optionalFieldValue($context_field_name);
-        }
-
-        $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
-        $obj->swapWeights($context_arr);
-
-        \OLOG\Redirects::redirectToSelf();
-        */
     }
 
     static protected function filterFormFieldName($table_id, $filter_index){
