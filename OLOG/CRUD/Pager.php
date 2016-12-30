@@ -15,8 +15,8 @@ class Pager
 	static public function getPageOffset($table_index_on_page)
 	{
 		$page_offset = 0;
-		if (array_key_exists(self::pageOffsetFormFieldName($table_index_on_page), $_GET)) {
-			$page_offset = intval($_GET[self::pageOffsetFormFieldName($table_index_on_page)]);
+		if (array_key_exists(self::pageOffsetFormFieldName($table_index_on_page), $_REQUEST)) {
+			$page_offset = intval($_REQUEST[self::pageOffsetFormFieldName($table_index_on_page)]);
 			if ($page_offset < 0) {
 				$page_offset = 0;
 			}
@@ -28,8 +28,8 @@ class Pager
 	static public function getPageSize($table_index_on_page, $default_page_size = 30)
 	{
 		$page_size = $default_page_size;
-		if (array_key_exists(self::pageSizeFormFieldName($table_index_on_page), $_GET)) {
-			$page_size = intval($_GET[self::pageSizeFormFieldName($table_index_on_page)]);
+		if (array_key_exists(self::pageSizeFormFieldName($table_index_on_page), $_REQUEST)) {
+			$page_size = intval($_REQUEST[self::pageSizeFormFieldName($table_index_on_page)]);
 			if ($page_size < 1) {
 				return $default_page_size;
 			}

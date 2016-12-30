@@ -2,9 +2,6 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Assert;
-use OLOG\GETAccess;
-
 class CRUDTableFilterEqualInvisible implements InterfaceCRUDTableFilterInvisible
 {
     protected $field_name;

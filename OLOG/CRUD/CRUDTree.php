@@ -3,14 +3,6 @@
 namespace OLOG\CRUD;
 
 use OLOG\Assert;
-use OLOG\BT\BT;
-use OLOG\GETAccess;
-use OLOG\Model\InterfaceWeight;
-use OLOG\Operations;
-use OLOG\POSTAccess;
-use OLOG\Preloader;
-use OLOG\Redirects;
-use OLOG\Render;
 use OLOG\Sanitize;
 use OLOG\Url;
 
@@ -20,7 +12,7 @@ class CRUDTree
     {
 
         // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
-        CRUDTable::executeOperations();
+        CRUDTable::executeOperations($table_id, $model_class_name);
 
         $objs_ids_arr = CRUDInternalTableObjectsSelector::getRecursiveObjIdsArrForClassName($model_class_name, $parent_id_field_name, $filters_arr, $order_by);
 
