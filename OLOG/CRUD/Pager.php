@@ -83,34 +83,32 @@ class Pager
 			$pager_needed = true;
 		}
 
-		if (!$pager_needed) {
-			return '';
+        $html = '<ul class="pagination" data-page-size="' . self::getPageSize($table_index_on_page) . '" data-page-offset="' . self::getPageOffset($table_index_on_page) . '">';
+
+		if ($pager_needed) {
+			// TODO: looses existing get form
+			$page_url = \OLOG\Url::getCurrentUrlNoGetForm();
+
+			if (self::hasPrevPage($table_index_on_page)) {
+				$html .= '<li><a data-page-offset="0" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=0&' . self::pageSizeFormFieldName($table_index_on_page) . '=' . self::getPageSize($table_index_on_page).'"><span class="glyphicon glyphicon-home"></span> 0-' . self::getPageSize($table_index_on_page) . '</a></li>';
+				$html .= '<li><a data-page-offset="' . self::getPrevPageStart($table_index_on_page) . '" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=' . self::getPrevPageStart($table_index_on_page) . '&' . self::pageSizeFormFieldName($table_index_on_page) . '='.self::getPageSize($table_index_on_page).'"><span class="glyphicon glyphicon-arrow-left"></span> ' . self::getPrevPageStart($table_index_on_page) . '-' . (self::getPrevPageStart($table_index_on_page) + self::getPageSize($table_index_on_page)) . '</a></li>';
+			} else {
+				$html .= '<li class="disabled"><a href="#"><span class="glyphicon glyphicon-home"></span></a></li>';
+				$html .= '<li class="disabled"><a href="#"><span class="glyphicon glyphicon-arrow-left"></span></a></li>';
+			}
+
+			$html .= '<li class="active"><a data-page-offset="' . self::getPageOffset($table_index_on_page) . '" href="#">' . self::getPageOffset($table_index_on_page) . '-' . (self::getPageOffset($table_index_on_page) + self::getPageSize($table_index_on_page)) . '</a></li>';
+
+			if (!$elements_count || self::hasNextPage($table_index_on_page, $elements_count)) {
+				$html .= '<li><a data-page-offset="' . self::getNextPageStart($table_index_on_page) . '" class="next-page" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=' . self::getNextPageStart($table_index_on_page) . '&' . self::pageSizeFormFieldName($table_index_on_page) . '=' . self::getPageSize($table_index_on_page) . '">' . self::getNextPageStart($table_index_on_page) . '-' . (self::getNextPageStart($table_index_on_page) + self::getPageSize($table_index_on_page)) . ' <span class="glyphicon glyphicon-arrow-right"></span></a></a></li>';
+			} else {
+				$html .= '<li class="disabled"><a href="#"><span class="glyphicon glyphicon-arrow-right"></span></a></li>';
+			}
+
+	        if ($display_total_rows_count) {
+	            $html .= '<li class="disabled"><a href="#">Всего записей: ' . $total_rows_count . '</a></li>';
+	        }
 		}
-
-        $html = '<ul class="pagination">';
-
-		// TODO: looses existing get form
-		$page_url = \OLOG\Url::getCurrentUrlNoGetForm();
-
-		if (self::hasPrevPage($table_index_on_page)) {
-			$html .= '<li><a href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=0&' . self::pageSizeFormFieldName($table_index_on_page) . '=' . self::getPageSize($table_index_on_page).'"><span class="glyphicon glyphicon-home"></span> 0-' . self::getPageSize($table_index_on_page) . '</a></li>';
-			$html .= '<li><a href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=' . self::getPrevPageStart($table_index_on_page) . '&' . self::pageSizeFormFieldName($table_index_on_page) . '='.self::getPageSize($table_index_on_page).'"><span class="glyphicon glyphicon-arrow-left"></span> ' . self::getPrevPageStart($table_index_on_page) . '-' . (self::getPrevPageStart($table_index_on_page) + self::getPageSize($table_index_on_page)) . '</a></li>';
-		} else {
-			$html .= '<li class="disabled"><a href="#"><span class="glyphicon glyphicon-home"></span></a></li>';
-			$html .= '<li class="disabled"><a href="#"><span class="glyphicon glyphicon-arrow-left"></span></a></li>';
-		}
-
-		$html .= '<li class="active"><a href="#">' . self::getPageOffset($table_index_on_page) . '-' . (self::getPageOffset($table_index_on_page) + self::getPageSize($table_index_on_page)) . '</a></li>';
-
-		if (!$elements_count || self::hasNextPage($table_index_on_page, $elements_count)) {
-			$html .= '<li><a class="next-page" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=' . self::getNextPageStart($table_index_on_page) . '&' . self::pageSizeFormFieldName($table_index_on_page) . '=' . self::getPageSize($table_index_on_page) . '">' . self::getNextPageStart($table_index_on_page) . '-' . (self::getNextPageStart($table_index_on_page) + self::getPageSize($table_index_on_page)) . ' <span class="glyphicon glyphicon-arrow-right"></span></a></a></li>';
-		} else {
-			$html .= '<li class="disabled"><a href="#"><span class="glyphicon glyphicon-arrow-right"></span></a></li>';
-		}
-
-        if ($display_total_rows_count) {
-            $html .= '<li class="disabled"><a href="#">Всего записей: ' . $total_rows_count . '</a></li>';
-        }
 
 		$html .= "</ul>";
 
