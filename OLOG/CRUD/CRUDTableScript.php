@@ -79,11 +79,6 @@ class CRUDTableScript
 									return false;
 								}
 								CRUD.Table.data[table_class].pagination = $(this).attr('href').split('?')[1];
-								//var params = $(this).attr('href').split('?')[1];
-								//$(this).data('params', params);
-								//var filters = $(filter_elem_selector).data('params') || '';
-								//var pagination = $(this).data('params') || '';
-								//var query = query_url + '?' + filters + '&' + pagination;
 								CRUD.Table.getRequeat(table_class);
 							});
 						},
@@ -162,13 +157,163 @@ class CRUDTableScript
 						}
 
 					};
+
+
+				CRUD.newTable = CRUD.newTable || function ($container, url) {
+
+						this.url = url;
+						this.$container = $container;
+						this.table_class = '.table';
+						this.$table = this.$container.find(this.table_class);
+						this.filter_class = '.filters-form';
+						this.$filter = this.$container.find(this.filter_class);
+						this.pagination_class = '.pagination';
+						this.$pagination = this.$container.find(this.pagination_class);
+						this.options_editor_class = '.js-options-editor';
+
+						this.init = function () {
+							this.initFilter();
+							this.initPagination();
+							this.initEditor();
+							this.initClickRow();
+						};
+
+						this.reInit = function () {
+
+						};
+
+						this.initFilter = function () {
+							var _this = this;
+
+							this.$filter.on('submit', function (e) {
+								e.preventDefault();
+								e.stopPropagation();
+
+								// Устанавливаем параметр сдвига на 0 в контейнер
+								_this.$pagination.data('page-offset', 0);
+								_this.ajaxRequest();
+							});
+						};
+
+						this.initPagination = function () {
+							var _this = this;
+
+							this.$pagination.on('click', 'a', function (e) {
+								e.preventDefault();
+								e.stopPropagation();
+
+								if ($(this).attr('href') == "#") {
+									return false;
+								}
+
+								// Устанавливаем параметр сдвига нажатой ссылки в контейнер
+								_this.$pagination.data('page-offset', $(this).data('page-offset'));
+								_this.ajaxRequest();
+							})
+						};
+
+						this.initEditor = function () {
+							var _this = this;
+
+							this.$table.on('submit', 'form', function (e) {
+								e.preventDefault();
+								e.stopPropagation();
+
+								_this.ajaxRequest($(this).serializeArray());
+							}).on('click', this.options_editor_class + ' > button', function (e) {
+								$(this).nextAll('input[name="' + $(this).attr('name') + '"]').val($(this).attr('value'));
+							});
+						};
+
+						this.initClickRow = function () {
+							var _this = this;
+
+							this.$table.find("> tbody > tr").each(function () {
+								var $tr = $(this);
+								// Проверка на наличие ссылки
+								if ($tr.find("a").length == 0) {
+									return false;
+								}
+								// Проверка на наличие только одной ссылки
+								if ( ($tr.find("a").length > 1)) {
+									return false;
+								}
+								var $link = $tr.find("a:first");
+								var url = $link.attr("href");
+								var link_style = "z-index: 1;position: absolute;top: 0;bottom: 0;left: 0;right: 0;display: block;";
+								$tr.find("> td").each(function () {
+									var $td = $(this).css({"position":"relative"});
+									if ($td.find("> *").prop("tagName") != "FORM") {
+										$td.prepend('<a href="' + url + '" style="' + link_style + '"></a>');
+									}
+								});
+							});
+						};
+
+						/**
+						 * Перерисовка таблици и пагинации
+						 * @param received_html
+						 */
+						this.tableRender = function (received_html) {
+							var $box = $('<div>', {html: received_html});
+
+							this.$table.html($box.find(this.table_class).html());
+							this.$pagination.html($box.find(this.pagination_class).html());
+						};
+
+						/**
+						 * Ajax запрос
+						 * @array data
+						 */
+						this.ajaxRequest = function (data) {
+							var _this = this;
+							var data = data || [];
+
+							var filter_arr = this.$filter.serializeArray();
+							var pagination_arr = [
+								{
+									'name': '<?= Pager::pageOffsetFormFieldName($table_class) ?>',
+									'value': this.$pagination.data('page-offset')
+								},
+								{
+									'name': '<?= Pager::pageSizeFormFieldName($table_class) ?>',
+									'value': this.$pagination.data('page-size')
+								}
+							];
+
+							$.merge(data, filter_arr);
+							$.merge(data, pagination_arr);
+
+							$.ajax({
+								type: "POST",
+								url: this.url,
+								data: data,
+								beforeSend: function () {
+									OLOG.preloader.show();
+								},
+								complete: function () {
+									OLOG.preloader.hide();
+								},
+								success: function (received_html) {
+									_this.tableRender(received_html);
+								}
+							});
+						};
+
+						/**
+						 * Начальный запуск
+						 */
+						this.init();
+					}
 			</script>
 			<?php
 		}
 
 		?>
 		<script>
-			CRUD.Table.init('<?= $table_class ?>', '<?= $query_url ?>');
+			//CRUD.Table.init('<?= $table_class ?>', '<?= $query_url ?>');
+
+			new CRUD.newTable($('.<?= $table_class ?>'), '<?= $query_url ?>');
 		</script>
 		<?php
 	}

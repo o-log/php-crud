@@ -10,21 +10,15 @@ use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilterEqualInvisible;
-use OLOG\CRUD\CRUDTableFilterEqualOptions;
 use OLOG\CRUD\CRUDTableFilterEqualOptionsInline;
-use OLOG\CRUD\CRUDTableFilterLike;
 use OLOG\CRUD\CRUDTableFilterLikeInline;
 use OLOG\CRUD\CRUDTableWidgetDelete;
-use OLOG\CRUD\CRUDTableWidgetEditData;
-use OLOG\CRUD\CRUDTableWidgetHtml;
 use OLOG\CRUD\CRUDTableWidgetOptions;
 use OLOG\CRUD\CRUDTableWidgetOptionsEditor;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDTableWidgetWeight;
-use OLOG\Operations;
-use OLOG\Url;
 
 class DemoTermsListAction
 {
