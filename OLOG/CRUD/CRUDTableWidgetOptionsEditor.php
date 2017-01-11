@@ -18,7 +18,12 @@ class CRUDTableWidgetOptionsEditor implements InterfaceCRUDTableWidget
      */
     public function html($obj)
     {
-	    return HTML::tag('form', ['class' => 'js-options-editor'], function () use ($obj) {
+	    return HTML::tag('form', ['class' => 'js-options-editor'], function () use ($obj) {		    echo '<input type="hidden" name="' . Operations::FIELD_NAME_OPERATION_CODE . '" value="' . CRUDTable::OPERATION_UPDATE_MODEL_FIELD . '">';
+		    echo '<input type="hidden" name="' . CRUDTable::FIELD_FIELD_NAME . '" value="' . $this->getValue() . '">';
+		    echo '<input type="hidden" name="' . CRUDTable::FIELD_CRUDTABLE_ID . '" value="' . $this->getCrudtableId() . '">';
+		    echo '<input type="hidden" name="' . CRUDTable::FIELD_MODEL_ID . '" value="' . $obj->getId() . '">';
+		    echo '<input type="hidden" name="' . CRUDTable::FIELD_FIELD_VALUE . '" value="' . $obj->getVocabularyId() . '">';
+
 		    $options_arr = $this->getOptionsArr();
 		    foreach ($options_arr as $value => $option_name) {
 			    $disabled = '';
@@ -27,12 +32,6 @@ class CRUDTableWidgetOptionsEditor implements InterfaceCRUDTableWidget
 			    }
 		    	echo '<button class="btn btn-xs btn-default" type="submit" name="' . CRUDTable::FIELD_FIELD_VALUE . '" value="' . $value . '" ' . $disabled . '>' . $option_name . '</button>';
 		    }
-
-		    echo '<input type="hidden" name="' . Operations::FIELD_NAME_OPERATION_CODE . '" value="' . CRUDTable::OPERATION_UPDATE_MODEL_FIELD . '">';
-		    echo '<input type="hidden" name="' . CRUDTable::FIELD_FIELD_NAME . '" value="' . $this->getValue() . '">';
-		    echo '<input type="hidden" name="' . CRUDTable::FIELD_CRUDTABLE_ID . '" value="' . $this->getCrudtableId() . '">';
-		    echo '<input type="hidden" name="' . CRUDTable::FIELD_MODEL_ID . '" value="' . $obj->getId() . '">';
-		    echo '<input type="hidden" name="' . CRUDTable::FIELD_FIELD_VALUE . '" value="' . $obj->getVocabularyId() . '">';
 	    });
     }
 
