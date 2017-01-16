@@ -87,19 +87,32 @@ class CRUDTable
             return;
         }
 
-        $db_table_name = $model_class_name::DB_TABLE_NAME; // TODO: check constant availability
-
-        $db_table_field = REQUESTWrapper::requiredFieldValue(self::FIELD_FIELD_NAME);
+        $model_field_name = REQUESTWrapper::requiredFieldValue(self::FIELD_FIELD_NAME);
         $value = REQUESTWrapper::requiredFieldValue(self::FIELD_FIELD_VALUE);
         $model_id = REQUESTWrapper::requiredFieldValue(self::FIELD_MODEL_ID);
 
         // TODO: owner check!!!
 
+        /*
+        $db_table_name = $model_class_name::DB_TABLE_NAME; // TODO: check constant availability
         DBWrapper::query(
             $model_class_name::DB_ID, // check class availability
             'update ' . Sanitize::sanitizeSqlColumnName($db_table_name) . ' set ' . Sanitize::sanitizeSqlColumnName($db_table_field) . ' = ? where id = ?',
             [$value, $model_id]
         );
+        */
+
+        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
+
+        $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
+
+        $reflect = new \ReflectionClass($obj);
+
+        $property_obj = $reflect->getProperty($model_field_name);
+        $property_obj->setAccessible(true);
+        $property_obj->setValue($obj, $value);
+
+        $obj->save();
     }
 
     static protected function filterFormFieldName($table_id, $filter_index){
