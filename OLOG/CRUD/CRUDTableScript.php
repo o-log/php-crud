@@ -21,13 +21,22 @@ class CRUDTableScript
 						this.url = url;
 						this.container_class = container_class;
 						this.$container = $('.' + this.container_class);
-						this.table_class = '.table';
-						this.$table = this.$container.find(this.table_class);
 						this.filter_class = '.filters-form';
-						this.$filter = this.$container.find(this.filter_class);
+						this.table_class = '.table';
 						this.pagination_class = '.pagination';
-						this.$pagination = this.$container.find(this.pagination_class);
 						this.options_editor_class = '.js-options-editor';
+
+						this.getFilterJqueryObj = function () {
+							return this.$container.find(this.filter_class);
+						};
+
+						this.getTableJqueryObj = function () {
+							return this.$container.find(this.table_class);
+						};
+
+						this.getPaginationJqueryObj = function () {
+							return this.$container.find(this.pagination_class);
+						};
 
 						this.init = function () {
 							this.initFilter();
@@ -43,12 +52,12 @@ class CRUDTableScript
 						this.initFilter = function () {
 							var _this = this;
 
-							this.$filter.on('submit', function (e) {
+							this.getFilterJqueryObj().on('submit', function (e) {
 								e.preventDefault();
 								e.stopPropagation();
 
 								// Устанавливаем параметр сдвига на 0 в контейнер
-								_this.$pagination.data('page-offset', 0);
+								_this.getFilterJqueryObj().data('page-offset', 0);
 								_this.ajaxRequest();
 							});
 						};
@@ -56,7 +65,7 @@ class CRUDTableScript
 						this.initPagination = function () {
 							var _this = this;
 
-							this.$pagination.on('click', 'a', function (e) {
+							this.getPaginationJqueryObj().on('click', 'a', function (e) {
 								e.preventDefault();
 								e.stopPropagation();
 
@@ -65,7 +74,7 @@ class CRUDTableScript
 								}
 
 								// Устанавливаем параметр сдвига нажатой ссылки в контейнер
-								_this.$pagination.data('page-offset', $(this).data('page-offset'));
+								_this.getPaginationJqueryObj().data('page-offset', $(this).data('page-offset'));
 								_this.ajaxRequest();
 							})
 						};
@@ -73,7 +82,7 @@ class CRUDTableScript
 						this.initOptionsEditor = function () {
 							var _this = this;
 
-							this.$table.on('submit', this.options_editor_class, function (e) {
+							this.getTableJqueryObj().on('submit', this.options_editor_class, function (e) {
 								e.preventDefault();
 								e.stopPropagation();
 
@@ -86,7 +95,7 @@ class CRUDTableScript
 						this.initClickRow = function () {
 							var _this = this;
 
-							this.$table.find("> tbody > tr").each(function () {
+							this.getTableJqueryObj().find("> tbody > tr").each(function () {
 								var $tr = $(this);
 								// Проверка на наличие ссылки
 								if ($tr.find("a").length == 0) {
@@ -115,8 +124,8 @@ class CRUDTableScript
 						this.tableRender = function (received_html) {
 							var $box = $('<div>', {html: received_html});
 
-							this.$table.html($box.find(this.table_class).html());
-							this.$pagination.html($box.find(this.pagination_class).html());
+							this.getTableJqueryObj().html($box.find(this.table_class).html());
+							this.getPaginationJqueryObj().html($box.find(this.pagination_class).html());
 
 							this.reInit();
 						};
@@ -129,15 +138,15 @@ class CRUDTableScript
 							var _this = this;
 							var data = data || [];
 
-							var filter_arr = this.$filter.serializeArray();
+							var filter_arr = this.getFilterJqueryObj().serializeArray();
 							var pagination_arr = [
 								{
 									'name': 'table_' + this.container_class + '_page_offset',
-									'value': this.$pagination.data('page-offset')
+									'value': this.getPaginationJqueryObj().data('page-offset')
 								},
 								{
 									'name': 'table_' + this.container_class + '_page_size',
-									'value': this.$pagination.data('page-size')
+									'value': this.getPaginationJqueryObj().data('page-size')
 								}
 							];
 
