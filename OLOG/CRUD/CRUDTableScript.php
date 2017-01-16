@@ -20,22 +20,29 @@ class CRUDTableScript
 
 						this.url = url;
 						this.container_class = container_class;
-						this.$container = $('.' + this.container_class);
-						this.filter_class = '.filters-form';
-						this.table_class = '.table';
-						this.pagination_class = '.pagination';
-						this.options_editor_class = '.js-options-editor';
+
+						/**
+						 * Классы
+						 */
+						const filter_class = '.filters-form';
+						const table_class = '.table';
+						const pagination_class = '.pagination';
+						const options_editor_class = '.js-options-editor';
+
+						this.getContainerJqueryObj = function () {
+							return $('.' + this.container_class);
+						};
 
 						this.getFilterJqueryObj = function () {
-							return this.$container.find(this.filter_class);
+							return this.getContainerJqueryObj().find(filter_class);
 						};
 
 						this.getTableJqueryObj = function () {
-							return this.$container.find(this.table_class);
+							return this.getContainerJqueryObj().find(table_class);
 						};
 
 						this.getPaginationJqueryObj = function () {
-							return this.$container.find(this.pagination_class);
+							return this.getContainerJqueryObj().find(pagination_class);
 						};
 
 						this.init = function () {
@@ -82,12 +89,12 @@ class CRUDTableScript
 						this.initOptionsEditor = function () {
 							var _this = this;
 
-							this.getTableJqueryObj().on('submit', this.options_editor_class, function (e) {
+							this.getTableJqueryObj().on('submit', options_editor_class, function (e) {
 								e.preventDefault();
 								e.stopPropagation();
 
 								_this.ajaxRequest($(this).serializeArray());
-							}).on('click', this.options_editor_class + ' > button', function (e) {
+							}).on('click', options_editor_class + ' > button', function (e) {
 								$(this).closest('form').find('input[name="' + $(this).attr('name') + '"]').val($(this).attr('value'));
 							});
 						};
@@ -124,8 +131,8 @@ class CRUDTableScript
 						this.tableRender = function (received_html) {
 							var $box = $('<div>', {html: received_html});
 
-							this.getTableJqueryObj().html($box.find(this.table_class).html());
-							this.getPaginationJqueryObj().html($box.find(this.pagination_class).html());
+							this.getTableJqueryObj().html($box.find(table_class).html());
+							this.getPaginationJqueryObj().html($box.find(pagination_class).html());
 
 							this.reInit();
 						};
