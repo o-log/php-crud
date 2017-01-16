@@ -7,6 +7,7 @@ use OLOG\CRUD\CRUDCreateFormScript;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTableColumn;
+use OLOG\CRUD\CRUDTableFilterLike;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetHtml;
 use OLOG\CRUD\CRUDTableWidgetHtmlWithLink;
@@ -62,9 +63,12 @@ class DemoNodesListAction
 					new CRUDTableWidgetDelete()
 				),
 			],
-			[],
+			[
+			    new CRUDTableFilterLike('h7g98347hg934', 'Название', 'title')
+            ],
 			'title',
-			$table_id
+			$table_id,
+            CRUDTable::FILTERS_POSITION_TOP
 		);
 
 		// Загрузка скриптов
