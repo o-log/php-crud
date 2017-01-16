@@ -64,7 +64,7 @@ class CRUDTableScript
 								e.stopPropagation();
 
 								// Устанавливаем параметр сдвига на 0 в контейнер
-								_this.getFilterJqueryObj().data('page-offset', 0);
+								_this.getPaginationJqueryObj().data('page-offset', 0);
 								_this.ajaxRequest();
 							});
 						};
