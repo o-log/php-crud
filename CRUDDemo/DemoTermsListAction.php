@@ -7,6 +7,7 @@ use OLOG\CRUD\CRUDForm;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDFormWidgetRadios;
 use OLOG\CRUD\CRUDFormWidgetOptions;
+use OLOG\CRUD\CRUDFormWidgetReferenceAjax;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilterEqualInvisible;
@@ -57,7 +58,19 @@ class DemoTermsListAction
                             1 => 'one',
                             2 => 'two'
                         ], false, true)
+                    ),
+                    new CRUDFormRow(
+                        'Parent id',
+                        new CRUDFormWidgetReferenceAjax(
+                            'parent_id',
+                            DemoTerm::class,
+                            'title',
+                            DemoAjaxTermsListAction::getUrl(),
+                            DemoTermEditAction::getUrl(CRUDFormWidgetReferenceAjax::REFERENCED_ID_PLACEHOLDER)
+
+                        )
                     )
+
                 ]
             ),
             [
