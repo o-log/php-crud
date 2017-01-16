@@ -7,6 +7,7 @@ use OLOG\CRUD\CRUDCreateFormScript;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDTableColumn;
+use OLOG\CRUD\CRUDTableFilterEqualOptions;
 use OLOG\CRUD\CRUDTableFilterLike;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetHtml;
@@ -64,7 +65,8 @@ class DemoNodesListAction
 				),
 			],
 			[
-			    new CRUDTableFilterLike('h7g98347hg934', 'Название', 'title')
+			    new CRUDTableFilterLike('h7g98347hg934', 'Название', 'title'),
+                new CRUDTableFilterEqualOptions('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false)
             ],
 			'title',
 			$table_id,
