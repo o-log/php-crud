@@ -131,8 +131,8 @@ class CRUDTableScript
 						this.tableRender = function (received_html) {
 							var $box = $('<div>', {html: received_html});
 
-							this.getTableJqueryObj().html($box.find(table_class).html());
-							this.getPaginationJqueryObj().html($box.find(pagination_class).html());
+							this.getTableJqueryObj().html($box.find('.' + this.container_class).find(table_class).html());
+							this.getPaginationJqueryObj().html($box.find('.' + this.container_class).find(pagination_class).html());
 
 							this.reInit();
 						};
