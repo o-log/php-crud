@@ -15,6 +15,7 @@ use OLOG\CRUD\CRUDTableWidgetHtmlWithLink;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
+use OLOG\CRUD\CRUDTableWidgetWeight;
 
 class DemoNodesListAction
 {
@@ -59,16 +60,20 @@ class DemoNodesListAction
 					'Reverse title',
 					new CRUDTableWidgetText('{this->getReverseTitle()}')
 				),
-				new CRUDTableColumn(
-					'',
-					new CRUDTableWidgetDelete()
-				),
+                new CRUDTableColumn(
+                    '',
+                    new CRUDTableWidgetWeight([])
+                ),
+                new CRUDTableColumn(
+                    '',
+                    new CRUDTableWidgetDelete()
+                ),
 			],
 			[
 			    new CRUDTableFilterLike('h7g98347hg934', 'Название', 'title'),
                 new CRUDTableFilterEqualOptions('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false)
             ],
-			'title',
+			'weight',
 			$table_id,
             CRUDTable::FILTERS_POSITION_TOP
 		);

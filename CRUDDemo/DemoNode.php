@@ -2,15 +2,20 @@
 
 namespace CRUDDemo;
 
+use OLOG\Model\InterfaceWeight;
+use OLOG\Model\WeightTrait;
+
 class DemoNode implements
     \OLOG\Model\InterfaceFactory,
     \OLOG\Model\InterfaceLoad,
     \OLOG\Model\InterfaceSave,
-    \OLOG\Model\InterfaceDelete
+    \OLOG\Model\InterfaceDelete,
+    InterfaceWeight
 {
     use \OLOG\Model\FactoryTrait;
     use \OLOG\Model\ActiveRecordTrait;
     use \OLOG\Model\ProtectPropertiesTrait;
+    use WeightTrait;
 
     const DB_ID = \CRUDDemo\CrudDemoConfig::DB_NAME_PHPCRUDDEMO;
     const DB_TABLE_NAME = 'node';
@@ -21,7 +26,26 @@ class DemoNode implements
     protected $expiration_date;
     protected $image_path_in_images;
     protected $body2;
+    const _WEIGHT = 'weight';
+    protected $weight = 0;
     protected $id;
+    protected $state_code = 0;
+    protected $body = '';
+    protected $title = '';
+
+    public function beforeSave(){
+        $this->initWeight([]);
+    }
+
+    public function getWeight(){
+        return $this->weight;
+    }
+
+    public function setWeight($value){
+        $this->weight = $value;
+    }
+
+
 
     public function getBody2(){
         return $this->body2;
@@ -62,11 +86,6 @@ class DemoNode implements
     public function setPublishedAtDatetimeStr($value){
         $this->published_at_datetime_str = $value;
     }
-
-    protected $state_code = 0;
-    protected $body = '';
-    protected $title = '';
-
 
     public function getIsPublished(){
         return $this->is_published;
