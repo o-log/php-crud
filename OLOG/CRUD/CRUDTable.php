@@ -63,8 +63,11 @@ class CRUDTable
 
         $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
 
-        $context_fields_names_str = POSTAccess::getRequiredPostValue(CRUDTableWidgetWeight::FORMFIELD_CONTEXT_FIELDS_NAME);
-        $context_fields_names_arr = explode(',', $context_fields_names_str);
+        $context_fields_names_str = POSTAccess::getOptionalPostValue(CRUDTableWidgetWeight::FORMFIELD_CONTEXT_FIELDS_NAME, '');
+        $context_fields_names_arr = [];
+        if ($context_fields_names_str != '') {
+            $context_fields_names_arr = explode(',', $context_fields_names_str);
+        }
 
         $context_arr = [];
         foreach ($context_fields_names_arr as $context_field_name){
