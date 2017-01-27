@@ -26,7 +26,7 @@ class DemoNodesListAction
 
 	public function action()
 	{
-		\OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
+		\OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
 
 		$table_id = 'tableContainer_NodeList';
 		$form_id = 'formElem_NodeList';

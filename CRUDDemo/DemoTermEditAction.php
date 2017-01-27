@@ -25,7 +25,7 @@ class DemoTermEditAction
 
     public function action($term_id)
     {
-        \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
+        \OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
 
         $html = '';
 
