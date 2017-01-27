@@ -42,7 +42,7 @@ class CRUDTree
         }
 
         if ($filters_position == CRUDTable::FILTERS_POSITION_INLINE) {
-            $html .= CRUDTable::filtersHtmlInline($table_id, $filters_arr);
+            $html .= CRUDTable::filtersAndCreateButtonHtmlInline($table_id, $filters_arr);
         }
 
         $html .= '<table class="table table-hover">';

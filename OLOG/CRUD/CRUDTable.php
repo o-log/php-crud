@@ -5,6 +5,7 @@ namespace OLOG\CRUD;
 use OLOG\Assert;
 use OLOG\DB\DBWrapper;
 use OLOG\HTML;
+use OLOG\MagnificPopup;
 use OLOG\Model\InterfaceWeight;
 use OLOG\Operations;
 use OLOG\POSTAccess;
@@ -186,14 +187,16 @@ class CRUDTable
 			}
 			echo '<div class="col-sm-' . $col_sm_class . '">';
 
-			echo self::toolbarHtml($table_id, $create_form_html, $filters_arr);
+            if ($filters_position != self::FILTERS_POSITION_INLINE) {
+                echo self::toolbarHtml($table_id, $create_form_html, $filters_arr);
+            }
 
 			if ($filters_position == self::FILTERS_POSITION_TOP) {
 				echo self::filtersHtml($table_id, $filters_arr);
 			}
 
 			if ($filters_position == self::FILTERS_POSITION_INLINE) {
-				echo self::filtersHtmlInline($table_id, $filters_arr);
+				echo self::filtersAndCreateButtonHtmlInline($table_id, $filters_arr, $create_form_html);
 			}
 
 			echo '<table class="table table-hover">';
@@ -309,35 +312,53 @@ class CRUDTable
         return $html;
     }
 
-    static public function filtersHtmlInline($table_index_on_page, $filters_arr)
+    static public function filtersAndCreateButtonHtmlInline($table_index_on_page, $filters_arr, $create_form_html = '')
     {
-	    if (empty($filters_arr)) {
+	    if (empty($filters_arr) && ($create_form_html == '')) {
 		    return '';
 	    }
 
-	    $html = HTML::div('filters-inline', '', function () use ($table_index_on_page, $filters_arr) {
+	    $html = HTML::div('filters-inline', '', function () use ($table_index_on_page, $filters_arr, $create_form_html) {
+            if (!empty($filters_arr)) {
+                echo '<form class="filters-form" style="display: inline;">';
 
-		    echo '<form class="filters-form">';
+                foreach ($filters_arr as $filter_obj) {
+                    if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
+                        echo '<div style="display: inline-block;margin-right: 10px;">';
 
-		    foreach ($filters_arr as $filter_obj) {
-			    if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
-				    echo '<div style="display: inline-block;margin-right: 10px;">';
+                        if ($filter_obj->getTitle()) {
+                            echo '<span style="display: inline-block;margin-right: 5px;">' . $filter_obj->getTitle() . '</span>';
+                        }
 
-				    if ($filter_obj->getTitle()) {
-					    echo '<span style="display: inline-block;margin-right: 5px;">' . $filter_obj->getTitle() . '</span>';
-				    }
+                        echo '<span style="display: inline-block;">' . $filter_obj->getHtml() . '</span>';
+                        echo '</div>';
+                    } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
+                        // do nothing with invisible filters
+                    } else {
+                        throw new \Exception('filter doesnt implement interface ...');
+                    }
+                }
 
-				    echo '<span style="display: inline-block;">' . $filter_obj->getHtml() . '</span>';
-				    echo '</div>';
+                echo '</form>';
+            }
 
-			    } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
-				    // do nothing with invisible filters
-			    } else {
-				    throw new \Exception('filter doesnt implement interface ...');
-			    }
-		    }
+            if ($create_form_html != ''){
+                $create_form_element_id = 'collapse_' . rand(1, 999999);
 
-		    echo '</form>';
+                //echo '<span class="pull-right">';
+                //if ($create_form_html) {
+                //$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
+                //echo '<button type="button" class="btn btn-sm btn-default" data-toggle="collapse" data-target="#' . $create_form_element_id . '">Создать</button>';
+                echo MagnificPopup::button($create_form_element_id, 'btn btn-sm btn-default pull-right', 'Создать');
+                //}
+                //echo '</span>';
+
+                //if ($create_form_html) {
+                //$html .= BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
+                //echo '<div class="collapse" id="' . $create_form_element_id . '"><div class="well">' . $create_form_html . '</div></div>';
+                echo MagnificPopup::popupHtml($create_form_element_id, $create_form_html);
+                //}
+            }
 	    });
 
 	    return $html;
