@@ -8,7 +8,7 @@ namespace CRUDDemo;
  * Class Auth
  * @package CRUDDemo
  */
-class Auth
+class CRUDDemoAuth
 {
     static public function currentUserHasAnyOfPermissions(array $permission_codes_arr){
         return true;
