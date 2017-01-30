@@ -20,7 +20,7 @@ class DemoAjaxTermsListAction
 
     public function action()
     {
-        \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
+        \OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
 
         $html = '';
 

@@ -22,7 +22,7 @@ class DemoNodeTermsAction
 
     public function action($node_id)
     {
-        \OLOG\Exits::exit403If(!Auth::currentUserHasAnyOfPermissions([1]));
+        \OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
 
         $html = DemoNodeEditAction::tabsHtml($node_id);
         $html .= '<div>&nbsp;</div>';
