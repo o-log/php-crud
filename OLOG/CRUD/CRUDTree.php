@@ -35,14 +35,16 @@ class CRUDTree
             $html .= '<div class="col-sm-12">';
         }
 
-        $html .= self::toolbarHtml($table_id, $create_form_html);
+        if ($filters_position != CRUDTable::FILTERS_POSITION_INLINE) {
+            $html .= self::toolbarHtml($table_id, $create_form_html);
+        }
 
         if ($filters_position == CRUDTable::FILTERS_POSITION_TOP) {
             $html .= self::filtersHtml($filters_arr);
         }
 
         if ($filters_position == CRUDTable::FILTERS_POSITION_INLINE) {
-            $html .= CRUDTable::filtersAndCreateButtonHtmlInline($table_id, $filters_arr);
+            $html .= CRUDTable::filtersAndCreateButtonHtmlInline($table_id, $filters_arr, $create_form_html);
         }
 
         $html .= '<table class="table table-hover">';

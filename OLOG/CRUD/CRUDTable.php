@@ -319,6 +319,8 @@ class CRUDTable
 	    }
 
 	    $html = HTML::div('filters-inline', '', function () use ($table_index_on_page, $filters_arr, $create_form_html) {
+	        echo '<style>.filters-inline {margin-bottom: 10px;}</style>';
+
             if (!empty($filters_arr)) {
                 echo '<form class="filters-form" style="display: inline;">';
 
