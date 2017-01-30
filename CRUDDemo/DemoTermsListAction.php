@@ -75,25 +75,25 @@ class DemoTermsListAction
             ),
             [
                 new CRUDTableColumn(
-                    'Edit',
+                    '',
                     new CRUDTableWidgetTextWithLink(
                         '{this->title}',
                         DemoTermEditAction::getUrl('{this->id}')
-                        )
+                    )
                 ),
 	            new CRUDTableColumn(
-		            'Vocabulary',
+		            '',
 		            new CRUDTableWidgetOptions(
 			            '{this->vocabulary_id}',
 			            DemoTerm::VOCABULARIES_ARR
 		            )
 	            ),
 	            new CRUDTableColumn(
-		            'Vocabulary',
+		            '',
 		            new CRUDTableWidgetOptionsEditor('vocabulary_id', DemoTerm::VOCABULARIES_ARR, $table_id)
 	            ),
                 new CRUDTableColumn(
-                    'Parent',
+                    '',
                     new CRUDTableWidgetText(
                         '{' . DemoTerm::class . '.{this->parent_id}->title}'
                     )

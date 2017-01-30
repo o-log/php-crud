@@ -123,7 +123,7 @@ class CRUDTable
 		return 'table_' . $table_id . '_filter_' . $filter_index;
 	}
 
-    static public function executeOperations($table_id, $model_class_name){
+    static public function executeOperations($table_id = '', $model_class_name = ''){
         static $__operations_executed = false;
 
         if ($__operations_executed){
