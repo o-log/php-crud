@@ -31,19 +31,16 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
 
         ob_start();
         ?>
-        <script>
+		<script>
             var CRUDTableFilterLikeInline = function (elem_id) {
-                this.$input = $('#' + elem_id);
-
+                var $input = $('#' + elem_id);
                 var timer;
-                var value = this.$input.val();
-                this.$input.on('keyup', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                var value = $input.val();
 
+                $input.on('keyup paste', function (e) {
                     var $this = $(this);
 
-                    if (value == $this.val()) {
+                    if ((value == $this.val()) && (e.type != 'paste')) {
                         return;
                     }
 
@@ -56,7 +53,7 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
                 });
             };
             new CRUDTableFilterLikeInline('<?= $this->getFilterIniqId() ?>');
-        </script>
+		</script>
         <?php
         $html .= ob_get_clean();
 
