@@ -2,6 +2,7 @@
 
 namespace OLOG\CRUD;
 
+use OLOG\HTML;
 use OLOG\REQUESTWrapper;
 
 class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
@@ -9,19 +10,55 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
     protected $title;
     protected $field_name;
     protected $filter_iniq_id;
-	protected $placeholder;
+    protected $placeholder;
 
-    public function getValueFromForm(){
+    public function getValueFromForm()
+    {
         $value = REQUESTWrapper::optionalFieldValue($this->getFilterIniqId());
 
         return $value;
     }
 
-    public function getHtml(){
-        $input_name = $this->getFilterIniqId();
+    public function getHtml()
+    {
 
-	    $html = '';
-        $html .= '<input placeholder="' . $this->getPlaceholder() . '" onkeyup="$(this).closest(\'form\').submit();" name="' . $input_name . '"/>';
+        $html = '';
+        $html .= HTML::tag('input', [
+            'placeholder' => $this->getPlaceholder(),
+            'name' => $this->getFilterIniqId(),
+            'id' => $this->getFilterIniqId()
+        ], '');
+
+        ob_start();
+        ?>
+        <script>
+            var CRUDTableFilterLikeInline = function (elem_id) {
+                this.$input = $('#' + elem_id);
+
+                var timer;
+                var value = this.$input.val();
+                this.$input.on('keyup', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    var $this = $(this);
+
+                    if (value == $this.val()) {
+                        return;
+                    }
+
+                    value = $this.val();
+
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        $this.closest('form').trigger('submit');
+                    }, 200);
+                });
+            };
+            new CRUDTableFilterLikeInline('<?= $this->getFilterIniqId() ?>');
+        </script>
+        <?php
+        $html .= ob_get_clean();
 
         return $html;
     }
@@ -50,11 +87,12 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
         return [$where, $placeholder_values_arr];
     }
 
-    public function __construct($filter_uniq_id, $title, $field_name, $placeholder = ''){
+    public function __construct($filter_uniq_id, $title, $field_name, $placeholder = '')
+    {
         $this->setFilterIniqId($filter_uniq_id);
         $this->setTitle($title);
         $this->setFieldName($field_name);
-	    $this->setPlaceholder($placeholder);
+        $this->setPlaceholder($placeholder);
     }
 
     /**
@@ -105,20 +143,20 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
         $this->field_name = $field_name;
     }
 
-	/**
-	 * @return mixed
-	 */
-	public function getPlaceholder()
-	{
-		return $this->placeholder;
-	}
+    /**
+     * @return mixed
+     */
+    public function getPlaceholder()
+    {
+        return $this->placeholder;
+    }
 
-	/**
-	 * @param mixed $placeholder
-	 */
-	public function setPlaceholder($placeholder)
-	{
-		$this->placeholder = $placeholder;
-	}
+    /**
+     * @param mixed $placeholder
+     */
+    public function setPlaceholder($placeholder)
+    {
+        $this->placeholder = $placeholder;
+    }
 
 }
