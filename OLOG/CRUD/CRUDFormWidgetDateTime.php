@@ -94,9 +94,11 @@ class CRUDFormWidgetDateTime implements InterfaceCRUDFormWidget
 				(function () {
 					var $input_is_null = $('#<?= $uniqid ?>___is_null');
 
-					$("#<?= $uniqid ?>_input").on('change', function () {
-						$input_is_null.prop('checked',false);
-					});
+                    $("#<?= $uniqid ?>_input").on('change', function () {
+                        if ($(this).val() != '') {
+                            $input_is_null.prop('checked',false);
+                        }
+                    });
 
 					$input_is_null.on('change', function () {
 						if ($(this).is(':checked')) {

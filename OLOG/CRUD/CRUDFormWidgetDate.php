@@ -90,12 +90,14 @@ class CRUDFormWidgetDate implements InterfaceCRUDFormWidget
                     <input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= Sanitize::sanitizeAttrValue($field_name) ?>___is_null" <?= $is_null_checked ?>> NULL
                 </label>
             </div>
-            <script>
+	        <script>
                 (function () {
                     var $input_is_null = $('#<?= $uniqid ?>___is_null');
 
                     $("#<?= $uniqid ?>_input").on('change', function () {
-                        $input_is_null.prop('checked',false);
+                        if ($(this).val() != '') {
+                            $input_is_null.prop('checked',false);
+                        }
                     });
 
                     $input_is_null.on('change', function () {
@@ -105,7 +107,7 @@ class CRUDFormWidgetDate implements InterfaceCRUDFormWidget
                         }
                     });
                 })();
-            </script>
+	        </script>
             <?php
             $html .= ob_get_clean();
         }
