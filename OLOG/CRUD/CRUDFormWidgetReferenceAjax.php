@@ -109,6 +109,9 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
                 }).success(function(received_html) {
                     $('#<?= $choose_form_element_id ?> .modal-body').html(received_html);
 	                OLOG.preloader.hide();
+                }).error(function( err ){
+                    $('#<?= $choose_form_element_id ?> .modal-body').html('<div class="alert alert-danger">'+err.status+ ': ' + err.statusText+'</div>');
+                    OLOG.preloader.hide();
                 });
             });
 
