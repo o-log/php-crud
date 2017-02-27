@@ -117,6 +117,7 @@ class CRUDTable
         $property_obj->setValue($obj, $value);
 
         $obj->save();
+        $obj->removeFromFactoryCache();
     }
 
     static protected function filterFormFieldName($table_id, $filter_index){
