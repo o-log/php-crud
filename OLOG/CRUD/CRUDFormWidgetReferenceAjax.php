@@ -87,7 +87,7 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
 
         if ($this->getEditorUrl()) {
             $html .= '<span class="input-group-btn">';
-            $html .= '<button ' . $disabled_btn_link . ' type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_link" class="btn btn-default">Перейти</button>';
+            $html .= '<button ' . $disabled_btn_link . ' type="button" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_btn_link" class="btn btn-link">Перейти</button>';
             $html .= '</span>';
         }
 
