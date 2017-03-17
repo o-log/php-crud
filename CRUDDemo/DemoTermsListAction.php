@@ -10,6 +10,7 @@ use OLOG\CRUD\CRUDFormWidgetOptions;
 use OLOG\CRUD\CRUDFormWidgetReferenceAjax;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
+use OLOG\CRUD\CRUDTableFilterEqualInline;
 use OLOG\CRUD\CRUDTableFilterEqualInvisible;
 use OLOG\CRUD\CRUDTableFilterEqualOptionsInline;
 use OLOG\CRUD\CRUDTableFilterLikeInline;
@@ -107,7 +108,8 @@ class DemoTermsListAction
                 new CRUDTableFilterEqualOptionsInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, null, true),
 	            new CRUDTableFilterEqualOptionsInline('345634g3tg534', '', 'gender', DemoTerm::GENDER_ARR, false, null, true, 'М. и Ж.'),
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
-                new CRUDTableFilterLikeInline('3748t7t45gdfg', '', 'title', 'Название содержит')
+                new CRUDTableFilterLikeInline('3748t7t45gdfg', '', 'title', 'Название содержит'),
+                new CRUDTableFilterEqualInline('345634g2v35234', '', 'title', 'Название')
             ],
             'weight',
             $table_id,
