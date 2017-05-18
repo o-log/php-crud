@@ -28,6 +28,7 @@ class CRUDInternalTableObjectsSelector
 
         /** @var InterfaceCRUDTableFilter2 $filter_obj */
         foreach ($filters_arr as $filter_obj) {
+            /*
             Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter2);
 
             list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
@@ -36,6 +37,24 @@ class CRUDInternalTableObjectsSelector
             }
 
             $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
+            */
+            if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
+                list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
+                if ($filter_sql_condition != ''){
+                    $where .= ' and ' . $filter_sql_condition;
+                }
+
+                $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
+            } elseif ($filter_obj instanceof InterfaceCRUDTableFilterInvisible) {
+                list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
+                if ($filter_sql_condition != ''){
+                    $where .= ' and ' . $filter_sql_condition;
+                }
+
+                $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
+            } else {
+                throw new \Exception('filter doesnt implement InterfaceCRUDTableFilter nor InterfaceCRUDTableFilter2');
+            }
         }
 
         if ($order_by == '') {
