@@ -28,6 +28,7 @@ class CRUDTableScript
 						const table_class = '.table';
 						const pagination_class = '.pagination';
 						const options_editor_class = '.js-options-editor';
+						const text_editor_class = '.js-text-editor';
 
 						this.getContainerJqueryObj = function () {
 							return $('.' + this.container_class);
@@ -98,6 +99,19 @@ class CRUDTableScript
 								$(this).closest('form').find('input[name="' + $(this).attr('name') + '"]').val($(this).attr('value'));
 							});
 						};
+
+                        this.initTextEditor = function () {
+                            var _this = this;
+
+                            this.getTableJqueryObj().on('submit', text_editor_class, function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                _this.ajaxRequest($(this).serializeArray());
+                            }).on('click', text_editor_class + ' > button', function (e) {
+                                $(this).closest('form').find('input[name="' + $(this).attr('name') + '"]').val($(this).attr('value'));
+                            });
+                        };
 
 						this.initClickRow = function () {
 							var _this = this;

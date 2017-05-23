@@ -18,6 +18,7 @@ use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetOptions;
 use OLOG\CRUD\CRUDTableWidgetOptionsEditor;
 use OLOG\CRUD\CRUDTableWidgetText;
+use OLOG\CRUD\CRUDTableWidgetTextEditor;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDTableWidgetWeight;
@@ -81,6 +82,10 @@ class DemoTermsListAction
                         '{this->title}',
                         DemoTermEditAction::getUrl('{this->id}')
                     )
+                ),
+                new CRUDTableColumn(
+                    '',
+                    new CRUDTableWidgetTextEditor('title', '{this->title}', $table_id)
                 ),
 	            new CRUDTableColumn(
 		            '',

@@ -18,7 +18,8 @@ class CRUDTableWidgetOptionsEditor implements InterfaceCRUDTableWidget
      */
     public function html($obj)
     {
-        return HTML::tag('form', ['class' => 'js-options-editor'], function () use ($obj) {		    echo '<input type="hidden" name="' . Operations::FIELD_NAME_OPERATION_CODE . '" value="' . CRUDTable::OPERATION_UPDATE_MODEL_FIELD . '">';
+        return HTML::tag('form', ['class' => 'js-options-editor'], function () use ($obj) {
+            echo '<input type="hidden" name="' . Operations::FIELD_NAME_OPERATION_CODE . '" value="' . CRUDTable::OPERATION_UPDATE_MODEL_FIELD . '">';
             echo '<input type="hidden" name="' . CRUDTable::FIELD_FIELD_NAME . '" value="' . $this->getFieldName() . '">';
             echo '<input type="hidden" name="' . CRUDTable::FIELD_CRUDTABLE_ID . '" value="' . $this->getCrudtableId() . '">';
             echo '<input type="hidden" name="' . CRUDTable::FIELD_MODEL_ID . '" value="' . $obj->getId() . '">';
