@@ -19,7 +19,7 @@ class CrudDemoConfig
 
         DBConfig::setDBSettingsObj(
             self::DB_NAME_PHPCRUDDEMO,
-            new DBSettings('localhost', 'phpcrud', 'root', '1')
+            new DBSettings('127.0.0.1', 'phpcrud', 'root', '1')
         );
     }
 }
