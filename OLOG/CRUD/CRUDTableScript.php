@@ -50,6 +50,7 @@ class CRUDTableScript
 							this.initFilter();
 							this.initPagination();
 							this.initOptionsEditor();
+							this.initTextEditor();
 							this.initClickRow();
 						};
 
