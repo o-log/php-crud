@@ -386,6 +386,7 @@ class CRUDTable
         if ($create_form_html) {
             //$html .= BT::modal($create_form_element_id, 'Форма создания', $create_form_html);
             $html .= '<div class="collapse" id="' . $create_form_element_id . '"><div class="well">' . $create_form_html . '</div></div>';
+            $html .= '<script>$("#' . $create_form_element_id . '").on("shown.bs.collapse", function () {$(this).find(".form-control").eq(0).focus();})</script>';
         }
 
         return $html;
