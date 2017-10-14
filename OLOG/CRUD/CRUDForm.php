@@ -2,11 +2,11 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Assert;
-use OLOG\Operations;
-use OLOG\POSTAccess;
-use OLOG\Render;
-use OLOG\Sanitize;
+
+use OLOG\Form;
+use OLOG\Model\ActiveRecordInterface;
+use OLOG\POST;
+use OLOG\HTML;
 
 class CRUDForm
 {
@@ -16,10 +16,12 @@ class CRUDForm
     const FIELD_OBJECT_ID = '_FIELD_OBJECT_ID';
 
     static public function saveOrUpdateObjectFromFormData() {
-        $model_class_name = POSTAccess::getRequiredPostValue(self::FIELD_CLASS_NAME);
-        $object_id = POSTAccess::getOptionalPostValue(self::FIELD_OBJECT_ID);
+        $model_class_name = POST::required(self::FIELD_CLASS_NAME);
+        $object_id = POST::optional(self::FIELD_OBJECT_ID);
 
-        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
+        if (!is_a($model_class_name, ActiveRecordInterface::class, true)){
+            throw new \Exception();
+        }
 
         $new_prop_values_arr = [];
         $null_fields_arr = [];
@@ -58,7 +60,7 @@ class CRUDForm
 
     static protected function saveEditorFormOperation($url_to_redirect_after_save = '', $redirect_get_params_arr = [])
     {
-        $model_class_name = POSTAccess::getRequiredPostValue(self::FIELD_CLASS_NAME);
+        $model_class_name = POST::required(self::FIELD_CLASS_NAME);
         $object_id = self::saveOrUpdateObjectFromFormData();
 
         if ($url_to_redirect_after_save != '') {
@@ -90,7 +92,7 @@ class CRUDForm
 
         $__operations_executed = true;
 
-        Operations::matchOperation(self::OPERATION_SAVE_EDITOR_FORM, function () use ($url_to_redirect_after_save, $redirect_get_params_arr) {
+        Form::match(self::OPERATION_SAVE_EDITOR_FORM, function () use ($url_to_redirect_after_save, $redirect_get_params_arr) {
             self::saveEditorFormOperation($url_to_redirect_after_save, $redirect_get_params_arr);
         });
 
@@ -116,16 +118,16 @@ class CRUDForm
 
         $html = '';
 
-        $html .= '<form id="' . $form_element_id . '" class="form-horizontal" role="form" method="post" action="' . Sanitize::sanitizeUrl(\OLOG\Url::getCurrentUrl()) . '">';
+        $html .= '<form id="' . $form_element_id . '" class="form-horizontal" role="form" method="post" action="' . HTML::url(\OLOG\Url::current()) . '">';
 
-        $html .= Operations::operationCodeHiddenField($operation_code);
+        $html .= Form::op($operation_code);
 
-        $html .= '<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
-        $html .= '<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . Sanitize::sanitizeAttrValue(CRUDFieldsAccess::getObjId($obj)) . '">';
+        $html .= '<input type="hidden" name="' . self::FIELD_CLASS_NAME . '" value="' . HTML::attr(get_class($obj)) . '">';
+        $html .= '<input type="hidden" name="' . self::FIELD_OBJECT_ID . '" value="' . HTML::attr(CRUDFieldsAccess::getObjId($obj)) . '">';
 
         /** @var InterfaceCRUDFormRow $element_obj */
         foreach ($element_obj_arr as $element_obj) {
-            Assert::assert($element_obj instanceof InterfaceCRUDFormRow);
+            assert($element_obj instanceof InterfaceCRUDFormRow);
             $html .= $element_obj->html($obj);
         }
 

@@ -1,13 +1,19 @@
 {
 	"name": "o-log/php-crud",
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/o-log/php-cache.git"
+		}
+	],
 	"require-dev" : {
 		"phpunit/phpunit" : "4.8.*",
-		"o-log/php-router" : "1.*"
+		"o-log/php-router" : "2.*"
 	},
 	"require" : {
-		"o-log/php-bt" : "6.*",
-		"o-log/php-lib" : "1.*",
-		"o-log/php-model" : "7.*"
+		"o-log/php-bt" : "7.*",
+		"o-log/php-model" : "8.*",
+    	"predis/predis": "1.*"
 	},
 	"autoload" : {
 		"psr-0" : {

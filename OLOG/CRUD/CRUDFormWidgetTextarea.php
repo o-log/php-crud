@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDFormWidgetTextarea implements InterfaceCRUDFormWidget
 {
@@ -32,7 +32,7 @@ class CRUDFormWidgetTextarea implements InterfaceCRUDFormWidget
             $disabled = 'disabled';
         }
 
-        return '<textarea name="' . Sanitize::sanitizeAttrValue($field_name) . '"  '. $is_required_str . ' class="form-control" rows="5"  ' . $disabled . '>' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
+        return '<textarea name="' . HTML::attr($field_name) . '"  '. $is_required_str . ' class="form-control" rows="5"  ' . $disabled . '>' . HTML::content($field_value) . '</textarea>';
     }
 
     /**

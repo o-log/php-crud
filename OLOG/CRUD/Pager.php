@@ -87,7 +87,7 @@ class Pager
 
 		if ($pager_needed) {
 			// TODO: looses existing get form
-			$page_url = \OLOG\Url::getCurrentUrlNoGetForm();
+			$page_url = \OLOG\Url::path();
 
 			if (self::hasPrevPage($table_index_on_page)) {
 				$html .= '<li><a data-page-offset="0" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=0&' . self::pageSizeFormFieldName($table_index_on_page) . '=' . self::getPageSize($table_index_on_page).'"><span class="glyphicon glyphicon-home"></span> 0-' . self::getPageSize($table_index_on_page) . '</a></li>';

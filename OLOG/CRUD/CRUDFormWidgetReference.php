@@ -2,8 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\BT\BT;
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDFormWidgetReference implements InterfaceCRUDFormWidget
 {
@@ -30,7 +29,7 @@ class CRUDFormWidgetReference implements InterfaceCRUDFormWidget
 
         // TODO: check referenced class interfaces
 
-        $referenced_obj_ids_arr = \OLOG\DB\DBWrapper::readColumn(
+        $referenced_obj_ids_arr = \OLOG\DB\DB::readColumn(
             $referenced_class_name::DB_ID, // TODO: use common method
             'select ID from ' . $referenced_class_name::DB_TABLE_NAME . ' order by ID' // TODO: respect custom ID fields
         );
@@ -55,8 +54,8 @@ class CRUDFormWidgetReference implements InterfaceCRUDFormWidget
 
         $select_element_id = 'js_select_' . rand(1, 999999);
 
-        $html .= '<select id="' . Sanitize::sanitizeAttrValue($select_element_id) . '" name="' . Sanitize::sanitizeAttrValue($field_name) . '" class="form-control">' . implode('', $options_html_arr) . '</select>';
-        $html .= '<input type="hidden" id="' . Sanitize::sanitizeAttrValue($select_element_id) . '_is_null" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null"/>';
+        $html .= '<select id="' . HTML::attr($select_element_id) . '" name="' . HTML::attr($field_name) . '" class="form-control">' . implode('', $options_html_arr) . '</select>';
+        $html .= '<input type="hidden" id="' . HTML::attr($select_element_id) . '_is_null" name="' . HTML::attr($field_name) . '___is_null"/>';
 
         ob_start();?>
         <script>

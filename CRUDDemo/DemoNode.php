@@ -2,22 +2,21 @@
 
 namespace CRUDDemo;
 
-use OLOG\Model\InterfaceWeight;
+use OLOG\Model\ActiveRecordInterface;
+use OLOG\Model\ActiveRecordTrait;
+use OLOG\Model\ProtectPropertiesTrait;
+use OLOG\Model\WeightInterface;
 use OLOG\Model\WeightTrait;
 
 class DemoNode implements
-    \OLOG\Model\InterfaceFactory,
-    \OLOG\Model\InterfaceLoad,
-    \OLOG\Model\InterfaceSave,
-    \OLOG\Model\InterfaceDelete,
-    InterfaceWeight
+    ActiveRecordInterface,
+    WeightInterface
 {
-    use \OLOG\Model\FactoryTrait;
-    use \OLOG\Model\ActiveRecordTrait;
-    use \OLOG\Model\ProtectPropertiesTrait;
+    use ActiveRecordTrait;
+    use ProtectPropertiesTrait;
     use WeightTrait;
 
-    const DB_ID = \CRUDDemo\CrudDemoConfig::DB_NAME_PHPCRUDDEMO;
+    const DB_ID = \CRUDDemo\CRUDDemoConfig::SPACE_CRUDDEMO;
     const DB_TABLE_NAME = 'node';
 
     protected $created_at_ts = 0;
@@ -97,7 +96,7 @@ class DemoNode implements
 
 
     public function getCreatedAtTs(){
-        return $this->getcreated_at_ts;
+        return $this->created_at_ts;
     }
 
     public function setCreatedAtTs($value){

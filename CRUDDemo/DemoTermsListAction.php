@@ -2,7 +2,7 @@
 
 namespace CRUDDemo;
 
-use OLOG\BT\BT;
+use OLOG\ActionInterface;
 use OLOG\CRUD\CRUDForm;
 use OLOG\CRUD\CRUDFormRow;
 use OLOG\CRUD\CRUDFormWidgetRadios;
@@ -22,10 +22,24 @@ use OLOG\CRUD\CRUDTableWidgetTextEditor;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDTableWidgetWeight;
+use OLOG\Layouts\AdminLayoutSelector;
+use OLOG\Layouts\PageTitleInterface;
+use OLOG\Layouts\TopActionObjInterface;
 
 class DemoTermsListAction
+    implements ActionInterface, PageTitleInterface, TopActionObjInterface
 {
-    static public function getUrl()
+    public function topActionObj()
+    {
+        return new DemoMainPageAction();
+    }
+
+    public function pageTitle()
+    {
+        return 'Terms';
+    }
+
+    public function url()
     {
         return '/terms';
     }
@@ -68,7 +82,7 @@ class DemoTermsListAction
                             DemoTerm::class,
                             'title',
                             DemoAjaxTermsListAction::getUrl(),
-                            DemoTermEditAction::getUrl(CRUDFormWidgetReferenceAjax::REFERENCED_ID_PLACEHOLDER)
+                            (new DemoTermEditAction(CRUDFormWidgetReferenceAjax::REFERENCED_ID_PLACEHOLDER))->url()
 
                         )
                     )
@@ -80,7 +94,7 @@ class DemoTermsListAction
                     '',
                     new CRUDTableWidgetTextWithLink(
                         '{this->title}',
-                        DemoTermEditAction::getUrl('{this->id}')
+                        (new DemoTermEditAction('{this->id}'))->url()
                     )
                 ),
                 new CRUDTableColumn(
@@ -122,11 +136,7 @@ class DemoTermsListAction
             true
         );
 
-    DemoLayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());
+        AdminLayoutSelector::render($html, $this);
     }
     
-    static public function breadcrumbsArr(){
-        return array_merge(DemoMainPageAction::breadcrumbsArr(), [BT::a(self::getUrl(), 'Terms')]);
-    } 
-
 }

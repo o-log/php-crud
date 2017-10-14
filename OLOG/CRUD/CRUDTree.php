@@ -2,8 +2,8 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Assert;
-use OLOG\Sanitize;
+
+use OLOG\HTML;
 use OLOG\Url;
 
 class CRUDTree
@@ -53,8 +53,8 @@ class CRUDTree
 
         /** @var InterfaceCRUDTableColumn $column_obj */
         foreach ($column_obj_arr as $column_obj) {
-            Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
-            $html .= '<th>' . Sanitize::sanitizeTagContent($column_obj->getTitle()) . '</th>';
+            assert($column_obj instanceof InterfaceCRUDTableColumn);
+            $html .= '<th>' . HTML::content($column_obj->getTitle()) . '</th>';
         }
 
         $html .= '</tr>';
@@ -70,13 +70,13 @@ class CRUDTree
 
             /** @var InterfaceCRUDTableColumn $column_obj */
             foreach ($column_obj_arr as $col_index => $column_obj) {
-                Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
+                assert($column_obj instanceof InterfaceCRUDTableColumn);
 
                 /** @var InterfaceCRUDTableWidget $widget_obj */
                 $widget_obj = $column_obj->getWidgetObj();
 
-                Assert::assert($widget_obj);
-                Assert::assert($widget_obj instanceof InterfaceCRUDTableWidget);
+                assert($widget_obj);
+                assert($widget_obj instanceof InterfaceCRUDTableWidget);
 
                 $col_width_attr = '';
 
@@ -117,7 +117,7 @@ class CRUDTree
 
 
 	    // Загрузка скриптов
-	    $html .= CRUDTableScript::getHtml($table_container_element_id, Url::getCurrentUrlNoGetForm());
+	    $html .= CRUDTableScript::getHtml($table_container_element_id, Url::path());
 
         return $html;
     }
@@ -133,7 +133,7 @@ class CRUDTree
 
             /** @var InterfaceCRUDTableFilter2 $filter_obj */
             foreach ($filters_arr as $filter_obj){
-                Assert::assert($filter_obj instanceof InterfaceCRUDTableFilter2);
+                assert($filter_obj instanceof InterfaceCRUDTableFilter2);
 
                 $html .= '<div class="col-md-12">';
                 $html .= '<div class="form-group">';

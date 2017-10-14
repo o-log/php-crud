@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDTableWidgetDatetime implements InterfaceCRUDTableWidget
 {
@@ -19,7 +19,7 @@ class CRUDTableWidgetDatetime implements InterfaceCRUDTableWidget
 		$datetime = CRUDCompiler::compile($this->getDatetime(), ['this' => $obj]);
 		$date_obj = new \DateTime($datetime);
 		$date = $date_obj->format($this->getFormat());
-		return Sanitize::sanitizeTagContent($date);
+		return HTML::content($date);
 	}
 
 	public function __construct($datetame, $format = "d.m.Y H:i:s")

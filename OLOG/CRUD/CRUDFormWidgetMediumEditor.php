@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 {
@@ -58,7 +58,7 @@ class CRUDFormWidgetMediumEditor implements InterfaceCRUDFormWidget
 
 		$html = '';
 
-		$html .= '<textarea id="' . $uniqid . '_textarea" name="' . Sanitize::sanitizeAttrValue($field_name) . '" style="display: none;">' . $field_value . '</textarea>';
+		$html .= '<textarea id="' . $uniqid . '_textarea" name="' . HTML::attr($field_name) . '" style="display: none;">' . $field_value . '</textarea>';
 		$html .= '<div id="' . $uniqid . '" class="form-control" style="height: auto;">' . $field_value . '</div>';
 
 

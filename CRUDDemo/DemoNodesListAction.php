@@ -2,7 +2,7 @@
 
 namespace CRUDDemo;
 
-use OLOG\BT\BT;
+use OLOG\ActionInterface;
 use OLOG\CRUD\CRUDCreateFormScript;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDFormRow;
@@ -10,16 +10,28 @@ use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilterEqualOptions;
 use OLOG\CRUD\CRUDTableFilterLike;
 use OLOG\CRUD\CRUDTableWidgetDelete;
-use OLOG\CRUD\CRUDTableWidgetHtml;
 use OLOG\CRUD\CRUDTableWidgetHtmlWithLink;
 use OLOG\CRUD\CRUDTableWidgetText;
-use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDTableWidgetWeight;
+use OLOG\Layouts\AdminLayoutSelector;
+use OLOG\Layouts\PageTitleInterface;
+use OLOG\Layouts\TopActionObjInterface;
 
 class DemoNodesListAction
+    implements ActionInterface, TopActionObjInterface, PageTitleInterface
 {
-	static public function getUrl()
+    public function pageTitle()
+    {
+        return 'Nodes';
+    }
+
+    public function topActionObj()
+    {
+        return new DemoMainPageAction();
+    }
+
+    public function url()
 	{
 		return '/nodes';
 	}
@@ -54,7 +66,7 @@ class DemoNodesListAction
 			[
 				new CRUDTableColumn(
 					'Title',
-					new CRUDTableWidgetHtmlWithLink('{this->title}<br>{this->getReverseTitle()}', DemoNodeEditAction::getUrl('{this->id}'))
+					new CRUDTableWidgetHtmlWithLink('{this->title}<br>{this->getReverseTitle()}', (new DemoNodeEditAction('{this->id}'))->url())
 				),
 				new CRUDTableColumn(
 					'Reverse title',
@@ -81,11 +93,6 @@ class DemoNodesListAction
 		// Загрузка скриптов
 		$html .= CRUDCreateFormScript::getHtml($form_id, $table_id);
 
-		DemoLayoutTemplate::render($html, 'Nodes', self::getBreadcrumbsArr());
-	}
-
-	static public function getBreadcrumbsArr()
-	{
-		return array_merge(DemoMainPageAction::breadcrumbsArr(), [BT::a(self::getUrl(), 'Nodes')]);
+		AdminLayoutSelector::render($html, $this);
 	}
 }

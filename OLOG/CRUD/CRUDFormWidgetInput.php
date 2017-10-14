@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDFormWidgetInput implements InterfaceCRUDFormWidget
 {
@@ -33,7 +33,7 @@ class CRUDFormWidgetInput implements InterfaceCRUDFormWidget
         $html = '';
         $html .= '<div class="row">';
         $html .= '<div class="col-sm-' . $input_cols . '">';
-        $html .= '<input id="' . $uniqid . '_input" name="' . Sanitize::sanitizeAttrValue($field_name) . '" ' . $is_required_str . ' class="form-control" value="' . Sanitize::sanitizeAttrValue($field_value) . '"/>';
+        $html .= '<input id="' . $uniqid . '_input" name="' . HTML::attr($field_name) . '" ' . $is_required_str . ' class="form-control" value="' . HTML::attr($field_value) . '"/>';
         $html .= '</div>';
 
         if ($this->getShowNullCheckbox()) {
@@ -45,7 +45,7 @@ class CRUDFormWidgetInput implements InterfaceCRUDFormWidget
             ob_start(); ?>
             <div class="col-sm-2">
                 <label class="form-control-static">
-                    <input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= Sanitize::sanitizeAttrValue($field_name) ?>___is_null" <?= $is_null_checked ?>> NULL
+                    <input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= HTML::attr($field_name) ?>___is_null" <?= $is_null_checked ?>> NULL
                 </label>
             </div>
             <script>

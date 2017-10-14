@@ -15,18 +15,33 @@ use OLOG\CRUD\CRUDTableFilterEqualInvisible;
 use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDTableWidgetWeight;
+use OLOG\Layouts\AdminLayoutSelector;
+use OLOG\MaskActionInterface;
 
-class DemoTermEditAction
+class DemoTermEditAction implements MaskActionInterface
 {
-    static public function getUrl($term_id = '(\d+)')
+    protected $term_id;
+
+    public function __construct($term_id)
     {
-        return '/admin/term/' . $term_id;
+        $this->term_id = $term_id;
     }
 
-    public function action($term_id)
+    static public function mask()
+    {
+        return '/admin/term/(\d+)';
+    }
+
+    public function url()
+    {
+        return '/admin/term/' . $this->term_id;
+    }
+
+    public function action()
     {
         \OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
 
+        $term_id = $this->term_id;
         $html = '';
 
         $term_obj = DemoTerm::factory($term_id);
@@ -75,7 +90,7 @@ class DemoTermEditAction
                         DemoTerm::class,
                         'title',
                         DemoAjaxTermsListAction::getUrl(),
-                        DemoTermEditAction::getUrl(CRUDFormWidgetReferenceAjax::REFERENCED_ID_PLACEHOLDER)
+                        (new DemoTermEditAction(CRUDFormWidgetReferenceAjax::REFERENCED_ID_PLACEHOLDER))->url()
 
                     )
                 )
@@ -102,7 +117,7 @@ class DemoTermEditAction
                 ]
             ),
             [
-                new CRUDTableColumn('', new CRUDTableWidgetTextWithLink('{this->title}', DemoTermEditAction::getUrl('{this->id}'))),
+                new CRUDTableColumn('', new CRUDTableWidgetTextWithLink('{this->title}', (new DemoTermEditAction('{this->id}'))->url())),
                 new CRUDTableColumn('', new CRUDTableWidgetWeight(['parent_id' => $term_id])),
                 new CRUDTableColumn('', new CRUDTableWidgetDelete())
             ],
@@ -113,12 +128,7 @@ class DemoTermEditAction
 
         );
 
-        DemoLayoutTemplate::render($html, 'Term ' . $term_id, self::breadcrumbsArr($term_id));
-    }
-
-    static public function breadcrumbsArr($term_id)
-    {
-        return array_merge(DemoTermsListAction::breadcrumbsArr(), [BT::a(self::getUrl($term_id), 'Term ' . $term_id)]);
+        AdminLayoutSelector::render($html, $this);
     }
 
 }

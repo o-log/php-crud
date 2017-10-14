@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
 {
@@ -63,7 +63,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
                 $is_required_str = ' required ';
             }
 
-            $html .= '<label class="radio-inline"><input type="radio" name="' . Sanitize::sanitizeAttrValue($input_name) . '" value="' . Sanitize::sanitizeAttrValue($value) . '" ' . $selected_html_attr . ' ' . $is_required_str . ' ' .$disabled. '> ' . $title . '</label>';
+            $html .= '<label class="radio-inline"><input type="radio" name="' . HTML::attr($input_name) . '" value="' . HTML::attr($value) . '" ' . $selected_html_attr . ' ' . $is_required_str . ' ' .$disabled. '> ' . $title . '</label>';
         }
         //$html .= '</div>';
 
@@ -75,7 +75,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
             }
             ob_start(); ?>
                 <label class="radio-inline">
-                    <input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= Sanitize::sanitizeAttrValue($input_name) ?>___is_null" <?= $is_null_checked ?>> NULL
+                    <input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= HTML::attr($input_name) ?>___is_null" <?= $is_null_checked ?>> NULL
                 </label>
             <script>
                 (function () {

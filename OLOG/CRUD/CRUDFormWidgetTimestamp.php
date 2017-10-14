@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDFormWidgetTimestamp implements InterfaceCRUDFormWidget
 {
@@ -54,7 +54,7 @@ class CRUDFormWidgetTimestamp implements InterfaceCRUDFormWidget
 		$html .= '<div class="col-sm-' . $input_cols . '">';
 
 		ob_start(); ?>
-		<input type="hidden" id="<?= $uniqid ?>_input" name="<?= Sanitize::sanitizeAttrValue($field_name) ?>" value="<?= Sanitize::sanitizeTagContent($field_value) ?>" data-field="<?= $uniqid ?>_date" <?= $is_required_str ?>>
+		<input type="hidden" id="<?= $uniqid ?>_input" name="<?= HTML::attr($field_name) ?>" value="<?= HTML::content($field_value) ?>" data-field="<?= $uniqid ?>_date" <?= $is_required_str ?>>
 		<div class="input-group date" id="<?= $uniqid ?>">
 			<input id="<?= $uniqid ?>_date" type="text" class="form-control" value="<?= $field_value_attr ?>">
 			<span class="input-group-addon">
@@ -87,7 +87,7 @@ class CRUDFormWidgetTimestamp implements InterfaceCRUDFormWidget
 			ob_start(); ?>
 			<div class="col-sm-2">
 				<label class="form-control-static">
-					<input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= Sanitize::sanitizeAttrValue($field_name) ?>___is_null" <?= $is_null_checked ?>> NULL
+					<input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= HTML::attr($field_name) ?>___is_null" <?= $is_null_checked ?>> NULL
 				</label>
 			</div>
 			<script>

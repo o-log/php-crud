@@ -3,8 +3,7 @@
 namespace OLOG\CRUD;
 
 use OLOG\HTML;
-use OLOG\Operations;
-use OLOG\Sanitize;
+use OLOG\Form;
 
 class CRUDTableWidgetTextEditor implements InterfaceCRUDTableWidget
 {
@@ -19,7 +18,7 @@ class CRUDTableWidgetTextEditor implements InterfaceCRUDTableWidget
      */
     public function html($obj){
         return HTML::tag('form', ['class' => 'js-text-editor'], function () use ($obj) {
-            echo '<input type="hidden" name="' . Operations::FIELD_NAME_OPERATION_CODE . '" value="' . CRUDTable::OPERATION_UPDATE_MODEL_FIELD . '">';
+            echo '<input type="hidden" name="' . Form::FIELD_NAME_OPERATION_CODE . '" value="' . CRUDTable::OPERATION_UPDATE_MODEL_FIELD . '">';
             echo '<input type="hidden" name="' . CRUDTable::FIELD_FIELD_NAME . '" value="' . $this->getFieldName() . '">';
             echo '<input type="hidden" name="' . CRUDTable::FIELD_CRUDTABLE_ID . '" value="' . $this->getCrudtableId() . '">';
             echo '<input type="hidden" name="' . CRUDTable::FIELD_MODEL_ID . '" value="' . $obj->getId() . '">';

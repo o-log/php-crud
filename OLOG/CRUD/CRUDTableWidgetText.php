@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDTableWidgetText implements InterfaceCRUDTableWidget
 {
@@ -15,7 +15,7 @@ class CRUDTableWidgetText implements InterfaceCRUDTableWidget
      */
     public function html($obj){
         $html = CRUDCompiler::compile($this->getText(), ['this' => $obj]);
-        return Sanitize::sanitizeTagContent($html);
+        return HTML::content($html);
     }
 
     public function __construct($text)

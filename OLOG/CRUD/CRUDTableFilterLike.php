@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\REQUESTWrapper;
+use OLOG\REQUEST;
 
 class CRUDTableFilterLike implements InterfaceCRUDTableFilter2
 {
@@ -11,7 +11,7 @@ class CRUDTableFilterLike implements InterfaceCRUDTableFilter2
     protected $filter_iniq_id;
 
     public function getValueFromForm(){
-        $value = REQUESTWrapper::optionalFieldValue($this->getFilterIniqId());
+        $value = REQUEST::optional($this->getFilterIniqId());
 
         // LIKE filter doesn't use nulls
 

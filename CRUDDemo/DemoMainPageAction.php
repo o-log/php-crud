@@ -2,26 +2,29 @@
 
 namespace CRUDDemo;
 
-use OLOG\BT\BT;
+use OLOG\ActionInterface;
+use OLOG\Layouts\AdminLayoutSelector;
+use OLOG\Layouts\PageTitleInterface;
 
-class DemoMainPageAction
+class DemoMainPageAction implements ActionInterface, PageTitleInterface
 {
-    static public function getUrl(){
+    public function pageTitle()
+    {
+        return 'MAIN';
+    }
+
+    public function url(){
         return '/';
     }
     
     public function action(){
         $html = '';
         $html .= '<div>';
-        $html .= '<a class="btn btn-default" href="' . DemoNodesListAction::getUrl() . '">NODES</a> ';
-        $html .= '<a class="btn btn-default" href="' . DemoTermsListAction::getUrl() . '">TERMS</a>';
-        $html .= '<a class="btn btn-default" href="' . DemoTermsTreeAction::getUrl() . '">TERMS TREE</a>';
+        $html .= '<a class="btn btn-default" href="' . (new DemoNodesListAction())->url() . '">NODES</a> ';
+        $html .= '<a class="btn btn-default" href="' . (new DemoTermsListAction())->url() . '">TERMS</a>';
+        $html .= '<a class="btn btn-default" href="' . (new DemoTermsTreeAction())->url() . '">TERMS TREE</a>';
         $html .= '</div>';
 
-        DemoLayoutTemplate::render($html, 'Main page', self::breadcrumbsArr());
-    }
-    
-    static public function breadcrumbsArr(){
-        return [BT::a(self::getUrl(), 'Main')];
+        AdminLayoutSelector::render($html, $this);
     }
 }

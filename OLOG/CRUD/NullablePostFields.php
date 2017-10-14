@@ -2,8 +2,8 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\POSTAccess;
-use OLOG\Sanitize;
+use OLOG\POST;
+use OLOG\HTML;
 
 class NullablePostFields
 {
@@ -14,17 +14,17 @@ class NullablePostFields
         }
 
         $html = '';
-        $html .= '<input type="hidden" name="' . Sanitize::sanitizeAttrValue($field_name) . '" value="' . Sanitize::sanitizeAttrValue($field_value) . '"/>';
-        $html .= '<input type="hidden" name="' . Sanitize::sanitizeAttrValue($field_name) . '___is_null" value="' . Sanitize::sanitizeAttrValue($is_null_value) . '"/>';
+        $html .= '<input type="hidden" name="' . HTML::attr($field_name) . '" value="' . HTML::attr($field_value) . '"/>';
+        $html .= '<input type="hidden" name="' . HTML::attr($field_name) . '___is_null" value="' . HTML::attr($is_null_value) . '"/>';
 
         return $html;
     }
 
     static public function optionalFieldValue($field_name){
-        $field_value = POSTAccess::getOptionalPostValue($field_name);
+        $field_value = POST::optional($field_name);
 
         // чтение возможных NULL
-        if (POSTAccess::getOptionalPostValue($field_name . "___is_null", '') == "1") {
+        if (POST::optional($field_name . "___is_null", '') == "1") {
             $field_value = null;
         }
 

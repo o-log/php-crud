@@ -2,11 +2,9 @@
 
 namespace OLOG\CRUD;
 
-
-use OLOG\Assert;
-use OLOG\Model\InterfaceWeight;
-use OLOG\Operations;
-use OLOG\Sanitize;
+use OLOG\Model\WeightInterface;
+use OLOG\Form;
+use OLOG\HTML;
 
 class CRUDTableWidgetWeight implements InterfaceCRUDTableWidget
 {
@@ -23,24 +21,24 @@ class CRUDTableWidgetWeight implements InterfaceCRUDTableWidget
     }
 
     /**
-     * @param $obj InterfaceWeight
+     * @param $obj WeightInterface
      * @return string
      */
     public function html($obj){
-        Assert::assert($obj);
+        assert($obj);
 
         $o = '';
-        $o .= '<form style="display: inline;" method="post" action="' . \OLOG\Url::getCurrentUrl() . '">';
-        $o .= Operations::operationCodeHiddenField(CRUDTable::OPERATION_SWAP_MODEL_WEIGHT);
-        $o .= '<input type="hidden" name="' . self::FORMFIELD_CONTEXT_FIELDS_NAME . '" value="' . Sanitize::sanitizeAttrValue(implode(',', array_keys($this->context_fields_arr))) . '">';
+        $o .= '<form style="display: inline;" method="post" action="' . \OLOG\Url::path() . '">';
+        $o .= Form::op(CRUDTable::OPERATION_SWAP_MODEL_WEIGHT);
+        $o .= '<input type="hidden" name="' . self::FORMFIELD_CONTEXT_FIELDS_NAME . '" value="' . HTML::attr(implode(',', array_keys($this->context_fields_arr))) . '">';
 
         foreach ($this->context_fields_arr as $context_field_name => $context_field_value) {
             $context_field_value = CRUDCompiler::compile($context_field_value, ['this' => $obj]);
             $o .= NullablePostFields::hiddenFieldHtml($context_field_name, $context_field_value);
         }
 
-        $o .= '<input type="hidden" name="_class_name" value="' . Sanitize::sanitizeAttrValue(get_class($obj)) . '">';
-        $o .= '<input type="hidden" name="_id" value="' . Sanitize::sanitizeAttrValue(CRUDFieldsAccess::getObjId($obj)) . '">';
+        $o .= '<input type="hidden" name="_class_name" value="' . HTML::attr(get_class($obj)) . '">';
+        $o .= '<input type="hidden" name="_id" value="' . HTML::attr(CRUDFieldsAccess::getObjId($obj)) . '">';
 
         $o .= '<button class="' . $this->button_class_str . '" type="submit">' . $this->button_text .'</button>';
 

@@ -2,8 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\BT\BT;
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDTableWidgetTextWithLink implements InterfaceCRUDTableWidget
 {
@@ -20,7 +19,7 @@ class CRUDTableWidgetTextWithLink implements InterfaceCRUDTableWidget
             $text = '#EMPTY#';
         }
 
-        $o = BT::a($url, $text, $this->getClassesStr());
+        $o = HTML::a($url, $text, $this->getClassesStr());
 
         return $o;
         

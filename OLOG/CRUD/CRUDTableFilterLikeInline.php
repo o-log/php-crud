@@ -3,7 +3,7 @@
 namespace OLOG\CRUD;
 
 use OLOG\HTML;
-use OLOG\REQUESTWrapper;
+use OLOG\REQUEST;
 
 class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
 {
@@ -14,7 +14,7 @@ class CRUDTableFilterLikeInline implements InterfaceCRUDTableFilter2
 
     public function getValueFromForm()
     {
-        $value = REQUESTWrapper::optionalFieldValue($this->getFilterIniqId());
+        $value = REQUEST::optional($this->getFilterIniqId());
 
         return $value;
     }

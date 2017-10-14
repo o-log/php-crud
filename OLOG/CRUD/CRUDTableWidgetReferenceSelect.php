@@ -2,8 +2,8 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Assert;
-use OLOG\Sanitize;
+
+use OLOG\HTML;
 
 class CRUDTableWidgetReferenceSelect implements InterfaceCRUDTableWidget
 {
@@ -18,7 +18,7 @@ class CRUDTableWidgetReferenceSelect implements InterfaceCRUDTableWidget
 
     public function html($obj)
     {
-        Assert::assert($obj);
+        assert($obj);
 
         $title_field_name = $this->getTitleFieldName();
 
@@ -32,7 +32,7 @@ class CRUDTableWidgetReferenceSelect implements InterfaceCRUDTableWidget
         }
 
         $o = '';
-        $o .= '<button class="btn btn-xs btn-default js-ajax-form-select" type="submit" data-id="' . Sanitize::sanitizeAttrValue($id) . '" data-title="' . Sanitize::sanitizeAttrValue($obj_title) . '">Выбор</button>';
+        $o .= '<button class="btn btn-xs btn-default js-ajax-form-select" type="submit" data-id="' . HTML::attr($id) . '" data-title="' . HTML::attr($obj_title) . '">Выбор</button>';
 
         return $o;
     }

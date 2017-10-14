@@ -2,13 +2,13 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Assert;
+
 
 class CRUDFieldsAccess
 {
     static public function getObjId($obj)
     {
-        Assert::assert($obj);
+        assert($obj);
         
         $obj_class_name = get_class($obj);
         $obj_id_field_name = CRUDFieldsAccess::getIdFieldName($obj_class_name);
@@ -38,7 +38,7 @@ class CRUDFieldsAccess
             }
         }
 
-        \OLOG\Assert::assert($field_prop_obj, 'Field "' . $field_name . '" not found in object. Object class: "' . $obj_class_name . '"');
+        assert($field_prop_obj, 'Field "' . $field_name . '" not found in object. Object class: "' . $obj_class_name . '"');
 
         $field_prop_obj->setAccessible(true);
         return $field_prop_obj->getValue($obj);

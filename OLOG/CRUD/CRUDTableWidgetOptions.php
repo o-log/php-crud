@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDTableWidgetOptions implements InterfaceCRUDTableWidget
 {
@@ -23,7 +23,7 @@ class CRUDTableWidgetOptions implements InterfaceCRUDTableWidget
         if (array_key_exists($value, $options_arr)) {
             $html = $options_arr[$value];
         }
-        return Sanitize::sanitizeTagContent($html);
+        return HTML::content($html);
     }
 
     public function __construct($value, $options_arr)

@@ -2,6 +2,7 @@
 
 namespace CRUDDemo;
 
+use OLOG\ActionInterface;
 use OLOG\BT\BT;
 use OLOG\CRUD\CRUDForm;
 use OLOG\CRUD\CRUDFormRow;
@@ -18,10 +19,12 @@ use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDTableWidgetTextWithLink;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDTableWidgetWeight;
+use OLOG\Layouts\AdminLayoutSelector;
 
 class DemoTermsTreeAction
+    implements ActionInterface
 {
-    static public function getUrl()
+    public function url()
     {
         return '/termstree';
     }
@@ -68,7 +71,7 @@ class DemoTermsTreeAction
                     'Edit',
                     new CRUDTableWidgetTextWithLink(
                         '{this->title}',
-                        DemoTermEditAction::getUrl('{this->id}')
+                        (new DemoTermEditAction('{this->id}'))->url()
                     )
                 ),
                 new CRUDTableColumn(
@@ -98,11 +101,7 @@ class DemoTermsTreeAction
             CRUDTable::FILTERS_POSITION_INLINE
         );
 
-        DemoLayoutTemplate::render($html, 'Термы', self::breadcrumbsArr());
-    }
-
-    static public function breadcrumbsArr(){
-        return array_merge(DemoMainPageAction::breadcrumbsArr(), [BT::a(self::getUrl(), 'Terms')]);
+        AdminLayoutSelector::render($html, $this);
     }
 
 }

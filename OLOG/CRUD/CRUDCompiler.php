@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Assert;
+
 
 class CRUDCompiler {
 
@@ -68,12 +68,12 @@ class CRUDCompiler {
 
     public static function getReplacement($obj, $obj_field_name)
     {
-        \OLOG\Assert::assert($obj);
+        assert($obj);
 
         $matches = [];
         if (preg_match('@^(\w+)\(\)$@', $obj_field_name, $matches)) { // имя поля заканчивается скобками - значит это имя метода
             $method_name = $matches[1];
-            Assert::assert(method_exists($obj, $method_name));
+            assert(method_exists($obj, $method_name));
             $replacement = call_user_func([$obj, $method_name]);
         } else {
             $replacement = CRUDFieldsAccess::getObjectFieldValue($obj, $obj_field_name);

@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
 {
@@ -98,7 +98,7 @@ class CRUDFormWidgetOptions implements InterfaceCRUDFormWidget
 
         if($this->getShowNullCheckbox()) {
             $html .= '<div class="input-group-addon">';
-            $html .= '<input type = "checkbox" value="1" name="' . Sanitize::sanitizeAttrValue($input_name) . '___is_null" ' . $is_null_checked . ' /> null';
+            $html .= '<input type = "checkbox" value="1" name="' . HTML::attr($input_name) . '___is_null" ' . $is_null_checked . ' /> null';
             $html .= '</div>';
         }
 

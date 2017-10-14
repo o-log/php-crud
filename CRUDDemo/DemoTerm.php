@@ -2,17 +2,13 @@
 
 namespace CRUDDemo;
 
-use OLOG\Model\InterfaceWeight;
+use OLOG\Model\WeightInterface;
 use OLOG\Model\WeightTrait;
 
 class DemoTerm implements
-    \OLOG\Model\InterfaceFactory,
-    \OLOG\Model\InterfaceLoad,
-    \OLOG\Model\InterfaceSave,
-    \OLOG\Model\InterfaceDelete,
-    InterfaceWeight
+    \OLOG\Model\ActiveRecordInterface,
+    WeightInterface
 {
-    use \OLOG\Model\FactoryTrait;
     use \OLOG\Model\ActiveRecordTrait;
     use \OLOG\Model\ProtectPropertiesTrait;
     use WeightTrait;
@@ -62,12 +58,12 @@ class DemoTerm implements
 
     static public function getIdsArrForVocabularyIdByCreatedAtDesc($value, $offset = 0, $page_size = 30){
         if (is_null($value)) {
-            return \OLOG\DB\DBWrapper::readColumn(
+            return \OLOG\DB\DB::readColumn(
                 self::DB_ID,
                 'select id from ' . self::DB_TABLE_NAME . ' where vocabulary_id is null order by created_at_ts desc limit ' . intval($page_size) . ' offset ' . intval($offset)
             );
         } else {
-            return \OLOG\DB\DBWrapper::readColumn(
+            return \OLOG\DB\DB::readColumn(
                 self::DB_ID,
                 'select id from ' . self::DB_TABLE_NAME . ' where vocabulary_id = ? order by created_at_ts desc limit ' . intval($page_size) . ' offset ' . intval($offset),
                 array($value)

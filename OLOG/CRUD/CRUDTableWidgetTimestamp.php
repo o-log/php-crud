@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDTableWidgetTimestamp implements InterfaceCRUDTableWidget
 {
@@ -18,7 +18,7 @@ class CRUDTableWidgetTimestamp implements InterfaceCRUDTableWidget
     {
         $timestamp = CRUDCompiler::compile($this->getTimestamp(), ['this' => $obj]);
         $date = date($this->getFormat(), $timestamp);
-        return Sanitize::sanitizeTagContent($date);
+        return HTML::content($date);
     }
 
     public function __construct($timestamp, $format = "Y-m-d H:i:s")

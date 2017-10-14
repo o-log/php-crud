@@ -2,16 +2,15 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Assert;
-use OLOG\DB\DBWrapper;
+
+use OLOG\DB\DB;
 use OLOG\HTML;
 use OLOG\MagnificPopup;
-use OLOG\Model\InterfaceWeight;
-use OLOG\Operations;
-use OLOG\POSTAccess;
+use OLOG\Model\WeightInterface;
+use OLOG\Form;
+use OLOG\POST;
 use OLOG\Redirects;
-use OLOG\REQUESTWrapper;
-use OLOG\Sanitize;
+use OLOG\REQUEST;
 use OLOG\Url;
 
 class CRUDTable
@@ -38,15 +37,17 @@ class CRUDTable
     {
         // TODO: do not pass DB table name in form - pass crud table id instead, get model class name from crud table
         // TODO: also check model owner
-        $model_class_name = POSTAccess::getRequiredPostValue(CRUDTableWidgetDelete::FIELD_CLASS_NAME);
-        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceDelete::class);
+        $model_class_name = POST::required(CRUDTableWidgetDelete::FIELD_CLASS_NAME);
+        if (!is_a($model_class_name, \OLOG\Model\ActiveRecordInterface::class, true)){
+            throw new \Exception();
+        }
 
-        $model_id = POSTAccess::getRequiredPostValue(CRUDTableWidgetDelete::FIELD_OBJECT_ID);
+        $model_id = POST::required(CRUDTableWidgetDelete::FIELD_OBJECT_ID);
 
         $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
         $obj->delete();
 
-        $redirect_url = POSTAccess::getOptionalPostValue(CRUDTableWidgetDelete::FIELD_REDIRECT_AFTER_DELETE_URL, '');
+        $redirect_url = POST::optional(CRUDTableWidgetDelete::FIELD_REDIRECT_AFTER_DELETE_URL, '');
 
         if ($redirect_url != ''){
             Redirects::redirect($redirect_url);
@@ -59,12 +60,14 @@ class CRUDTable
     {
         // TODO: do not pass DB table name in form - pass crud table id instead, get model class name from crud table
         // TODO: also check model owner
-        $model_class_name = POSTAccess::getRequiredPostValue('_class_name'); // TODO: constant for field name
-        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceWeight::class);
+        $model_class_name = POST::required('_class_name'); // TODO: constant for field name
+        if (!is_a($model_class_name, \OLOG\Model\WeightInterface::class, true)){
+            throw new \Exception();
+        }
 
-        $model_id = POSTAccess::getRequiredPostValue('_id'); // TODO: constant for field name
+        $model_id = POST::required('_id'); // TODO: constant for field name
 
-        $context_fields_names_str = POSTAccess::getOptionalPostValue(CRUDTableWidgetWeight::FORMFIELD_CONTEXT_FIELDS_NAME, '');
+        $context_fields_names_str = POST::optional(CRUDTableWidgetWeight::FORMFIELD_CONTEXT_FIELDS_NAME, '');
         $context_fields_names_arr = [];
         if ($context_fields_names_str != '') {
             $context_fields_names_arr = explode(',', $context_fields_names_str);
@@ -75,7 +78,7 @@ class CRUDTable
             $context_arr[$context_field_name] = NullablePostFields::optionalFieldValue($context_field_name);
         }
 
-        /** @var InterfaceWeight $obj */
+        /** @var WeightInterface $obj */
         $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
         $obj->swapWeights($context_arr);
 
@@ -84,29 +87,31 @@ class CRUDTable
 
     static protected function updateModelFieldOperation($table_id, $model_class_name)
     {
-        $table_id_from_request = REQUESTWrapper::optionalFieldValue(self::FIELD_CRUDTABLE_ID, '');
+        $table_id_from_request = REQUEST::optional(self::FIELD_CRUDTABLE_ID, '');
 
         // проверяем, что операция выполняется для таблицы из запроса, потому что класс модели мы берем из таблицы
         if ($table_id_from_request != $table_id){
             return;
         }
 
-        $model_field_name = REQUESTWrapper::requiredFieldValue(self::FIELD_FIELD_NAME);
-        $value = REQUESTWrapper::requiredFieldValue(self::FIELD_FIELD_VALUE);
-        $model_id = REQUESTWrapper::requiredFieldValue(self::FIELD_MODEL_ID);
+        $model_field_name = REQUEST::required(self::FIELD_FIELD_NAME);
+        $value = REQUEST::required(self::FIELD_FIELD_VALUE);
+        $model_id = REQUEST::required(self::FIELD_MODEL_ID);
 
         // TODO: owner check!!!
 
         /*
         $db_table_name = $model_class_name::DB_TABLE_NAME; // TODO: check constant availability
-        DBWrapper::query(
+        DB::query(
             $model_class_name::DB_ID, // check class availability
             'update ' . Sanitize::sanitizeSqlColumnName($db_table_name) . ' set ' . Sanitize::sanitizeSqlColumnName($db_table_field) . ' = ? where id = ?',
             [$value, $model_id]
         );
         */
 
-        \OLOG\CheckClassInterfaces::exceptionIfClassNotImplementsInterface($model_class_name, \OLOG\Model\InterfaceSave::class);
+        if (!is_a($model_class_name, \OLOG\Model\ActiveRecordInterface::class, true)){
+            throw new \Exception();
+        }
 
         $obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $model_id);
 
@@ -132,15 +137,15 @@ class CRUDTable
 
         $__operations_executed = true;
 
-        Operations::matchOperation(self::OPERATION_DELETE_MODEL, function () {
+        Form::match(self::OPERATION_DELETE_MODEL, function () {
             self::deleteModelOperation();
         });
 
-        Operations::matchOperation(self::OPERATION_SWAP_MODEL_WEIGHT, function () {
+        Form::match(self::OPERATION_SWAP_MODEL_WEIGHT, function () {
             self::swapModelWeightOperation();
         });
 
-        Operations::matchOperation(self::OPERATION_UPDATE_MODEL_FIELD, function () use ($table_id,  $model_class_name) {
+        Form::match(self::OPERATION_UPDATE_MODEL_FIELD, function () use ($table_id,  $model_class_name) {
             self::updateModelFieldOperation($table_id, $model_class_name);
         });
     }
@@ -204,7 +209,7 @@ class CRUDTable
 			/** @var InterfaceCRUDTableColumn $column_obj */
 			$has_nonempty_th = false;
             foreach ($column_obj_arr as $column_obj) {
-                Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
+                assert($column_obj instanceof InterfaceCRUDTableColumn);
                 if ($column_obj->getTitle() != ''){
                     $has_nonempty_th = true;
                 }
@@ -213,7 +218,7 @@ class CRUDTable
             if ($has_nonempty_th) {
                 echo '<thead><tr>';
                 foreach ($column_obj_arr as $column_obj) {
-                    Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
+                    assert($column_obj instanceof InterfaceCRUDTableColumn);
                     echo '<th>' . $column_obj->getTitle() . '</th>';
                 }
                 echo '</tr></thead>';
@@ -230,11 +235,11 @@ class CRUDTable
 				/** @var InterfaceCRUDTableColumn $column_obj */
 				echo '<tr>';
 				foreach ($column_obj_arr as $column_obj) {
-					Assert::assert($column_obj instanceof InterfaceCRUDTableColumn);
+					assert($column_obj instanceof InterfaceCRUDTableColumn);
 				    /** @var InterfaceCRUDTableWidget $widget_obj */
 				    $widget_obj = $column_obj->getWidgetObj();
-                    Assert::assert($widget_obj);
-                    Assert::assert($widget_obj instanceof InterfaceCRUDTableWidget);
+                    assert($widget_obj);
+                    assert($widget_obj instanceof InterfaceCRUDTableWidget);
 
                     $col_width_attr = '';
 
@@ -271,7 +276,7 @@ class CRUDTable
 		});
 
 		// Загрузка скриптов
-		$html .= CRUDTableScript::getHtml($table_container_element_id, Url::getCurrentUrlNoGetForm());
+		$html .= CRUDTableScript::getHtml($table_container_element_id, Url::path());
 
 		return $html;
 	}

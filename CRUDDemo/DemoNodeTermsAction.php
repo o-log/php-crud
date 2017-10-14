@@ -12,23 +12,34 @@ use OLOG\CRUD\CRUDTableWidgetDelete;
 use OLOG\CRUD\CRUDTableWidgetText;
 use OLOG\CRUD\CRUDFormWidgetInput;
 use OLOG\CRUD\CRUDFormWidgetReference;
+use OLOG\Layouts\AdminLayoutSelector;
+use OLOG\Layouts\PageTitleInterface;
+use OLOG\Layouts\TopActionObjInterface;
+use OLOG\MaskActionInterface;
 
 class DemoNodeTermsAction
+    extends DemoNodeBase
+    implements MaskActionInterface, PageTitleInterface, TopActionObjInterface
 {
-    static public function getUrl($node_id = '(\d+)')
+    static public function mask()
     {
-        return '/node/' . $node_id . '/terms';
+        return '/node/(\d+)/terms';
     }
 
-    public function action($node_id)
+    public function url()
+    {
+        return '/node/' . $this->node_id . '/terms';
+    }
+
+    public function action()
     {
         \OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
 
-        $html = DemoNodeEditAction::tabsHtml($node_id);
+        $html = self::tabsHtml($this->node_id);
         $html .= '<div>&nbsp;</div>';
 
         $new_term_to_node = new DemoTermToNode();
-        $new_term_to_node->setNodeId($node_id);
+        $new_term_to_node->setNodeId($this->node_id);
 
         $html .= CRUDTable::html(
             DemoTermToNode::class,
@@ -49,9 +60,9 @@ class DemoNodeTermsAction
                 new CRUDTableColumn('Term', new CRUDTableWidgetText('{' . DemoTerm::class . '.{this->term_id}->title}')),
                 new CRUDTableColumn('Delete', new CRUDTableWidgetDelete())
             ],
-            [new CRUDTableFilterEqualInvisible('node_id', $node_id)]
+            [new CRUDTableFilterEqualInvisible('node_id', $this->node_id)]
         );
 
-        DemoLayoutTemplate::render($html, 'Node ' . $node_id, DemoNodeEditAction::breadcrumbsArr($node_id));
+        AdminLayoutSelector::render($html, $this);
     }
 }

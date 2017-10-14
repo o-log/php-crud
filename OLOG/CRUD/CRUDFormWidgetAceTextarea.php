@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-use OLOG\Sanitize;
+use OLOG\HTML;
 
 class CRUDFormWidgetAceTextarea implements InterfaceCRUDFormWidget
 {
@@ -35,8 +35,8 @@ class CRUDFormWidgetAceTextarea implements InterfaceCRUDFormWidget
             ';
 
         // TODO: is form-control needed?
-        $html .= '<div id="' . $editor_element_id . '" class="form-control">' . Sanitize::sanitizeTagContent($field_value) . '</div>';
-        $html .= '<textarea id="' . $editor_element_id . '_target" name="' . Sanitize::sanitizeAttrValue($field_name) . '" style="display: none;">' . Sanitize::sanitizeTagContent($field_value) . '</textarea>';
+        $html .= '<div id="' . $editor_element_id . '" class="form-control">' . HTML::content($field_value) . '</div>';
+        $html .= '<textarea id="' . $editor_element_id . '_target" name="' . HTML::attr($field_name) . '" style="display: none;">' . HTML::content($field_value) . '</textarea>';
 
         // TODO: multiple insertion!!!!
         $html .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>

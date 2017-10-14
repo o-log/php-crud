@@ -3,8 +3,7 @@
 namespace OLOG\CRUD;
 
 use OLOG\HTML;
-use OLOG\REQUESTWrapper;
-use OLOG\Sanitize;
+use OLOG\REQUEST;
 
 class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
 {
@@ -19,7 +18,7 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
 
     // сообщает, нужно ли использовать значения из формы (включая отсутствующие в форме поля - для чекбоксов это означает false) или этот фильтр в форме не приходил и нужно использовать initial значения
     public function useValuesFromForm(){
-        $value = REQUESTWrapper::optionalFieldValue($this->filterIsPassedInputName(), null);
+        $value = REQUEST::optional($this->filterIsPassedInputName(), null);
 
         if (is_null($value)){
             return false;
@@ -29,7 +28,7 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
     }
 
     public function nullCheckboxInputName(){
-        return Sanitize::sanitizeAttrValue($this->getFilterIniqId() . '___is_null');
+        return HTML::attr($this->getFilterIniqId() . '___is_null');
     }
 
     public function getValue(){
@@ -37,8 +36,8 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
             return $this->getInitialValue();
         }
 
-        $value = REQUESTWrapper::optionalFieldValue($this->getFilterIniqId());
-        $is_null = REQUESTWrapper::optionalFieldValue($this->nullCheckboxInputName());
+        $value = REQUEST::optional($this->getFilterIniqId());
+        $is_null = REQUEST::optional($this->nullCheckboxInputName());
 
         if ($is_null != ''){
             $value = null;
@@ -48,7 +47,7 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
     }
 
     public function enabledCheckboxInputName(){
-        return Sanitize::sanitizeAttrValue($this->getFilterIniqId() . '___enabled');
+        return HTML::attr($this->getFilterIniqId() . '___enabled');
     }
 
     public function filterIsPassedInputName(){
@@ -112,7 +111,7 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
             return $this->getInitialIsEnabled();
         }
 
-        $is_enabled_from_form = REQUESTWrapper::optionalFieldValue($this->enabledCheckboxInputName());
+        $is_enabled_from_form = REQUEST::optional($this->enabledCheckboxInputName());
 
         if ($is_enabled_from_form != ''){
             return true;
@@ -132,7 +131,8 @@ class CRUDTableFilterEqualOptionsInline implements InterfaceCRUDTableFilter2
         }
 
         $value = $this->getValue();
-        $sanitized_column_name = Sanitize::sanitizeSqlColumnName($this->getFieldName());
+        //$sanitized_column_name = Sanitize::sanitizeSqlColumnName($this->getFieldName());
+        $sanitized_column_name = preg_replace('@\W@', '_', $this->getFieldName());
 
         if (is_null($value)) {
             return [
