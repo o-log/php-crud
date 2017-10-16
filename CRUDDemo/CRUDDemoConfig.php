@@ -16,7 +16,7 @@ class CRUDDemoConfig
 
     public static function init()
     {
-        ini_set('assert.exception', 1);
+        ini_set('assert.exception', true);
         date_default_timezone_set('Europe/Moscow');
 
         //$conf['return_false_if_no_route'] = true; // for local php server

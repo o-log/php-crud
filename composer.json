@@ -12,8 +12,7 @@
 	},
 	"require" : {
 		"o-log/php-bt" : "7.*",
-		"o-log/php-model" : "8.*",
-    	"predis/predis": "1.*"
+		"o-log/php-model" : "8.*"
 	},
 	"autoload" : {
 		"psr-0" : {

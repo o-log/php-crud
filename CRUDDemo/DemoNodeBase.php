@@ -3,6 +3,7 @@
 namespace CRUDDemo;
 
 use OLOG\BT\BT;
+use OLOG\URL;
 
 class DemoNodeBase
 {
@@ -29,12 +30,14 @@ class DemoNodeBase
                 BT::tabHtml(
                     'Edit',
                     DemoNodeEditAction::mask(),
-                    (new DemoNodeEditAction($node_id))->url()
+                    (new DemoNodeEditAction($node_id))->url(),
+                    URL::path()
                 ),
                 BT::tabHtml(
                     'Terms',
                     DemoNodeTermsAction::mask(),
-                    (new DemoNodeTermsAction($node_id))->url()
+                    (new DemoNodeTermsAction($node_id))->url(),
+                    URL::path()
                 )
             ]
         );
