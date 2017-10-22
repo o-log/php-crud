@@ -43,7 +43,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
         $html = '';
         //$html .= '<div class="row">';
         //$html .= '<div class="col-sm-' . $input_cols . '" id="' . $uniqid . '_radio_box">';
-        $html .= '<div id="' . $uniqid . '_radio_box">';
+        $html .= '<div class="btn-group btn-group-sm" data-toggle="buttons" id="' . $uniqid . '_radio_box">';
 
         $options_arr = $this->getOptionsArr();
 
@@ -54,8 +54,10 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
 
         foreach ($options_arr as $value => $title) {
             $selected_html_attr = '';
+            $label_class = '';
             if (!is_null($field_value) && $field_value == $value) {
                 $selected_html_attr = ' checked ';
+                $label_class .= ' active ';
             }
 
             $is_required_str = '';
@@ -63,7 +65,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
                 $is_required_str = ' required ';
             }
 
-            $html .= '<label class="radio-inline"><input type="radio" name="' . HTML::attr($input_name) . '" value="' . HTML::attr($value) . '" ' . $selected_html_attr . ' ' . $is_required_str . ' ' .$disabled. '> ' . $title . '</label>';
+            $html .= '<label class="btn btn-secondary ' . $label_class . '"><input type="radio" name="' . HTML::attr($input_name) . '" value="' . HTML::attr($value) . '" ' . $selected_html_attr . ' ' . $is_required_str . ' ' .$disabled. '> ' . $title . '</label>';
         }
         //$html .= '</div>';
 
@@ -74,7 +76,7 @@ class CRUDFormWidgetRadios implements InterfaceCRUDFormWidget
                 $is_null_checked = ' checked ';
             }
             ob_start(); ?>
-                <label class="radio-inline">
+                <label>
                     <input id="<?= $uniqid ?>___is_null" type="checkbox" value="1" name="<?= HTML::attr($input_name) ?>___is_null" <?= $is_null_checked ?>> NULL
                 </label>
             <script>

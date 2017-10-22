@@ -7,7 +7,6 @@ use OLOG\BT\LayoutBootstrap4;
 use OLOG\Cache\BucketMemcache;
 use OLOG\Cache\CacheConfig;
 use OLOG\Cache\MemcacheServer;
-use OLOG\CoreUI\LayoutCoreUI;
 use OLOG\DB\ConnectorMySQL;
 use OLOG\DB\DBConfig;
 use OLOG\DB\Space;
@@ -26,7 +25,7 @@ class Config
 
         //$conf['return_false_if_no_route'] = true; // for local php server
 
-        LayoutsConfig::setAdminLayoutClassName(LayoutCoreUI::class);
+        LayoutsConfig::setAdminLayoutClassName(LayoutBootstrap4::class);
 
         DBConfig::setConnector(
             self::CONNECTOR_CRUDDEMO,

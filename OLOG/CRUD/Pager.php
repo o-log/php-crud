@@ -83,32 +83,36 @@ class Pager
 			$pager_needed = true;
 		}
 
-        $html = '<ul class="pagination" data-page-size="' . self::getPageSize($table_index_on_page) . '" data-page-offset="' . self::getPageOffset($table_index_on_page) . '">';
+        if (!$pager_needed) {
+		    return;
+        }
 
-		if ($pager_needed) {
+        $html = '<div class="button-group js-pagination" data-page-size="' . self::getPageSize($table_index_on_page) . '" data-page-offset="' . self::getPageOffset($table_index_on_page) . '">';
+
+		//if ($pager_needed) {
 			// TODO: looses existing get form
 			$page_url = \OLOG\Url::path();
 
 			if (self::hasPrevPage($table_index_on_page)) {
-				$html .= '<li><a data-page-offset="0" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=0&' . self::pageSizeFormFieldName($table_index_on_page) . '=' . self::getPageSize($table_index_on_page).'"><span class="fa fa-home"></span> 0-' . self::getPageSize($table_index_on_page) . '</a></li>';
-				$html .= '<li><a data-page-offset="' . self::getPrevPageStart($table_index_on_page) . '" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=' . self::getPrevPageStart($table_index_on_page) . '&' . self::pageSizeFormFieldName($table_index_on_page) . '='.self::getPageSize($table_index_on_page).'"><span class="fa fa-arrow-left"></span> ' . self::getPrevPageStart($table_index_on_page) . '-' . (self::getPrevPageStart($table_index_on_page) + self::getPageSize($table_index_on_page)) . '</a></li>';
+				$html .= '<a class="btn btn-secondary" data-page-offset="0" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=0&' . self::pageSizeFormFieldName($table_index_on_page) . '=' . self::getPageSize($table_index_on_page).'"><span class="fa fa-home"></span> 0-' . self::getPageSize($table_index_on_page) . '</a>';
+				$html .= '<a class="btn btn-secondary" data-page-offset="' . self::getPrevPageStart($table_index_on_page) . '" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=' . self::getPrevPageStart($table_index_on_page) . '&' . self::pageSizeFormFieldName($table_index_on_page) . '='.self::getPageSize($table_index_on_page).'"><span class="fa fa-arrow-left"></span> ' . self::getPrevPageStart($table_index_on_page) . '-' . (self::getPrevPageStart($table_index_on_page) + self::getPageSize($table_index_on_page)) . '</a>';
 			} else {
-				$html .= '<li class="disabled"><a href="#"><span class="fa fa-home"></span></a></li>';
-				$html .= '<li class="disabled"><a href="#"><span class="fa fa-arrow-left"></span></a></li>';
+				$html .= '<a class="btn btn-secondary disabled" href="#"><span class="fa fa-home"></span></a>';
+				$html .= '<a class="btn btn-secondary disabled" href="#"><span class="fa fa-arrow-left"></span></a>';
 			}
 
-			$html .= '<li class="active"><a data-page-offset="' . self::getPageOffset($table_index_on_page) . '" href="#">' . self::getPageOffset($table_index_on_page) . '-' . (self::getPageOffset($table_index_on_page) + self::getPageSize($table_index_on_page)) . '</a></li>';
+			$html .= '<a class="btn btn-link disabled" data-page-offset="' . self::getPageOffset($table_index_on_page) . '" href="#">' . self::getPageOffset($table_index_on_page) . '-' . (self::getPageOffset($table_index_on_page) + self::getPageSize($table_index_on_page)) . '</a>';
 
 			if (!$elements_count || self::hasNextPage($table_index_on_page, $elements_count)) {
-				$html .= '<li><a data-page-offset="' . self::getNextPageStart($table_index_on_page) . '" class="next-page" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=' . self::getNextPageStart($table_index_on_page) . '&' . self::pageSizeFormFieldName($table_index_on_page) . '=' . self::getPageSize($table_index_on_page) . '">' . self::getNextPageStart($table_index_on_page) . '-' . (self::getNextPageStart($table_index_on_page) + self::getPageSize($table_index_on_page)) . ' <span class="fa fa-arrow-right"></span></a></a></li>';
+				$html .= '<a class="btn btn-secondary" data-page-offset="' . self::getNextPageStart($table_index_on_page) . '" class="next-page" href="' . $page_url . '?' . self::pageOffsetFormFieldName($table_index_on_page) . '=' . self::getNextPageStart($table_index_on_page) . '&' . self::pageSizeFormFieldName($table_index_on_page) . '=' . self::getPageSize($table_index_on_page) . '">' . self::getNextPageStart($table_index_on_page) . '-' . (self::getNextPageStart($table_index_on_page) + self::getPageSize($table_index_on_page)) . ' <span class="fa fa-arrow-right"></span></a></a></li>';
 			} else {
-				$html .= '<li class="disabled"><a href="#"><span class="fa fa-arrow-right"></span></a></li>';
+				$html .= '<a class="btn btn-secondary disabled" href="#"><span class="fa fa-arrow-right"></span></a>';
 			}
 
 	        if ($display_total_rows_count) {
-	            $html .= '<li class="disabled"><a href="#">Всего записей: ' . $total_rows_count . '</a></li>';
+	            $html .= '<a class="btn btn-link disabled" href="#">Всего записей: ' . $total_rows_count . '</a>';
 	        }
-		}
+		//}
 
 		$html .= "</ul>";
 

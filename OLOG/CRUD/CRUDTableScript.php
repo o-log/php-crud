@@ -26,7 +26,7 @@ class CRUDTableScript
 						 */
 						const filter_class = '.filters-form';
 						const table_class = '.table';
-						const pagination_class = '.pagination';
+						const pagination_class = '.js-pagination';
 						const options_editor_class = '.js-options-editor';
 						const text_editor_class = '.js-text-editor';
 
