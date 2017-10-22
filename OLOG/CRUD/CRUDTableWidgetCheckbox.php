@@ -27,9 +27,9 @@ class CRUDTableWidgetCheckbox implements InterfaceCRUDTableWidget
 
     public function html($obj) {
         if( CRUDFieldsAccess::getObjectFieldValue($obj, $this->getFieldName() )) {
-            $html = '<span style ="text-decoration: none;" class="glyphicon glyphicon-check"></span>';
+            $html = '<span style ="text-decoration: none;" class="fa fa-check"></span>';
         } else {
-            $html = '<span style ="text-decoration: none;" class="glyphicon glyphicon-unchecked"></span>';
+            $html = '<span style ="text-decoration: none;" class="fa fa-unchecked"></span>';
         }
 
         return $html;

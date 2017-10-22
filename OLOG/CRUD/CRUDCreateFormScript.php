@@ -35,17 +35,18 @@ class CRUDCreateFormScript
 							OLOG.preloader.show();
 
 							$.ajax({
-								type: "POST",
-								url: query,
-								data: data
-							}).success(function (received_html) {
-								OLOG.preloader.hide();
-								
-								var $box = $('<div>', {html: received_html});
-								$(table_elem).html($box.find(table_elem).html());
-							}).fail(function () {
-								OLOG.preloader.hide();
-							});
+                                type: "POST",
+                                url: query,
+                                data: data,
+                                success: function (received_html) {
+                                    OLOG.preloader.hide();
+                                    var $box = $('<div>', {html: received_html});
+                                    $(table_elem).html($box.find(table_elem).html());
+                                },
+                                fail: function () {
+                                    OLOG.preloader.hide();
+                                }
+                            });
 						}
 					};
 			</script>

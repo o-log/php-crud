@@ -23,7 +23,7 @@ class CRUDTableWidgetTextEditor implements InterfaceCRUDTableWidget
             echo '<input type="hidden" name="' . CRUDTable::FIELD_CRUDTABLE_ID . '" value="' . $this->getCrudtableId() . '">';
             echo '<input type="hidden" name="' . CRUDTable::FIELD_MODEL_ID . '" value="' . $obj->getId() . '">';
             echo '<input type="text" name="' . CRUDTable::FIELD_FIELD_VALUE . '" value="' .  CRUDFieldsAccess::getObjectFieldValue($obj, $this->getFieldName()) . '">';
-            echo '<button class="btn btn-xs btn-default glyphicon glyphicon-ok" type="submit"></button>';
+            echo '<button class="btn btn-sm btn-secondary fa fa-check" type="submit"></button>';
         });
     }
 

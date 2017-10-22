@@ -20,9 +20,9 @@ class DemoMainPageAction implements ActionInterface, PageTitleInterface
     public function action(){
         $html = '';
         $html .= '<div>';
-        $html .= '<a class="btn btn-default" href="' . (new DemoNodesListAction())->url() . '">NODES</a> ';
-        $html .= '<a class="btn btn-default" href="' . (new DemoTermsListAction())->url() . '">TERMS</a>';
-        $html .= '<a class="btn btn-default" href="' . (new DemoTermsTreeAction())->url() . '">TERMS TREE</a>';
+        $html .= '<a class="btn btn-secondary" href="' . (new DemoNodesListAction())->url() . '">NODES</a> ';
+        $html .= '<a class="btn btn-secondary" href="' . (new DemoTermsListAction())->url() . '">TERMS</a>';
+        $html .= '<a class="btn btn-secondary" href="' . (new DemoTermsTreeAction())->url() . '">TERMS TREE</a>';
         $html .= '</div>';
 
         AdminLayoutSelector::render($html, $this);

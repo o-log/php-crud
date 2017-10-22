@@ -295,9 +295,9 @@ class CRUDTable
             foreach ($filters_arr as $filter_obj){
                 if ($filter_obj instanceof InterfaceCRUDTableFilter2) {
                     $html .= '<div class="col-md-12">';
-                    $html .= '<div class="form-group">';
+                    $html .= '<div class="form-group row">';
 
-                    $html .= '<label class="col-sm-4 text-right control-label">' . $filter_obj->getTitle() . '</label>';
+                    $html .= '<label class="col-sm-4 text-right col-form-label">' . $filter_obj->getTitle() . '</label>';
                     $html .= '<div class="col-sm-8">' . $filter_obj->getHtml() . '</div>';
 
                     $html .= '</div>';
@@ -354,9 +354,9 @@ class CRUDTable
 
                 //echo '<span class="pull-right">';
                 //if ($create_form_html) {
-                //$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
-                //echo '<button type="button" class="btn btn-sm btn-default" data-toggle="collapse" data-target="#' . $create_form_element_id . '">Создать</button>';
-                echo MagnificPopup::button($create_form_element_id, 'btn btn-sm btn-default pull-right', 'Создать');
+                //$html .= '<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
+                //echo '<button type="button" class="btn btn-sm btn-secondary" data-toggle="collapse" data-target="#' . $create_form_element_id . '">Создать</button>';
+                echo MagnificPopup::button($create_form_element_id, 'btn btn-sm btn-secondary pull-right', 'Создать');
                 //}
                 //echo '</span>';
 
@@ -383,8 +383,8 @@ class CRUDTable
 
         $html .= '<div class="btn-group" role="group">';
         if ($create_form_html) {
-            //$html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
-            $html .= '<button type="button" class="btn btn-default" data-toggle="collapse" data-target="#' . $create_form_element_id . '">Создать</button>';
+            //$html .= '<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#' . $create_form_element_id . '">Создать</button>';
+            $html .= '<button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#' . $create_form_element_id . '">Создать</button>';
         }
         $html .= '</div>';
 

@@ -32,7 +32,7 @@ class CRUDTableWidgetOptionsEditor implements InterfaceCRUDTableWidget
                 if ($value == $obj_value) {
                     $disabled = 'style="opacity:0.5;" disabled';
                 }
-                echo '<button class="btn btn-xs btn-default" type="submit" name="' . CRUDTable::FIELD_FIELD_VALUE . '" value="' . $value . '" ' . $disabled . '>' . $option_name . '</button>';
+                echo '<button class="btn btn-sm btn-secondary" type="submit" name="' . CRUDTable::FIELD_FIELD_VALUE . '" value="' . $value . '" ' . $disabled . '>' . $option_name . '</button>';
             }
         });
     }

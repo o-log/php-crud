@@ -4,7 +4,7 @@ require_once '../vendor/autoload.php';
 
 use \OLOG\Router;
 
-\CRUDDemo\CRUDDemoConfig::init();
+\Config\Config::init();
 
 Router::action(\CRUDDemo\DemoMainPageAction::class, 0);
 

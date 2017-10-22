@@ -16,7 +16,7 @@ class DemoNode implements
     use ProtectPropertiesTrait;
     use WeightTrait;
 
-    const DB_ID = \CRUDDemo\CRUDDemoConfig::SPACE_CRUDDEMO;
+    const DB_ID = \Config\Config::SPACE_CRUDDEMO;
     const DB_TABLE_NAME = 'node';
 
     protected $created_at_ts = 0;

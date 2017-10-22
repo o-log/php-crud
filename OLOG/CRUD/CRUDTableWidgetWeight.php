@@ -14,7 +14,7 @@ class CRUDTableWidgetWeight implements InterfaceCRUDTableWidget
     protected $button_text;
     protected $button_class_str;
 
-    public function __construct($context_fields_arr, $button_text = '', $button_class_str = 'btn btn-xs btn-default glyphicon glyphicon-arrow-up'){
+    public function __construct($context_fields_arr, $button_text = '', $button_class_str = 'btn btn-sm btn-secondary fa fa-arrow-up'){
         $this->context_fields_arr = $context_fields_arr;
         $this->button_class_str = $button_class_str;
         $this->button_text = $button_text;

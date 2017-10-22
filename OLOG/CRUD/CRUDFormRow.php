@@ -27,8 +27,8 @@ class CRUDFormRow implements InterfaceCRUDFormRow
         //$field_name = CRUDConfigReader::getRequiredSubkey($element_config_arr, self::KEY_FORM_ROW_FIELD_NAME);
         //$field_title = CRUDConfigReader::getOptionalSubkey($element_config_arr, self::KEY_FORM_ROW_TITLE, $field_name);
 
-        $html .= '<div class="form-group ' . ($required ? 'required' : '') . '">';
-        $html .= '<label class="col-sm-4 text-right control-label">' . $this->getTitle() . '</label>';
+        $html .= '<div class="form-group row ' . ($required ? 'required' : '') . '">';
+        $html .= '<label class="col-sm-4 text-right col-form-label">' . $this->getTitle() . '</label>';
 
         $html .= '<div class="col-sm-8">';
         //$widget_config_arr = CRUDConfigReader::getRequiredSubkey($element_config_arr, 'WIDGET');

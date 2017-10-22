@@ -78,8 +78,8 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
 
         if ($this->getAjaxActionUrl()) {
             $html .= '<span class="input-group-btn">';
-            $html .= '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' . $choose_form_element_id . '"><span class="glyphicon glyphicon-folder-open"></span></button>';
-            $html .= '<button type="button" id="' . HTML::attr($select_element_id) . '_btn_is_null" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>';
+            $html .= '<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#' . $choose_form_element_id . '"><span class="fa fa-folder-open"></span></button>';
+            $html .= '<button type="button" id="' . HTML::attr($select_element_id) . '_btn_is_null" class="btn btn-secondary"><span class="fa fa-remove"></span></button>';
             $html .= '</span>';
         }
 
@@ -105,13 +105,15 @@ class CRUDFormWidgetReferenceAjax implements InterfaceCRUDFormWidget
             $('#<?= $choose_form_element_id ?>').on('shown.bs.modal', function (e) {
 	            OLOG.preloader.show();
                 $.ajax({
-                    url: "<?= $this->getAjaxActionUrl() ?>"
-                }).success(function(received_html) {
-                    $('#<?= $choose_form_element_id ?> .modal-body').html(received_html);
-	                OLOG.preloader.hide();
-                }).error(function( err ){
-                    $('#<?= $choose_form_element_id ?> .modal-body').html('<div class="alert alert-danger">'+err.status+ ': ' + err.statusText+'</div>');
-                    OLOG.preloader.hide();
+                    url: "<?= $this->getAjaxActionUrl() ?>",
+                    success: function(received_html) {
+                        $('#<?= $choose_form_element_id ?> .modal-body').html(received_html);
+	                    OLOG.preloader.hide();
+                    },
+                    error: function( err ) {
+                        $('#<?= $choose_form_element_id ?> .modal-body').html('<div class="alert alert-danger">' + err.status + ': ' + err.statusText + '</div>');
+                        OLOG.preloader.hide();
+                    }
                 });
             });
 

@@ -58,7 +58,7 @@ class CRUDFormWidgetDate implements InterfaceCRUDFormWidget
         <div class="input-group date" id="<?= $uniqid ?>">
             <input id="<?= $uniqid ?>_date" type="text" class="form-control" value="<?= $field_value_attr ?>">
             <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
+                    <span class="fa fa-calendar"></span>
                 </span>
         </div>
         <script>

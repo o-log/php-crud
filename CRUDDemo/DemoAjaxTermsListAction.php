@@ -2,6 +2,7 @@
 
 namespace CRUDDemo;
 
+use OLOG\ActionInterface;
 use OLOG\CRUD\CRUDTable;
 use OLOG\CRUD\CRUDTableColumn;
 use OLOG\CRUD\CRUDTableFilterEqualInvisible;
@@ -11,9 +12,9 @@ use OLOG\CRUD\CRUDTableFilterLikeInline;
 use OLOG\CRUD\CRUDTableWidgetReferenceSelect;
 use OLOG\CRUD\CRUDTableWidgetText;
 
-class DemoAjaxTermsListAction
+class DemoAjaxTermsListAction implements ActionInterface
 {
-    static public function getUrl()
+    public function url()
     {
         return '/ajax_terms';
     }

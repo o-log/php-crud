@@ -81,7 +81,7 @@ class DemoTermsListAction
                             'parent_id',
                             DemoTerm::class,
                             'title',
-                            DemoAjaxTermsListAction::getUrl(),
+                            (new DemoAjaxTermsListAction())->url(),
                             (new DemoTermEditAction(CRUDFormWidgetReferenceAjax::REFERENCED_ID_PLACEHOLDER))->url()
 
                         )

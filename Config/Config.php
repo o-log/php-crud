@@ -1,14 +1,19 @@
 <?php
 
-namespace CRUDDemo;
+namespace Config;
 
-use OLOG\BT\LayoutBootstrap;
+use CRUDDemo\CRUDDemoLayout;
+use OLOG\BT\LayoutBootstrap4;
+use OLOG\Cache\BucketMemcache;
+use OLOG\Cache\CacheConfig;
+use OLOG\Cache\MemcacheServer;
+use OLOG\CoreUI\LayoutCoreUI;
 use OLOG\DB\ConnectorMySQL;
 use OLOG\DB\DBConfig;
 use OLOG\DB\Space;
 use OLOG\Layouts\LayoutsConfig;
 
-class CRUDDemoConfig
+class Config
 {
     const CONNECTOR_CRUDDEMO = 'connector_phpcrud';
     const SPACE_CRUDDEMO = 'phpcrud';
@@ -21,7 +26,7 @@ class CRUDDemoConfig
 
         //$conf['return_false_if_no_route'] = true; // for local php server
 
-        LayoutsConfig::setAdminLayoutClassName(LayoutBootstrap::class);
+        LayoutsConfig::setAdminLayoutClassName(LayoutCoreUI::class);
 
         DBConfig::setConnector(
             self::CONNECTOR_CRUDDEMO,
@@ -32,5 +37,7 @@ class CRUDDemoConfig
             self::SPACE_CRUDDEMO,
             new Space(self::CONNECTOR_CRUDDEMO, 'phpcrud.sql')
         );
+
+        CacheConfig::setBucket('', new BucketMemcache([new MemcacheServer('localhost', 11211)]));
     }
 }

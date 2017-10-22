@@ -32,7 +32,7 @@ class CRUDTableWidgetReferenceSelect implements InterfaceCRUDTableWidget
         }
 
         $o = '';
-        $o .= '<button class="btn btn-xs btn-default js-ajax-form-select" type="submit" data-id="' . HTML::attr($id) . '" data-title="' . HTML::attr($obj_title) . '">Выбор</button>';
+        $o .= '<button class="btn btn-sm btn-secondary js-ajax-form-select" type="submit" data-id="' . HTML::attr($id) . '" data-title="' . HTML::attr($obj_title) . '">Выбор</button>';
 
         return $o;
     }
