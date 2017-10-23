@@ -35,9 +35,9 @@ class CRUDFormVerticalRow implements InterfaceCRUDFormRow
         $html = '';
 
         $html .= '<div class="form-group">';
-        $html .= '<div class="col-sm-12"><label>' . $this->getTitle() . '</label></div>';
+        $html .= '<div class=""><label>' . $this->getTitle() . '</label></div>';
 
-        $html .= '<div class="col-sm-12">';
+        $html .= '<div class="">';
 
         $widget_obj = $this->getWidgetObj();
 
