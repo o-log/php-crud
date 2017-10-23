@@ -2,7 +2,6 @@
 
 namespace OLOG\CRUD;
 
-
 use OLOG\Form;
 use OLOG\Model\ActiveRecordInterface;
 use OLOG\POST;
@@ -131,12 +130,10 @@ class CRUDForm
             $html .= $element_obj->html($obj);
         }
 
-        $html .= '<div class="row">';
-        $html .= '<div class="col-sm-8 col-sm-offset-4">';
+        $html .= '<div class="text-right">';
         if (!$hide_submit_button) {
-            $html .= '<button style="width: 100%" type="submit" class="btn btn-primary">Сохранить</button>';
+            $html .= '<button type="submit" class="btn btn-primary">Сохранить</button>';
         }
-        $html .= '</div>';
         $html .= '</div>';
 
         $html .= '</form>';
