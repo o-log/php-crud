@@ -3,16 +3,12 @@
 namespace CRUDDemo;
 
 use OLOG\ActionInterface;
-use OLOG\BT\BT;
 use OLOG\CRUD\CForm;
 use OLOG\CRUD\FRow;
 use OLOG\CRUD\FWRadios;
 use OLOG\CRUD\FWOptions;
-use OLOG\CRUD\CTable;
 use OLOG\CRUD\TCol;
-use OLOG\CRUD\TFEqualOptions;
 use OLOG\CRUD\TFEqualOptionsInline;
-use OLOG\CRUD\TFLike;
 use OLOG\CRUD\TFLikeInline;
 use OLOG\CRUD\TWDelete;
 use OLOG\CRUD\TWText;
@@ -97,8 +93,7 @@ class DemoTermsTreeAction
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
                 new TFLikeInline('3748t7t45gdfg', 'Название содержит', 'title')
             ],
-            1,
-            CTable::FILTERS_POSITION_INLINE
+            1
         );
 
         AdminLayoutSelector::render($html, $this);

@@ -21,7 +21,7 @@ class DemoMainPageAction implements ActionInterface, PageTitleInterface
         $html = '';
         $html .= '<div>';
         $html .= '<a class="btn btn-secondary" href="' . (new DemoNodesListAction())->url() . '">NODES</a> ';
-        $html .= '<a class="btn btn-secondary" href="' . (new DemoTermsListAction())->url() . '">TERMS</a>';
+        $html .= '<a class="btn btn-secondary" href="' . (new DemoTermsListAction())->url() . '">TERMS</a> ';
         $html .= '<a class="btn btn-secondary" href="' . (new DemoTermsTreeAction())->url() . '">TERMS TREE</a>';
         $html .= '</div>';
 

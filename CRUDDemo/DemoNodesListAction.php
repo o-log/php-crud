@@ -7,8 +7,8 @@ use OLOG\CRUD\CCreateFormScript;
 use OLOG\CRUD\CTable;
 use OLOG\CRUD\FRow;
 use OLOG\CRUD\TCol;
-use OLOG\CRUD\TFEqualOptions;
-use OLOG\CRUD\TFLike;
+use OLOG\CRUD\TFEqualOptionsInline;
+use OLOG\CRUD\TFLikeInline;
 use OLOG\CRUD\TWDelete;
 use OLOG\CRUD\TWHtmlWithLink;
 use OLOG\CRUD\TWText;
@@ -82,16 +82,16 @@ class DemoNodesListAction
                 ),
 			],
 			[
-			    new TFLike('h7g98347hg934', 'Название', 'title'),
-                new TFEqualOptions('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false)
+			    new TFLikeInline('h7g98347hg934', 'Название', 'title'),
+                new TFEqualOptionsInline('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false)
             ],
 			'weight',
 			$table_id,
-            CTable::FILTERS_POSITION_TOP
+            'Nodes'
 		);
 
 		// Загрузка скриптов
-		$html .= CCreateFormScript::getHtml($form_id, $table_id);
+		//$html .= CCreateFormScript::getHtml($form_id, $table_id);
 
 		AdminLayoutSelector::render($html, $this);
 	}

@@ -23,12 +23,6 @@ class CTable
     const OPERATION_SWAP_MODEL_WEIGHT = 'OPERATION_SWAP_MODEL_WEIGHT';
     const OPERATION_UPDATE_MODEL_FIELD = 'OPERATION_UPDATE_MODEL_FIELD';
 
-    const FILTERS_POSITION_LEFT = 'FILTERS_POSITION_LEFT';
-    const FILTERS_POSITION_RIGHT = 'FILTERS_POSITION_RIGHT';
-    const FILTERS_POSITION_TOP = 'FILTERS_POSITION_TOP';
-    const FILTERS_POSITION_NONE = 'FILTERS_POSITION_NONE';
-	const FILTERS_POSITION_INLINE = 'FILTERS_POSITION_INLINE';
-
     const FIELD_CRUDTABLE_ID = 'crudtable_id';
     const FIELD_FIELD_NAME = 'field_name';
     const FIELD_FIELD_VALUE = 'field_value';
@@ -160,7 +154,7 @@ class CTable
 	 * @param string $order_by
 	 * @return string
 	 */
-	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '', $filters_position = self::FILTERS_POSITION_NONE, $display_total_rows_count = false)
+	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '', $title = '', $display_total_rows_count = false)
 	{
 
 	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
@@ -177,32 +171,11 @@ class CTable
 
         // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
 
-		$html = HTML::div($table_container_element_id, '', function() use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $order_by, $table_id, $filters_position, $display_total_rows_count) {
-            echo '<div class="row">';
+		$html = HTML::div($table_container_element_id, '', function() use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $order_by, $table_id, $display_total_rows_count, $title) {
+            //echo '<div>';
+            //echo '<div>';
 
-            if ($filters_position == self::FILTERS_POSITION_LEFT) {
-                echo '<div class="col-sm-4">';
-                echo self::filtersHtml($table_id, $filters_arr);
-                echo '</div>';
-            }
-
-            $col_sm_class = '12';
-            if (($filters_position == self::FILTERS_POSITION_LEFT) || ($filters_position == self::FILTERS_POSITION_RIGHT)) {
-                $col_sm_class = '8';
-            }
-            echo '<div class="col-sm-' . $col_sm_class . '">';
-
-            if ($filters_position != self::FILTERS_POSITION_INLINE) {
-                echo self::toolbarHtml($table_id, $create_form_html, $filters_arr);
-            }
-
-            if ($filters_position == self::FILTERS_POSITION_TOP) {
-                echo self::filtersHtml($table_id, $filters_arr);
-            }
-
-            if ($filters_position == self::FILTERS_POSITION_INLINE) {
-                echo self::filtersAndCreateButtonHtmlInline($table_id, $filters_arr, $create_form_html);
-            }
+            echo self::filtersAndCreateButtonHtmlInline($table_id, $filters_arr, $create_form_html, $title);
 
             $total_rows_count = 0;
             $page_size = Pager::getPageSize($table_id);
@@ -264,21 +237,13 @@ class CTable
                     echo '</tr>';
                 }
                 echo '</tbody>';
-
                 echo '</table>';
 
                 echo Pager::renderPager($table_id, count($objs_ids_arr), $display_total_rows_count, $total_rows_count);
             }
 
-			echo '</div>';
-
-			if ($filters_position == self::FILTERS_POSITION_RIGHT) {
-				echo '<div class="col-sm-4">';
-				echo self::filtersHtml($table_id, $filters_arr);
-				echo '</div>';
-			}
-
-			echo '</div>';
+            //echo '</div>';
+            //echo '</div>';
 		});
 
 		// Загрузка скриптов
@@ -287,50 +252,18 @@ class CTable
 		return $html;
 	}
 
-    static protected function filtersHtml($table_index_on_page, $filters_arr)
-    {
-        $html = '';
-
-        if ($filters_arr) {
-            $html .= '<div class="">';
-            $html .= '<form class="filters-form form-inline">';
-            $html .= '<div class="row">';
-
-            //$filter_index = 0;
-
-            foreach ($filters_arr as $filter_obj){
-                if ($filter_obj instanceof TFInterface) {
-                    $html .= '<div class="col-md-12">';
-                    $html .= '<div class="form-group row">';
-
-                    $html .= '<label class="col-sm-4 text-right col-form-label">' . $filter_obj->getTitle() . '</label>';
-                    $html .= '<div class="col-sm-8">' . $filter_obj->getHtml() . '</div>';
-
-                    $html .= '</div>';
-                    $html .= '</div>';
-                } elseif ($filter_obj instanceof TFHiddenInterface) {
-                    // do nothing with invisible filters
-                } else {
-                    throw new \Exception('filter doesnt implement interface ...');
-                }
-            }
-
-            $html .= '</div>';
-            $html .= '</form>';
-            $html .= '</div>';
-        }
-
-        return $html;
-    }
-
-    static public function filtersAndCreateButtonHtmlInline($table_index_on_page, $filters_arr, $create_form_html = '')
+    static public function filtersAndCreateButtonHtmlInline($table_index_on_page, $filters_arr, $create_form_html = '', $title)
     {
 	    if (empty($filters_arr) && ($create_form_html == '')) {
 		    return '';
 	    }
 
-	    $html = HTML::div('filters-inline', '', function () use ($table_index_on_page, $filters_arr, $create_form_html) {
-	        echo '<style>.filters-inline {margin-bottom: 10px;}</style>';
+	    $html = HTML::div('filters-inline clearfix mb-2', '', function () use ($table_index_on_page, $filters_arr, $create_form_html, $title) {
+	        //echo '<style>.filters-inline {margin-bottom: 10px;}</style>';
+
+            if ($title != ''){
+                echo '<span class="font-weight-bold mr-3">' . $title . '</span>';
+            }
 
             if (!empty($filters_arr)) {
                 echo '<form class="filters-form form-inline" style="display: inline;">';

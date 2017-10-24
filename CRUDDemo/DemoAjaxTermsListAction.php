@@ -3,11 +3,9 @@
 namespace CRUDDemo;
 
 use OLOG\ActionInterface;
-use OLOG\CRUD\CTable;
 use OLOG\CRUD\TCol;
 use OLOG\CRUD\TFEqualHidden;
 use OLOG\CRUD\TFEqualOptionsInline;
-use OLOG\CRUD\TFLike;
 use OLOG\CRUD\TFLikeInline;
 use OLOG\CRUD\TWReferenceSelect;
 use OLOG\CRUD\TWText;
@@ -54,8 +52,7 @@ class DemoAjaxTermsListAction implements ActionInterface
                 new TFLikeInline('3748t7t45gdfg', '', 'title', 'Название содержит')
             ],
             '',
-            25683745,
-            CTable::FILTERS_POSITION_INLINE
+            25683745
         );
 
         echo $html;

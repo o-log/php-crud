@@ -116,7 +116,7 @@ class DemoTermsListAction
             ],
             'weight',
             $table_id,
-            CTable::FILTERS_POSITION_INLINE,
+            'Terms',
             true
         );
 
