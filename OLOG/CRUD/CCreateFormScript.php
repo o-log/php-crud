@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-class CRUDCreateFormScript
+class CCreateFormScript
 {
 	public static function render($form_id, $table_class)
 	{

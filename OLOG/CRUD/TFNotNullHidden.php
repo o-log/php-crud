@@ -2,17 +2,9 @@
 
 namespace OLOG\CRUD;
 
-class TFEqualInvisibleInterface implements TFInvisibleInterface
+class TFNotNullHidden implements TFHiddenInterface
 {
     protected $field_name;
-    protected $filter_value;
-
-    public function getValue(){
-        return $this->filter_value;
-    }
-    public function setValue($val){
-        $this->filter_value = $val;
-    }
 
     public function getHtml(){
         $html = '';
@@ -25,23 +17,15 @@ class TFEqualInvisibleInterface implements TFInvisibleInterface
      */
     public function sqlConditionAndPlaceholderValue()
     {
-        $filter_value = $this->getValue();
         $column_name = $this->getFieldName();
-        $placeholder_values_arr = [];
 
-        if (is_null($filter_value)){
-            $where = $column_name . ' is null ';
-        } else {
-            $where = $column_name . ' = ? ';
-            $placeholder_values_arr[] = $filter_value;
-        }
+        $where = $column_name . " is not null ";
 
-        return [$where, $placeholder_values_arr];
+        return [$where, []];
     }
 
-    public function __construct($field_name,  $value){
+    public function __construct($field_name){
         $this->setFieldName($field_name);
-        $this->setValue($value);
     }
 
     /**

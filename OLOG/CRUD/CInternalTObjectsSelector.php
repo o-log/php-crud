@@ -28,7 +28,7 @@ class CInternalTObjectsSelector
             $query_param_values_arr[] = $parent_id;
         }
 
-        /** @var TF2Interface $filter_obj */
+        /** @var TFInterface $filter_obj */
         foreach ($filters_arr as $filter_obj) {
             /*
             assert($filter_obj instanceof InterfaceCRUDTableFilter2);
@@ -40,14 +40,14 @@ class CInternalTObjectsSelector
 
             $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
             */
-            if ($filter_obj instanceof TF2Interface) {
+            if ($filter_obj instanceof TFInterface) {
                 list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
                 if ($filter_sql_condition != ''){
                     $where .= ' and ' . $filter_sql_condition;
                 }
 
                 $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
-            } elseif ($filter_obj instanceof TFInvisibleInterface) {
+            } elseif ($filter_obj instanceof TFHiddenInterface) {
                 list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
                 if ($filter_sql_condition != ''){
                     $where .= ' and ' . $filter_sql_condition;
@@ -104,14 +104,14 @@ class CInternalTObjectsSelector
         $where = ' 1 = 1 ';
 
         foreach ($filters_arr as $filter_obj) {
-            if ($filter_obj instanceof TF2Interface) {
+            if ($filter_obj instanceof TFInterface) {
                 list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
                 if ($filter_sql_condition != ''){
                     $where .= ' and ' . $filter_sql_condition;
                 }
 
                 $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
-            } elseif ($filter_obj instanceof TFInvisibleInterface) {
+            } elseif ($filter_obj instanceof TFHiddenInterface) {
                 list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
                 if ($filter_sql_condition != ''){
                     $where .= ' and ' . $filter_sql_condition;

@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-interface CColInterface
+interface TColInterface
 {
     public function getTitle();
     public function getWidgetObj();

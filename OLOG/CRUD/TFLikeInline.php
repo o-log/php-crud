@@ -5,7 +5,7 @@ namespace OLOG\CRUD;
 use OLOG\HTML;
 use OLOG\REQUEST;
 
-class TFLikeInline implements TF2Interface
+class TFLikeInline implements TFInterface
 {
     protected $title;
     protected $field_name;

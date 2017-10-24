@@ -11,7 +11,7 @@ use OLOG\CRUD\FWOptions;
 use OLOG\CRUD\FWRadios;
 use OLOG\CRUD\FWReferenceAjax;
 use OLOG\CRUD\TCol;
-use OLOG\CRUD\TFEqualInvisibleInterface;
+use OLOG\CRUD\TFEqualHidden;
 use OLOG\CRUD\TWDelete;
 use OLOG\CRUD\TWTextWithLink;
 use OLOG\CRUD\TWWeight;
@@ -122,7 +122,7 @@ class DemoTermEditAction implements MaskActionInterface
                 new TCol('', new TWDelete())
             ],
             [
-                new TFEqualInvisibleInterface('parent_id', $term_id)
+                new TFEqualHidden('parent_id', $term_id)
             ],
             'weight'
 

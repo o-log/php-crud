@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-class TCol implements CColInterface
+class TCol implements TColInterface
 {
     public $title;
     public $widget_obj;

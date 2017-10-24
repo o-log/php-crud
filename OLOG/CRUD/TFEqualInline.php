@@ -5,7 +5,7 @@ namespace OLOG\CRUD;
 use OLOG\HTML;
 use OLOG\REQUEST;
 
-class TFEqualInline implements TF2Interface
+class TFEqualInline implements TFInterface
 {
     protected $title;
     protected $field_name;

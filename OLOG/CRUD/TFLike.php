@@ -4,7 +4,7 @@ namespace OLOG\CRUD;
 
 use OLOG\REQUEST;
 
-class TFLike implements TF2Interface
+class TFLike implements TFInterface
 {
     protected $title;
     protected $field_name;

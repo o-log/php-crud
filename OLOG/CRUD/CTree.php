@@ -6,7 +6,7 @@ namespace OLOG\CRUD;
 use OLOG\HTML;
 use OLOG\Url;
 
-class CRUDTree
+class CTree
 {
     static public function html($model_class_name, $create_form_html, $column_obj_arr, $parent_id_field_name, $order_by = '', $table_id = '1', $filters_arr = [], $col_with_padding_index = 0, $filters_position = CTable::FILTERS_POSITION_NONE)
     {
@@ -51,9 +51,9 @@ class CRUDTree
         $html .= '<thead>';
         $html .= '<tr>';
 
-        /** @var CColInterface $column_obj */
+        /** @var TColInterface $column_obj */
         foreach ($column_obj_arr as $column_obj) {
-            assert($column_obj instanceof CColInterface);
+            assert($column_obj instanceof TColInterface);
             $html .= '<th>' . HTML::content($column_obj->getTitle()) . '</th>';
         }
 
@@ -68,9 +68,9 @@ class CRUDTree
 
             $html .= '<tr>';
 
-            /** @var CColInterface $column_obj */
+            /** @var TColInterface $column_obj */
             foreach ($column_obj_arr as $col_index => $column_obj) {
-                assert($column_obj instanceof CColInterface);
+                assert($column_obj instanceof TColInterface);
 
                 /** @var TWInterface $widget_obj */
                 $widget_obj = $column_obj->getWidgetObj();
@@ -131,9 +131,9 @@ class CRUDTree
             $html .= '<form class="filters-form form-horizontal">';
             $html .= '<div class="row">';
 
-            /** @var TF2Interface $filter_obj */
+            /** @var TFInterface $filter_obj */
             foreach ($filters_arr as $filter_obj){
-                assert($filter_obj instanceof TF2Interface);
+                assert($filter_obj instanceof TFInterface);
 
                 $html .= '<div class="col-md-12">';
                 $html .= '<div class="form-group row">';

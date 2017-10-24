@@ -2,7 +2,7 @@
 
 namespace OLOG\CRUD;
 
-class TFInInvisibleInterface implements TFInvisibleInterface
+class TFInHidden implements TFHiddenInterface
 {
     protected $field_name;
     protected $filter_value;

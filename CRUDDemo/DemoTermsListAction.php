@@ -12,7 +12,7 @@ use OLOG\CRUD\FWReferenceAjax;
 use OLOG\CRUD\CTable;
 use OLOG\CRUD\TCol;
 use OLOG\CRUD\TFEqualInline;
-use OLOG\CRUD\TFEqualInvisibleInterface;
+use OLOG\CRUD\TFEqualHidden;
 use OLOG\CRUD\TFEqualOptionsInline;
 use OLOG\CRUD\TFLikeInline;
 use OLOG\CRUD\TWDelete;

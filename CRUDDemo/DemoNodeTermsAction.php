@@ -7,7 +7,7 @@ use OLOG\CRUD\FGroupHidden;
 use OLOG\CRUD\FRow;
 use OLOG\CRUD\CTable;
 use OLOG\CRUD\TCol;
-use OLOG\CRUD\TFEqualInvisibleInterface;
+use OLOG\CRUD\TFEqualHidden;
 use OLOG\CRUD\TWDelete;
 use OLOG\CRUD\TWText;
 use OLOG\CRUD\FWInput;
@@ -60,7 +60,7 @@ class DemoNodeTermsAction
                 new TCol('Term', new TWText('{' . DemoTerm::class . '.{this->term_id}->title}')),
                 new TCol('Delete', new TWDelete())
             ],
-            [new TFEqualInvisibleInterface('node_id', $this->node_id)]
+            [new TFEqualHidden('node_id', $this->node_id)]
         );
 
         AdminLayoutSelector::render($html, $this);

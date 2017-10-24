@@ -214,10 +214,10 @@ class CTable
             } else {
                 echo '<table class="table table-hover table-sm">';
 
-                /** @var CColInterface $column_obj */
+                /** @var TColInterface $column_obj */
                 $has_nonempty_th = false;
                 foreach ($column_obj_arr as $column_obj) {
-                    assert($column_obj instanceof CColInterface);
+                    assert($column_obj instanceof TColInterface);
                     if ($column_obj->getTitle() != '') {
                         $has_nonempty_th = true;
                     }
@@ -226,7 +226,7 @@ class CTable
                 if ($has_nonempty_th) {
                     echo '<thead><tr>';
                     foreach ($column_obj_arr as $column_obj) {
-                        assert($column_obj instanceof CColInterface);
+                        assert($column_obj instanceof TColInterface);
                         echo '<th>' . $column_obj->getTitle() . '</th>';
                     }
                     echo '</tr></thead>';
@@ -237,10 +237,10 @@ class CTable
                 foreach ($objs_ids_arr as $obj_id) {
                     $obj_obj = CInternalObjectLoader::createAndLoadObject($model_class_name, $obj_id);
 
-                    /** @var CColInterface $column_obj */
+                    /** @var TColInterface $column_obj */
                     echo '<tr>';
                     foreach ($column_obj_arr as $column_obj) {
-                        assert($column_obj instanceof CColInterface);
+                        assert($column_obj instanceof TColInterface);
                         /** @var TWInterface $widget_obj */
                         $widget_obj = $column_obj->getWidgetObj();
                         assert($widget_obj);
@@ -299,7 +299,7 @@ class CTable
             //$filter_index = 0;
 
             foreach ($filters_arr as $filter_obj){
-                if ($filter_obj instanceof TF2Interface) {
+                if ($filter_obj instanceof TFInterface) {
                     $html .= '<div class="col-md-12">';
                     $html .= '<div class="form-group row">';
 
@@ -308,7 +308,7 @@ class CTable
 
                     $html .= '</div>';
                     $html .= '</div>';
-                } elseif ($filter_obj instanceof TFInvisibleInterface) {
+                } elseif ($filter_obj instanceof TFHiddenInterface) {
                     // do nothing with invisible filters
                 } else {
                     throw new \Exception('filter doesnt implement interface ...');
@@ -336,7 +336,7 @@ class CTable
                 echo '<form class="filters-form form-inline" style="display: inline;">';
 
                 foreach ($filters_arr as $filter_obj) {
-                    if ($filter_obj instanceof TF2Interface) {
+                    if ($filter_obj instanceof TFInterface) {
                         echo '<div style="display: inline-block;margin-right: 10px;">';
 
                         if ($filter_obj->getTitle()) {
@@ -345,7 +345,7 @@ class CTable
 
                         echo '<span style="display: inline-block;">' . $filter_obj->getHtml() . '</span>';
                         echo '</div>';
-                    } elseif ($filter_obj instanceof TFInvisibleInterface) {
+                    } elseif ($filter_obj instanceof TFHiddenInterface) {
                         // do nothing with invisible filters
                     } else {
                         throw new \Exception('filter doesnt implement interface ...');

@@ -3,7 +3,7 @@
 namespace CRUDDemo;
 
 use OLOG\ActionInterface;
-use OLOG\CRUD\CRUDCreateFormScript;
+use OLOG\CRUD\CCreateFormScript;
 use OLOG\CRUD\CTable;
 use OLOG\CRUD\FRow;
 use OLOG\CRUD\TCol;
@@ -91,7 +91,7 @@ class DemoNodesListAction
 		);
 
 		// Загрузка скриптов
-		$html .= CRUDCreateFormScript::getHtml($form_id, $table_id);
+		$html .= CCreateFormScript::getHtml($form_id, $table_id);
 
 		AdminLayoutSelector::render($html, $this);
 	}

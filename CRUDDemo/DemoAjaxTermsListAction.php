@@ -5,7 +5,7 @@ namespace CRUDDemo;
 use OLOG\ActionInterface;
 use OLOG\CRUD\CTable;
 use OLOG\CRUD\TCol;
-use OLOG\CRUD\TFEqualInvisibleInterface;
+use OLOG\CRUD\TFEqualHidden;
 use OLOG\CRUD\TFEqualOptionsInline;
 use OLOG\CRUD\TFLike;
 use OLOG\CRUD\TFLikeInline;
@@ -47,7 +47,7 @@ class DemoAjaxTermsListAction implements ActionInterface
                 )
             ],
             [
-                new TFEqualInvisibleInterface('parent_id', null),
+                new TFEqualHidden('parent_id', null),
                 new TFEqualOptionsInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, null, true),
                 new TFEqualOptionsInline('345634g3tg534', '', 'gender', DemoTerm::GENDER_ARR, false, null, true, 'М. и Ж.'),
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')

@@ -35,7 +35,7 @@ class DemoTermsTreeAction
 
         $html = '';
 
-        $html .= \OLOG\CRUD\CRUDTree::html(
+        $html .= \OLOG\CRUD\CTree::html(
             \CRUDDemo\DemoTerm::class,
             CForm::html(
                 new DemoTerm,

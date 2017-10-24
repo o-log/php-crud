@@ -2,19 +2,23 @@
 
 namespace OLOG\CRUD;
 
-class TFNotInInvisibleInterface implements TFInvisibleInterface
+class TFNotEqualHidden implements TFHiddenInterface
 {
     protected $field_name;
     protected $filter_value;
 
-    public function getValue(){
+    public function getValue()
+    {
         return $this->filter_value;
     }
-    public function setValue($val){
-        $this->filter_value=$val;
+
+    public function setValue($val)
+    {
+        $this->filter_value = $val;
     }
 
-    public function getHtml(){
+    public function getHtml()
+    {
         $html = '';
         return $html;
     }
@@ -25,25 +29,22 @@ class TFNotInInvisibleInterface implements TFInvisibleInterface
      */
     public function sqlConditionAndPlaceholderValue()
     {
-        $filter_value_arr = $this->getValue();
-        if(!count($filter_value_arr)){
-            return['', []];
-        }
-
-        $placeholder_values_arr=[];
+        $filter_value = $this->getValue();
         $column_name = $this->getFieldName();
+        $placeholder_values_arr = [];
 
-        $in_arr=[];
-        foreach ($filter_value_arr  as $val){
-            $in_arr[]='?';
-            $placeholder_values_arr[]=$val;
+        if (is_null($filter_value)) {
+            $where = $column_name . ' is not null ';
+        } else {
+            $where = $column_name . ' != ? ';
+            $placeholder_values_arr[] = $filter_value;
         }
-        $where = $column_name." not IN(".implode(',',$in_arr).") ";
 
         return [$where, $placeholder_values_arr];
     }
 
-    public function __construct($field_name,  $value){
+    public function __construct($field_name, $value)
+    {
         $this->setFieldName($field_name);
         $this->setValue($value);
     }
