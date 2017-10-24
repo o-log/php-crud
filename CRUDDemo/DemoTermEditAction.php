@@ -3,18 +3,18 @@
 namespace CRUDDemo;
 
 use OLOG\BT\BT;
-use OLOG\CRUD\CRUDFormInvisibleRow;
-use OLOG\CRUD\CRUDFormRow;
-use OLOG\CRUD\CRUDFormVerticalRow;
-use OLOG\CRUD\CRUDFormWidgetInput;
-use OLOG\CRUD\CRUDFormWidgetOptions;
-use OLOG\CRUD\CRUDFormWidgetRadios;
-use OLOG\CRUD\CRUDFormWidgetReferenceAjax;
-use OLOG\CRUD\CRUDTableColumn;
-use OLOG\CRUD\CRUDTableFilterEqualInvisible;
-use OLOG\CRUD\CRUDTableWidgetDelete;
-use OLOG\CRUD\CRUDTableWidgetTextWithLink;
-use OLOG\CRUD\CRUDTableWidgetWeight;
+use OLOG\CRUD\FGroupHidden;
+use OLOG\CRUD\FRow;
+use OLOG\CRUD\FGroup;
+use OLOG\CRUD\FWInput;
+use OLOG\CRUD\FWOptions;
+use OLOG\CRUD\FWRadios;
+use OLOG\CRUD\FWReferenceAjax;
+use OLOG\CRUD\TCol;
+use OLOG\CRUD\TFEqualInvisibleInterface;
+use OLOG\CRUD\TWDelete;
+use OLOG\CRUD\TWTextWithLink;
+use OLOG\CRUD\TWWeight;
 use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\MaskActionInterface;
 
@@ -46,51 +46,51 @@ class DemoTermEditAction implements MaskActionInterface
 
         $term_obj = DemoTerm::factory($term_id);
 
-        $html .= \OLOG\CRUD\CRUDForm::html(
+        $html .= \OLOG\CRUD\CForm::html(
             $term_obj,
             [
-                new CRUDFormVerticalRow(
+                new FGroup(
                     'Title',
-                    new CRUDFormWidgetInput('title', false, true),
+                    new FWInput('title', false, true),
                     'Comment string'
                 ),
-                new CRUDFormVerticalRow(
+                new FGroup(
                     'weight',
-                    new CRUDFormWidgetInput('weight', false, true)
+                    new FWInput('weight', false, true)
                 ),
-                new CRUDFormRow(
+                new FRow(
                     'Chooser',
-                    new CRUDFormWidgetRadios('chooser', [
+                    new FWRadios('chooser', [
                         1 => 'one',
                         2 => 'two'
                     ], true, true)
                 ),
-	            new CRUDFormRow(
+	            new FRow(
 		            'Gender',
-		            new CRUDFormWidgetRadios('gender', [
+		            new FWRadios('gender', [
 			            1 => 'male',
 			            2 => 'female'
 		            ], true)
 	            ),
-                new CRUDFormRow(
+                new FRow(
                     'Options',
-                    new CRUDFormWidgetOptions('options', [
+                    new FWOptions('options', [
                         1 => 'one',
                         2 => 'two'
                     ], false, true)
                 ),
-                new CRUDFormRow(
+                new FRow(
                     'Vocabulary',
-                    new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, true)
+                    new FWOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, true)
                 ),
-                new CRUDFormRow(
+                new FRow(
                     'Parent id',
-                    new CRUDFormWidgetReferenceAjax(
+                    new FWReferenceAjax(
                         'parent_id',
                         DemoTerm::class,
                         'title',
                         (new DemoAjaxTermsListAction())->url(),
-                        (new DemoTermEditAction(CRUDFormWidgetReferenceAjax::REFERENCED_ID_PLACEHOLDER))->url()
+                        (new DemoTermEditAction(FWReferenceAjax::REFERENCED_ID_PLACEHOLDER))->url()
 
                     )
                 )
@@ -102,27 +102,27 @@ class DemoTermEditAction implements MaskActionInterface
         $new_term_obj = new DemoTerm();
         $new_term_obj->setParentId($term_id);
 
-        $html .= \OLOG\CRUD\CRUDTable::html(
+        $html .= \OLOG\CRUD\CTable::html(
             \CRUDDemo\DemoTerm::class,
-            \OLOG\CRUD\CRUDForm::html(
+            \OLOG\CRUD\CForm::html(
                 $new_term_obj,
                 [
-                    new CRUDFormRow(
+                    new FRow(
                         'Title',
-                        new CRUDFormWidgetInput('title')
+                        new FWInput('title')
                     ),
-                    new CRUDFormInvisibleRow(
-                        new CRUDFormWidgetInput('parent_id')
+                    new FGroupHidden(
+                        new FWInput('parent_id')
                     )
                 ]
             ),
             [
-                new CRUDTableColumn('', new CRUDTableWidgetTextWithLink('{this->title}', (new DemoTermEditAction('{this->id}'))->url())),
-                new CRUDTableColumn('', new CRUDTableWidgetWeight(['parent_id' => $term_id])),
-                new CRUDTableColumn('', new CRUDTableWidgetDelete())
+                new TCol('', new TWTextWithLink('{this->title}', (new DemoTermEditAction('{this->id}'))->url())),
+                new TCol('', new TWWeight(['parent_id' => $term_id])),
+                new TCol('', new TWDelete())
             ],
             [
-                new CRUDTableFilterEqualInvisible('parent_id', $term_id)
+                new TFEqualInvisibleInterface('parent_id', $term_id)
             ],
             'weight'
 

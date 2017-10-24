@@ -38,6 +38,7 @@ class DemoTerm implements
     protected $options = null;
     protected $vocabulary_id = 1;
     protected $weight = 0;
+    const _ID = 'id';
     protected $id;
 
     public function beforeSave(){

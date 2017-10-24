@@ -3,19 +3,19 @@
 namespace CRUDDemo;
 
 use OLOG\BT\BT;
-use OLOG\CRUD\CRUDFormRowHtml;
-use OLOG\CRUD\CRUDFormWidgetDate;
-use OLOG\CRUD\CRUDFormWidgetDateTime;
-use OLOG\CRUD\CRUDFormWidgetHtml;
-use OLOG\CRUD\CRUDFormWidgetInput;
-use OLOG\CRUD\CRUDFormWidgetMediumEditor;
-use OLOG\CRUD\CRUDFormWidgetOptions;
-use OLOG\CRUD\CRUDFormWidgetRadios;
-use OLOG\CRUD\CRUDFormRow;
-use OLOG\CRUD\CRUDFormWidgetTextarea;
-use OLOG\CRUD\CRUDFormWidgetTimestamp;
-use OLOG\CRUD\CRUDFormVerticalRow;
-use OLOG\CRUD\CRUDFormWidgetAceTextarea;
+use OLOG\CRUD\FGroupHtml;
+use OLOG\CRUD\FWDate;
+use OLOG\CRUD\FWDateTime;
+use OLOG\CRUD\FWHtml;
+use OLOG\CRUD\FWInput;
+use OLOG\CRUD\FWMediumEditor;
+use OLOG\CRUD\FWOptions;
+use OLOG\CRUD\FWRadios;
+use OLOG\CRUD\FRow;
+use OLOG\CRUD\FWTextarea;
+use OLOG\CRUD\FWTimestamp;
+use OLOG\CRUD\FGroup;
+use OLOG\CRUD\FWAceTextarea;
 use CRUDDemo\DemoNodeBase;
 use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
@@ -45,41 +45,41 @@ class DemoNodeEditAction
 
         $node_obj = DemoNode::factory($node_id);
 
-        $html .= \OLOG\CRUD\CRUDForm::html(
+        $html .= \OLOG\CRUD\CForm::html(
             $node_obj,
             [
-                new CRUDFormRow(
+                new FRow(
                     'Id',
-                    new CRUDFormWidgetInput('id')
+                    new FWInput('id')
                 ),
-                new CRUDFormRow(
+                new FRow(
                     'Title',
-                    new CRUDFormWidgetTextarea('title', true)
+                    new FWTextarea('title', true)
                 ),
-                new CRUDFormRow(
+                new FRow(
                     'image_path_in_images nullable',
-                    new CRUDFormWidgetInput('image_path_in_images', true)
+                    new FWInput('image_path_in_images', true)
                 ),
-                new CRUDFormRow(
+                new FRow(
                     'Date',
-                    new CRUDFormWidgetTimestamp('created_at_ts')
+                    new FWTimestamp('created_at_ts')
                 ),
-                new CRUDFormRow(
+                new FRow(
                     'is_published',
-                    new CRUDFormWidgetRadios('is_published', [0 => 'no', 1 => 'yes'])
+                    new FWRadios('is_published', [0 => 'no', 1 => 'yes'])
                 ),
-                new CRUDFormRow(
+                new FRow(
                     'published_at_datetime_str',
-                    new CRUDFormWidgetDateTime('published_at_datetime_str')
+                    new FWDateTime('published_at_datetime_str')
                 ),
-                new CRUDFormRowHtml('<h2>Extra fields</h2>'),
-                new CRUDFormRow(
+                new FGroupHtml('<h2>Extra fields</h2>'),
+                new FRow(
                     'expiration_date nullable',
-                    new CRUDFormWidgetDate('expiration_date')
+                    new FWDate('expiration_date')
                 ),
-                new CRUDFormRow(
+                new FRow(
                     'State code',
-                    new CRUDFormWidgetOptions('state_code',
+                    new FWOptions('state_code',
                         [
                             1 => 'announce',
                             2 => 'live',
@@ -87,17 +87,17 @@ class DemoNodeEditAction
                         ]
                     )
                 ),
-                new CRUDFormRow(
+                new FRow(
                     'State code',
-                    new CRUDFormWidgetHtml('<ul><li>html widget - line 1</li><li>html widget - line 2</li></ul>')
+                    new FWHtml('<ul><li>html widget - line 1</li><li>html widget - line 2</li></ul>')
                 ),
-				new CRUDFormVerticalRow(
+				new FGroup(
 					'пример Medium Editor',
-					new CRUDFormWidgetMediumEditor('body2', '', 'placeholder: false, toolbar: {buttons: ["bold","anchor"]}')
+					new FWMediumEditor('body2', '', 'placeholder: false, toolbar: {buttons: ["bold","anchor"]}')
 				),
-                new CRUDFormVerticalRow(
+                new FGroup(
                     'пример Ace Editor',
-                    new CRUDFormWidgetAceTextarea('body')
+                    new FWAceTextarea('body')
                 )
             ]
         );

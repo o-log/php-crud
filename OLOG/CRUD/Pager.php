@@ -87,7 +87,7 @@ class Pager
 		    return;
         }
 
-        $html = '<div class="button-group js-pagination" data-page-size="' . self::getPageSize($table_index_on_page) . '" data-page-offset="' . self::getPageOffset($table_index_on_page) . '">';
+        $html = '<div class="btn-group btn-group-sm js-pagination" data-page-size="' . self::getPageSize($table_index_on_page) . '" data-page-offset="' . self::getPageOffset($table_index_on_page) . '">';
 
 		//if ($pager_needed) {
 			// TODO: looses existing get form

@@ -4,16 +4,16 @@ namespace CRUDDemo;
 
 use OLOG\ActionInterface;
 use OLOG\CRUD\CRUDCreateFormScript;
-use OLOG\CRUD\CRUDTable;
-use OLOG\CRUD\CRUDFormRow;
-use OLOG\CRUD\CRUDTableColumn;
-use OLOG\CRUD\CRUDTableFilterEqualOptions;
-use OLOG\CRUD\CRUDTableFilterLike;
-use OLOG\CRUD\CRUDTableWidgetDelete;
-use OLOG\CRUD\CRUDTableWidgetHtmlWithLink;
-use OLOG\CRUD\CRUDTableWidgetText;
-use OLOG\CRUD\CRUDFormWidgetInput;
-use OLOG\CRUD\CRUDTableWidgetWeight;
+use OLOG\CRUD\CTable;
+use OLOG\CRUD\FRow;
+use OLOG\CRUD\TCol;
+use OLOG\CRUD\TFEqualOptions;
+use OLOG\CRUD\TFLike;
+use OLOG\CRUD\TWDelete;
+use OLOG\CRUD\TWHtmlWithLink;
+use OLOG\CRUD\TWText;
+use OLOG\CRUD\FWInput;
+use OLOG\CRUD\TWWeight;
 use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
 use OLOG\Layouts\TopActionObjInterface;
@@ -45,18 +45,18 @@ class DemoNodesListAction
 
 		$html = '';
 
-		$html .= CRUDTable::html(
+		$html .= CTable::html(
 			DemoNode::class,
-			\OLOG\CRUD\CRUDForm::html(
+			\OLOG\CRUD\CForm::html(
 				new DemoNode(),
 				[
-					new CRUDFormRow(
+					new FRow(
 						'Title',
-						new CRUDFormWidgetInput('title')
+						new FWInput('title')
 					),
-					new CRUDFormRow(
+					new FRow(
 						'body2',
-						new CRUDFormWidgetInput('body2')
+						new FWInput('body2')
 					)
 				],
 				'',
@@ -64,30 +64,30 @@ class DemoNodesListAction
 				$form_id
 			),
 			[
-				new CRUDTableColumn(
+				new TCol(
 					'Title',
-					new CRUDTableWidgetHtmlWithLink('{this->title}<br>{this->getReverseTitle()}', (new DemoNodeEditAction('{this->id}'))->url())
+					new TWHtmlWithLink('{this->title}<br>{this->getReverseTitle()}', (new DemoNodeEditAction('{this->id}'))->url())
 				),
-				new CRUDTableColumn(
+				new TCol(
 					'Reverse title',
-					new CRUDTableWidgetText('{this->getReverseTitle()}')
+					new TWText('{this->getReverseTitle()}')
 				),
-                new CRUDTableColumn(
+                new TCol(
                     '',
-                    new CRUDTableWidgetWeight([])
+                    new TWWeight([])
                 ),
-                new CRUDTableColumn(
+                new TCol(
                     '',
-                    new CRUDTableWidgetDelete()
+                    new TWDelete()
                 ),
 			],
 			[
-			    new CRUDTableFilterLike('h7g98347hg934', 'Название', 'title'),
-                new CRUDTableFilterEqualOptions('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false)
+			    new TFLike('h7g98347hg934', 'Название', 'title'),
+                new TFEqualOptions('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false)
             ],
 			'weight',
 			$table_id,
-            CRUDTable::FILTERS_POSITION_TOP
+            CTable::FILTERS_POSITION_TOP
 		);
 
 		// Загрузка скриптов

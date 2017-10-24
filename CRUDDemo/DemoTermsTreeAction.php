@@ -4,21 +4,21 @@ namespace CRUDDemo;
 
 use OLOG\ActionInterface;
 use OLOG\BT\BT;
-use OLOG\CRUD\CRUDForm;
-use OLOG\CRUD\CRUDFormRow;
-use OLOG\CRUD\CRUDFormWidgetRadios;
-use OLOG\CRUD\CRUDFormWidgetOptions;
-use OLOG\CRUD\CRUDTable;
-use OLOG\CRUD\CRUDTableColumn;
-use OLOG\CRUD\CRUDTableFilterEqualOptions;
-use OLOG\CRUD\CRUDTableFilterEqualOptionsInline;
-use OLOG\CRUD\CRUDTableFilterLike;
-use OLOG\CRUD\CRUDTableFilterLikeInline;
-use OLOG\CRUD\CRUDTableWidgetDelete;
-use OLOG\CRUD\CRUDTableWidgetText;
-use OLOG\CRUD\CRUDTableWidgetTextWithLink;
-use OLOG\CRUD\CRUDFormWidgetInput;
-use OLOG\CRUD\CRUDTableWidgetWeight;
+use OLOG\CRUD\CForm;
+use OLOG\CRUD\FRow;
+use OLOG\CRUD\FWRadios;
+use OLOG\CRUD\FWOptions;
+use OLOG\CRUD\CTable;
+use OLOG\CRUD\TCol;
+use OLOG\CRUD\TFEqualOptions;
+use OLOG\CRUD\TFEqualOptionsInline;
+use OLOG\CRUD\TFLike;
+use OLOG\CRUD\TFLikeInline;
+use OLOG\CRUD\TWDelete;
+use OLOG\CRUD\TWText;
+use OLOG\CRUD\TWTextWithLink;
+use OLOG\CRUD\FWInput;
+use OLOG\CRUD\TWWeight;
 use OLOG\Layouts\AdminLayoutSelector;
 
 class DemoTermsTreeAction
@@ -37,23 +37,23 @@ class DemoTermsTreeAction
 
         $html .= \OLOG\CRUD\CRUDTree::html(
             \CRUDDemo\DemoTerm::class,
-            CRUDForm::html(
+            CForm::html(
                 new DemoTerm,
                 [
-                    new CRUDFormRow(
+                    new FRow(
                         'Title',
-                        new CRUDFormWidgetInput('title', false, true)
+                        new FWInput('title', false, true)
                     ),
-                    new CRUDFormRow(
+                    new FRow(
                         'Chooser',
-                        new CRUDFormWidgetRadios('chooser', [
+                        new FWRadios('chooser', [
                             1 => 'one',
                             2 => 'two'
                         ], true, true)
                     ),
-                    new CRUDFormRow(
+                    new FRow(
                         'Options',
-                        new CRUDFormWidgetOptions('options', [
+                        new FWOptions('options', [
                             1 => 'one',
                             2 => 'two'
                         ], false, true)
@@ -61,30 +61,30 @@ class DemoTermsTreeAction
                 ]
             ),
             [
-                new CRUDTableColumn(
+                new TCol(
                     'Parent',
-                    new CRUDTableWidgetText(
+                    new TWText(
                         '{' . DemoTerm::class . '.{this->parent_id}->title}'
                     )
                 ),
-                new CRUDTableColumn(
+                new TCol(
                     'Edit',
-                    new CRUDTableWidgetTextWithLink(
+                    new TWTextWithLink(
                         '{this->title}',
                         (new DemoTermEditAction('{this->id}'))->url()
                     )
                 ),
-                new CRUDTableColumn(
+                new TCol(
                     '',
-                    new CRUDTableWidgetWeight(
+                    new TWWeight(
                         [
                             'parent_id' => '{this->parent_id}'
                         ]
                     )
                 ),
-                new CRUDTableColumn(
+                new TCol(
                     '',
-                    new CRUDTableWidgetDelete()
+                    new TWDelete()
                 )
             ],
             'parent_id',
@@ -93,12 +93,12 @@ class DemoTermsTreeAction
             [
                 //new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL),
                 //new CRUDTableFilter('vocabulary_id', CRUDTableFilter::FILTER_EQUAL, DemoTerm::VOCABULARY_MAIN, new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR)),
-                new CRUDTableFilterEqualOptionsInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, true, DemoTerm::VOCABULARY_MAIN, false),
+                new TFEqualOptionsInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, true, DemoTerm::VOCABULARY_MAIN, false),
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
-                new CRUDTableFilterLikeInline('3748t7t45gdfg', 'Название содержит', 'title')
+                new TFLikeInline('3748t7t45gdfg', 'Название содержит', 'title')
             ],
             1,
-            CRUDTable::FILTERS_POSITION_INLINE
+            CTable::FILTERS_POSITION_INLINE
         );
 
         AdminLayoutSelector::render($html, $this);

@@ -8,13 +8,13 @@ use OLOG\Url;
 
 class CRUDTree
 {
-    static public function html($model_class_name, $create_form_html, $column_obj_arr, $parent_id_field_name, $order_by = '', $table_id = '1', $filters_arr = [], $col_with_padding_index = 0, $filters_position = CRUDTable::FILTERS_POSITION_NONE)
+    static public function html($model_class_name, $create_form_html, $column_obj_arr, $parent_id_field_name, $order_by = '', $table_id = '1', $filters_arr = [], $col_with_padding_index = 0, $filters_position = CTable::FILTERS_POSITION_NONE)
     {
 
         // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
-        CRUDTable::executeOperations($table_id, $model_class_name);
+        CTable::executeOperations($table_id, $model_class_name);
 
-        $objs_ids_arr = CRUDInternalTableObjectsSelector::getRecursiveObjIdsArrForClassName($model_class_name, $parent_id_field_name, $filters_arr, $order_by);
+        $objs_ids_arr = CInternalTObjectsSelector::getRecursiveObjIdsArrForClassName($model_class_name, $parent_id_field_name, $filters_arr, $order_by);
 
         //
         // вывод таблицы
@@ -26,7 +26,7 @@ class CRUDTree
         $html = '<div>';
         $html .= '<div class="' . $table_container_element_id . ' row">';
 
-        if ($filters_position == CRUDTable::FILTERS_POSITION_LEFT) {
+        if ($filters_position == CTable::FILTERS_POSITION_LEFT) {
             $html .= '<div class="col-sm-4">';
             $html .= self::filtersHtml($filters_arr);
             $html .= '</div>';
@@ -35,25 +35,25 @@ class CRUDTree
             $html .= '<div class="col-sm-12">';
         }
 
-        if ($filters_position != CRUDTable::FILTERS_POSITION_INLINE) {
+        if ($filters_position != CTable::FILTERS_POSITION_INLINE) {
             $html .= self::toolbarHtml($table_id, $create_form_html);
         }
 
-        if ($filters_position == CRUDTable::FILTERS_POSITION_TOP) {
+        if ($filters_position == CTable::FILTERS_POSITION_TOP) {
             $html .= self::filtersHtml($filters_arr);
         }
 
-        if ($filters_position == CRUDTable::FILTERS_POSITION_INLINE) {
-            $html .= CRUDTable::filtersAndCreateButtonHtmlInline($table_id, $filters_arr, $create_form_html);
+        if ($filters_position == CTable::FILTERS_POSITION_INLINE) {
+            $html .= CTable::filtersAndCreateButtonHtmlInline($table_id, $filters_arr, $create_form_html);
         }
 
         $html .= '<table class="table table-hover">';
         $html .= '<thead>';
         $html .= '<tr>';
 
-        /** @var InterfaceCRUDTableColumn $column_obj */
+        /** @var CColInterface $column_obj */
         foreach ($column_obj_arr as $column_obj) {
-            assert($column_obj instanceof InterfaceCRUDTableColumn);
+            assert($column_obj instanceof CColInterface);
             $html .= '<th>' . HTML::content($column_obj->getTitle()) . '</th>';
         }
 
@@ -64,27 +64,27 @@ class CRUDTree
 
         foreach ($objs_ids_arr as $obj_data) {
             $obj_id = $obj_data['id'];
-            $obj_obj = CRUDObjectLoader::createAndLoadObject($model_class_name, $obj_id);
+            $obj_obj = CInternalObjectLoader::createAndLoadObject($model_class_name, $obj_id);
 
             $html .= '<tr>';
 
-            /** @var InterfaceCRUDTableColumn $column_obj */
+            /** @var CColInterface $column_obj */
             foreach ($column_obj_arr as $col_index => $column_obj) {
-                assert($column_obj instanceof InterfaceCRUDTableColumn);
+                assert($column_obj instanceof CColInterface);
 
-                /** @var InterfaceCRUDTableWidget $widget_obj */
+                /** @var TWInterface $widget_obj */
                 $widget_obj = $column_obj->getWidgetObj();
 
                 assert($widget_obj);
-                assert($widget_obj instanceof InterfaceCRUDTableWidget);
+                assert($widget_obj instanceof TWInterface);
 
                 $col_width_attr = '';
 
-                if ($widget_obj instanceof CRUDTableWidgetDelete){
+                if ($widget_obj instanceof TWDelete){
                     $col_width_attr = ' width="1px" ';
                 }
 
-                if ($widget_obj instanceof CRUDTableWidgetWeight){
+                if ($widget_obj instanceof TWWeight){
                     $col_width_attr = ' width="1px" ';
                 }
 
@@ -117,7 +117,7 @@ class CRUDTree
 
 
 	    // Загрузка скриптов
-	    $html .= CRUDTableScript::getHtml($table_container_element_id, Url::path());
+	    $html .= CInternalTScript::getHtml($table_container_element_id, Url::path());
 
         return $html;
     }
@@ -131,9 +131,9 @@ class CRUDTree
             $html .= '<form class="filters-form form-horizontal">';
             $html .= '<div class="row">';
 
-            /** @var InterfaceCRUDTableFilter2 $filter_obj */
+            /** @var TF2Interface $filter_obj */
             foreach ($filters_arr as $filter_obj){
-                assert($filter_obj instanceof InterfaceCRUDTableFilter2);
+                assert($filter_obj instanceof TF2Interface);
 
                 $html .= '<div class="col-md-12">';
                 $html .= '<div class="form-group row">';
