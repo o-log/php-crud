@@ -41,7 +41,8 @@ class FRow implements FGroupInterface
         $html .= $widget_obj->html($obj);
 
         if ($this->getCommentStr()) {
-            $html .= '<span class="help-block">' . $this->getCommentStr() . '</span>';
+            $html .= '<small class="form-text text-muted">' . $this->getCommentStr() . '</small>';
+            //$html .= '<span class="help-block">' . $this->getCommentStr() . '</span>';
         }
 
         $html .= '</div>';

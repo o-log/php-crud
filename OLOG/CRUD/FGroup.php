@@ -47,7 +47,7 @@ class FGroup implements FGroupInterface
 
         if ($this->getCommentStr()) {
             $html .= '<div class="col-sm-12">';
-            $html .= '<span class="help-block">' . $this->getCommentStr() . '</span>';
+            $html .= '<small class="form-text text-muted">' . $this->getCommentStr() . '</small>';
             $html .= '</div>';
         }
 
