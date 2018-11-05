@@ -183,7 +183,10 @@ class CTable
             $objs_ids_arr = CInternalTObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $start, $page_size, $order_by, $display_total_rows_count, $total_rows_count);
 
             if (($start == 0) && (count($objs_ids_arr) == 0)) {
+                // контенер с классом table здесь должен быть обязательно, инача js не сможет извлечь таблицу из выдачи
+                echo '<table class="table table-hover table-sm"><tr><td>';
                 BT::card('', '<div class="fa fa-archive"></div><div>Нет записей</div>', ['text-center']);
+                echo '</td></tr></table>';
             } else {
                 echo '<table class="table table-hover table-sm">';
 
