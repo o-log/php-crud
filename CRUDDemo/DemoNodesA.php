@@ -18,7 +18,7 @@ use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
 use OLOG\Layouts\TopActionObjInterface;
 
-class DemoNodesListAction
+class DemoNodesA
     implements ActionInterface, TopActionObjInterface, PageTitleInterface
 {
     public function pageTitle()
@@ -66,11 +66,21 @@ class DemoNodesListAction
 			[
 				new TCol(
 					'Title',
-					new TWHtmlWithLink('{this->title}<br>{this->getReverseTitle()}', (new DemoNodeEditAction('{this->id}'))->url())
+					new TWHtmlWithLink(
+                        function(DemoNode $node){
+					        return 'DIRECT: ' . $node->getTitle() . '<br>REVERSE: ' . $node->getReverseTitle();
+                        },
+                        function(DemoNode $node) {
+                            return (new DemoNodeEditAction($node->getId()))->url();
+                        }
+                    )
 				),
 				new TCol(
 					'Reverse title',
-					new TWText('{this->getReverseTitle()}')
+					new TWText(function(DemoNode $node){
+                        $title = $node->getTitle();
+                        return 'REVERSE: ' . strrev($title);
+                    })
 				),
                 new TCol(
                     '',

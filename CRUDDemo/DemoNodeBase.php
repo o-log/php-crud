@@ -10,7 +10,7 @@ class DemoNodeBase
     protected $node_id;
 
     public function topActionObj(){
-        return new DemoNodesListAction();
+        return new DemoNodesA();
     }
 
     public function pageTitle()

@@ -29,7 +29,7 @@ class Config
 
         DBConfig::setConnector(
             self::CONNECTOR_CRUDDEMO,
-            new ConnectorMySQL('127.0.0.1', 'phpcrud', 'root', '1234')
+            new ConnectorMySQL('127.0.0.1', 'phpcrud', 'root', '1')
         );
 
         DBConfig::setSpace(

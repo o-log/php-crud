@@ -17,6 +17,10 @@ class CCompiler {
      */
     public static function compile($str, array $data)
     {
+        if (is_callable($str)){
+            return $str($data['this']);
+        }
+
         // TODO: clean and finish
 
         $matches = [];

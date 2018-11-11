@@ -27,7 +27,7 @@ use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
 use OLOG\Layouts\TopActionObjInterface;
 
-class DemoTermsListAction
+class DemoTermsA
     implements ActionInterface, PageTitleInterface, TopActionObjInterface
 {
     public function topActionObj()
@@ -99,7 +99,13 @@ class DemoTermsListAction
                 new TCol(
                     '',
                     new TWText(
-                        '{' . DemoTerm::class . '.{this->parent_id}->title}'
+                        function (DemoTerm $term){
+                            $parent = DemoTerm::factory($term->getParentId(), false);
+                            if ($parent) {
+                                return $parent->getTitle();
+                            }
+                            return '-';
+                        }
                     )
                 ),
                 new TCol('', new TWWeight(['parent_id' => null])),
@@ -122,5 +128,5 @@ class DemoTermsListAction
 
         AdminLayoutSelector::render($html, $this);
     }
-    
+
 }
