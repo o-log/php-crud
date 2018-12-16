@@ -114,7 +114,7 @@ class Pager
 	        }
 		//}
 
-		$html .= "</ul>";
+		$html .= "</div>";
 
 		return $html;
 	}
