@@ -13,6 +13,7 @@ use OLOG\CRUD\TWDelete;
 use OLOG\CRUD\TWHtmlWithLink;
 use OLOG\CRUD\TWText;
 use OLOG\CRUD\FWInput;
+use OLOG\CRUD\TWTimestamp;
 use OLOG\CRUD\TWWeight;
 use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
@@ -82,6 +83,10 @@ class DemoNodesA
                         return 'REVERSE: ' . strrev($title);
                     })
 				),
+                new TCol(
+                    'Created at',
+                    new TWTimestamp(function(DemoNode $node){return time();})
+                ),
                 new TCol(
                     '',
                     new TWWeight([])
