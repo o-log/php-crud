@@ -6,14 +6,17 @@ class DemoTermToNode implements
     \OLOG\Model\ActiveRecordInterface
 {
     use \OLOG\Model\ActiveRecordTrait;
-    use \OLOG\Model\ProtectPropertiesTrait;
 
     const DB_ID = 'phpcrud';
     const DB_TABLE_NAME = 'termtonode';
 
-    protected $id;
-    protected $node_id;
-    protected $term_id;
+    public $id;
+    public $node_id;
+    public $term_id;
+
+    public function term(): ?DemoTerm {
+        return DemoTerm::factory($this->term_id);
+    }
 
     /**
      * @return int

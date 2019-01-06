@@ -10,7 +10,6 @@ class DemoTerm implements
     WeightInterface
 {
     use \OLOG\Model\ActiveRecordTrait;
-    use \OLOG\Model\ProtectPropertiesTrait;
     use WeightTrait;
 
     const DB_ID         = 'phpcrud';
@@ -34,6 +33,11 @@ class DemoTerm implements
 		self::GENDER_FEMALE => 'female'
 	];
 
+    const _TITLE = 'title';
+    public $title = '';
+    public $gender  = null;
+    public $parent_id;
+
     protected $chooser = null;
     protected $options = null;
     protected $vocabulary_id = 1;
@@ -41,7 +45,11 @@ class DemoTerm implements
     const _ID = 'id';
     protected $id;
 
-    public function beforeSave(){
+    public function parent(): ?DemoTerm {
+        return DemoTerm::factory($this->parent_id, false);
+    }
+
+    public function beforeSave(): void{
         $this->initWeight(
             ['parent_id' => $this->getParentId()]
         );
@@ -54,8 +62,6 @@ class DemoTerm implements
     public function setWeight($value){
         $this->weight = $value;
     }
-
-
 
     static public function getIdsArrForVocabularyIdByCreatedAtDesc($value, $offset = 0, $page_size = 30){
         if (is_null($value)) {
@@ -80,11 +86,6 @@ class DemoTerm implements
     public function setVocabularyId($value){
         $this->vocabulary_id = $value;
     }
-
-
-    protected $title   = '';
-    protected $gender  = null;
-    protected $parent_id;
 
     public function getOptions()
     {

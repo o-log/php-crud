@@ -9,7 +9,7 @@ class TWTextWithLink implements TWInterface
     protected $text;
     protected $link;
     protected $classes_str;
-    
+
     public function html($obj){
         $url = CCompiler::compile($this->getLink(), ['this' => $obj]);
 
@@ -22,9 +22,8 @@ class TWTextWithLink implements TWInterface
         $o = HTML::a($url, $text, $this->getClassesStr());
 
         return $o;
-        
     }
-    
+
     public function __construct($text, $link, $classes_str = '')
     {
         $this->setText($text);
@@ -79,6 +78,6 @@ class TWTextWithLink implements TWInterface
     {
         $this->link = $link;
     }
-    
-    
+
+
 }

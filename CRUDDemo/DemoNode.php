@@ -4,7 +4,6 @@ namespace CRUDDemo;
 
 use OLOG\Model\ActiveRecordInterface;
 use OLOG\Model\ActiveRecordTrait;
-use OLOG\Model\ProtectPropertiesTrait;
 use OLOG\Model\WeightInterface;
 use OLOG\Model\WeightTrait;
 
@@ -13,7 +12,6 @@ class DemoNode implements
     WeightInterface
 {
     use ActiveRecordTrait;
-    use ProtectPropertiesTrait;
     use WeightTrait;
 
     const DB_ID = \Config\Config::SPACE_CRUDDEMO;
@@ -32,7 +30,7 @@ class DemoNode implements
     protected $body = '';
     protected $title = '';
 
-    public function beforeSave(){
+    public function beforeSave(): void{
         $this->initWeight([]);
     }
 
@@ -135,7 +133,7 @@ class DemoNode implements
         $this->body = $body;
     }
 
-    
+
     /**
      * @return int
      */

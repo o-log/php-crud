@@ -24,23 +24,25 @@ class DemoAjaxTermsListAction implements ActionInterface
         $html = '';
 
         $html .= \OLOG\CRUD\CTable::html(
-            \CRUDDemo\DemoTerm::class,
+            DemoTerm::class,
             '',
             [
                 new TCol(
                     '',
-                    new TWReferenceSelect('title')
+                    new TWReferenceSelect(DemoTerm::_TITLE)
                 ),
                 new TCol(
                     'Edit',
                     new TWText(
-                        '{this->title}'
+                        DemoTerm::_TITLE
                     )
                 ),
                 new TCol(
                     'Parent',
                     new TWText(
-                        '{' . DemoTerm::class . '.{this->parent_id}->title}'
+                        function(DemoTerm $term){
+                            return $term->parent() ? $term->parent()->title : '';
+                        }
                     )
                 )
             ],

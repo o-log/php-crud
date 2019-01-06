@@ -2,7 +2,6 @@
 
 namespace CRUDDemo;
 
-use OLOG\BT\BT;
 use OLOG\CRUD\FGroupHtml;
 use OLOG\CRUD\FWDate;
 use OLOG\CRUD\FWDateTime;
@@ -16,7 +15,6 @@ use OLOG\CRUD\FWTextarea;
 use OLOG\CRUD\FWTimestamp;
 use OLOG\CRUD\FGroup;
 use OLOG\CRUD\FWAceTextarea;
-use CRUDDemo\DemoNodeBase;
 use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
 use OLOG\Layouts\TopActionObjInterface;

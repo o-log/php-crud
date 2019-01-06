@@ -255,7 +255,7 @@ class CTable
 		return $html;
 	}
 
-    static public function filtersAndCreateButtonHtmlInline($table_index_on_page, $filters_arr, $create_form_html = '', $title)
+    static public function filtersAndCreateButtonHtmlInline($table_index_on_page, $filters_arr, $create_form_html = '', $title = '')
     {
 	    if (empty($filters_arr) && ($create_form_html == '')) {
 		    return '';

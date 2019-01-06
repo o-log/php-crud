@@ -2,7 +2,6 @@
 
 namespace CRUDDemo;
 
-use OLOG\BT\BT;
 use OLOG\CRUD\FGroupHidden;
 use OLOG\CRUD\FRow;
 use OLOG\CRUD\FGroup;
@@ -103,7 +102,7 @@ class DemoTermEditAction implements MaskActionInterface
         $new_term_obj->setParentId($term_id);
 
         $html .= \OLOG\CRUD\CTable::html(
-            \CRUDDemo\DemoTerm::class,
+            DemoTerm::class,
             \OLOG\CRUD\CForm::html(
                 $new_term_obj,
                 [
@@ -117,7 +116,15 @@ class DemoTermEditAction implements MaskActionInterface
                 ]
             ),
             [
-                new TCol('', new TWTextWithLink('{this->title}', (new DemoTermEditAction('{this->id}'))->url())),
+                new TCol(
+                    '',
+                    new TWTextWithLink(
+                        DemoTerm::_TITLE,
+                        function(DemoTerm $term){
+                            return (new DemoTermEditAction($term->getId()))->url();
+                        }
+                    )
+                ),
                 new TCol('', new TWWeight(['parent_id' => $term_id])),
                 new TCol('', new TWDelete())
             ],

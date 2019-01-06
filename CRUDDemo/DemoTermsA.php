@@ -4,7 +4,6 @@ namespace CRUDDemo;
 
 use OLOG\ActionInterface;
 use OLOG\CRUD\CForm;
-use OLOG\CRUD\FRow;
 use OLOG\CRUD\FGroup;
 use OLOG\CRUD\FWRadios;
 use OLOG\CRUD\FWOptions;
@@ -12,7 +11,6 @@ use OLOG\CRUD\FWReferenceAjax;
 use OLOG\CRUD\CTable;
 use OLOG\CRUD\TCol;
 use OLOG\CRUD\TFEqualInline;
-use OLOG\CRUD\TFEqualHidden;
 use OLOG\CRUD\TFEqualOptionsInline;
 use OLOG\CRUD\TFLikeInline;
 use OLOG\CRUD\TWDelete;
@@ -54,7 +52,7 @@ class DemoTermsA
         $table_id = '8726438755234';
 
         $html .= CTable::html(
-            \CRUDDemo\DemoTerm::class,
+            DemoTerm::class,
             CForm::html(
                 new DemoTerm,
                 [
@@ -77,8 +75,10 @@ class DemoTermsA
                 new TCol(
                     '',
                     new TWTextWithLink(
-                        'title',
-                        (new DemoTermEditAction('{this->id}'))->url()
+                        DemoTerm::_TITLE,
+                        function(DemoTerm $term){
+                            return (new DemoTermEditAction($term->getId()))->url();
+                        }
                     )
                 ),
                 new TCol(
@@ -100,11 +100,7 @@ class DemoTermsA
                     '',
                     new TWText(
                         function (DemoTerm $term){
-                            $parent = DemoTerm::factory($term->getParentId(), false);
-                            if ($parent) {
-                                return $parent->getTitle();
-                            }
-                            return '-';
+                            return $term->parent() ? $term->parent()->title : '-';
                         }
                     )
                 ),

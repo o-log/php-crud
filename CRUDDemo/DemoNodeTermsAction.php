@@ -57,7 +57,9 @@ class DemoNodeTermsAction
                 ]
             ),
             [
-                new TCol('Term', new TWText('{' . DemoTerm::class . '.{this->term_id}->title}')),
+                new TCol('Term', new TWText(function (DemoTermToNode $ttn){
+                    return $ttn->term()->title;
+                })),
                 new TCol('Delete', new TWDelete())
             ],
             [new TFEqualHidden('node_id', $this->node_id)]

@@ -3,7 +3,6 @@
 namespace CRUDDemo;
 
 use OLOG\ActionInterface;
-use OLOG\CRUD\CCreateFormScript;
 use OLOG\CRUD\CTable;
 use OLOG\CRUD\FRow;
 use OLOG\CRUD\TCol;
@@ -84,8 +83,10 @@ class DemoNodesA
                     })
 				),
                 new TCol(
-                    'Created at',
-                    new TWTimestamp(function(DemoNode $node){return time();})
+                    'Current time',
+                    new TWTimestamp(function(DemoNode $node){
+                        return time();
+                    })
                 ),
                 new TCol(
                     '',

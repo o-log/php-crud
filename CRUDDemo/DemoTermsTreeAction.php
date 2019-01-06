@@ -32,7 +32,7 @@ class DemoTermsTreeAction
         $html = '';
 
         $html .= \OLOG\CRUD\CTree::html(
-            \CRUDDemo\DemoTerm::class,
+            DemoTerm::class,
             CForm::html(
                 new DemoTerm,
                 [
@@ -60,14 +60,19 @@ class DemoTermsTreeAction
                 new TCol(
                     'Parent',
                     new TWText(
-                        '{' . DemoTerm::class . '.{this->parent_id}->title}'
+//                        '{' . DemoTerm::class . '.{this->parent_id}->title}'
+                        function(DemoTerm $term){
+                            return $term->parent() ? $term->parent()->title : 'X';
+                        }
                     )
                 ),
                 new TCol(
                     'Edit',
                     new TWTextWithLink(
-                        '{this->title}',
-                        (new DemoTermEditAction('{this->id}'))->url()
+                        'title',
+                        function (DemoTerm $term){
+                            return (new DemoTermEditAction($term->getId()))->url();
+                        }
                     )
                 ),
                 new TCol(
