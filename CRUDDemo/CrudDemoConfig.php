@@ -1,18 +1,15 @@
 <?php
 
-namespace Config;
+namespace CRUDDemo;
 
-use CRUDDemo\CRUDDemoLayout;
-use OLOG\BT\LayoutBootstrap4;
 use OLOG\Cache\BucketMemcache;
 use OLOG\Cache\CacheConfig;
 use OLOG\Cache\MemcacheServer;
 use OLOG\DB\ConnectorMySQL;
 use OLOG\DB\DBConfig;
 use OLOG\DB\Space;
-use OLOG\Layouts\LayoutsConfig;
 
-class Config
+class CrudDemoConfig
 {
     const CONNECTOR_CRUDDEMO = 'connector_phpcrud';
     const SPACE_CRUDDEMO = 'phpcrud';

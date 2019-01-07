@@ -41,6 +41,7 @@ class DemoTerm implements
     const _TITLE = 'title';
     public $title = '';
     public $gender  = null;
+    const _PARENT_ID = 'parent_id';
     public $parent_id;
 
     protected $chooser = null;

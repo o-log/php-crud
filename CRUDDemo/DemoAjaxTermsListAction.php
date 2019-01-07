@@ -26,8 +26,6 @@ class DemoAjaxTermsListAction
 
     public function action()
     {
-        \OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
-
         $html = '';
 
         $html .= \OLOG\CRUD\CTable::html(

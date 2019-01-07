@@ -20,7 +20,7 @@ class TWTextWithLink implements TWInterface
 
         $text = CCompiler::compile($this->getText(), ['this' => $obj]);
 
-        if (trim($text) == ''){
+        if (trim((string) $text) == ''){
             $text = '#EMPTY#';
         }
 

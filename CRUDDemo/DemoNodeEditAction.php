@@ -38,8 +38,6 @@ class DemoNodeEditAction
 
     public function action()
     {
-        \OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
-
         $node_id = $this->node_id;
 
         $html = self::tabsHtml($node_id);

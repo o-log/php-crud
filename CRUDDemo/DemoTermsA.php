@@ -50,8 +50,6 @@ class DemoTermsA
 
     public function action()
     {
-        \OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
-
         $html = '';
 
         $table_id = '8726438755234';

@@ -20,7 +20,7 @@ class TWHtmlWithLink implements TWInterface
 
 	    $html = CCompiler::compile($this->getHtml(), ['this' => $obj]);
 
-        if (trim($html) == ''){
+        if (trim((string) $html) == ''){
 	        $html = '#EMPTY#';
         }
 

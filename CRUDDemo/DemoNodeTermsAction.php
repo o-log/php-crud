@@ -37,8 +37,6 @@ class DemoNodeTermsAction
 
     public function action()
     {
-        \OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
-
         $html = self::tabsHtml($this->node_id);
         $html .= '<div>&nbsp;</div>';
 

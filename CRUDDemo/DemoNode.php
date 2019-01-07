@@ -19,7 +19,7 @@ class DemoNode implements
     use ActiveRecordTrait;
     use WeightTrait;
 
-    const DB_ID = \Config\Config::SPACE_CRUDDEMO;
+    const DB_ID = \CRUDDemo\CrudDemoConfig::SPACE_CRUDDEMO;
     const DB_TABLE_NAME = 'node';
 
     protected $created_at_ts = 0;

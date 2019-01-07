@@ -32,8 +32,6 @@ class DemoTermsTreeAction
 
     public function action()
     {
-        \OLOG\Exits::exit403If(!CRUDDemoAuth::currentUserHasAnyOfPermissions([1]));
-
         $html = '';
 
         $html .= \OLOG\CRUD\CTree::html(
@@ -84,7 +82,7 @@ class DemoTermsTreeAction
                     '',
                     new TWWeight(
                         [
-                            'parent_id' => '{this->parent_id}'
+                            'parent_id' => DemoTerm::_PARENT_ID
                         ]
                     )
                 ),
@@ -99,7 +97,15 @@ class DemoTermsTreeAction
             [
                 //new CRUDTableFilter('parent_id', CRUDTableFilter::FILTER_IS_NULL),
                 //new CRUDTableFilter('vocabulary_id', CRUDTableFilter::FILTER_EQUAL, DemoTerm::VOCABULARY_MAIN, new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR)),
-                new TFEqualOptionsInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, true, DemoTerm::VOCABULARY_MAIN, false),
+                new TFEqualOptionsInline(
+                    '34785ty8y45t8',
+                    'Словарь',
+                    'vocabulary_id',
+                    DemoTerm::VOCABULARIES_ARR,
+                    false,
+                    '',
+                    false
+                ),
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
                 new TFLikeInline('3748t7t45gdfg', 'Название содержит', 'title')
             ],
