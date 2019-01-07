@@ -26,7 +26,7 @@ class TWTimestamp implements TWInterface
             return '';
         }
 
-        if ($this->getFormat() == 'auto'){
+        if ($this->getFormat() == ''){
             if (date('Ymd') == date('Ymd', $timestamp)){
                 $date = date("H:i", $timestamp);
             } else {
@@ -38,7 +38,7 @@ class TWTimestamp implements TWInterface
         return HTML::content($date);
     }
 
-    public function __construct($timestamp, $format = "Y-m-d H:i:s")
+    public function __construct($timestamp, $format = '')
     {
         $this->setTimestamp($timestamp);
         $this->setFormat($format);

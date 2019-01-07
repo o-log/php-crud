@@ -87,7 +87,7 @@ class DemoNodesA
 				),
                 new TCol(
                     'Current time',
-                    new TWTimestamp(DemoNode::_CREATED_AT_TS, 'auto')
+                    new TWTimestamp(DemoNode::_CREATED_AT_TS, '')
                 ),
                 new TCol(
                     '',
