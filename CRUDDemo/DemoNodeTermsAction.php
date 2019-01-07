@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace CRUDDemo;
 
@@ -12,13 +17,12 @@ use OLOG\CRUD\TWDelete;
 use OLOG\CRUD\TWText;
 use OLOG\CRUD\FWInput;
 use OLOG\CRUD\FWReference;
-use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
 use OLOG\Layouts\TopActionObjInterface;
 use OLOG\MaskActionInterface;
 
 class DemoNodeTermsAction
-    extends DemoNodeBase
+    extends DemoNodeABase
     implements MaskActionInterface, PageTitleInterface, TopActionObjInterface
 {
     static public function mask()
@@ -65,6 +69,6 @@ class DemoNodeTermsAction
             [new TFEqualHidden('node_id', $this->node_id)]
         );
 
-        AdminLayoutSelector::render($html, $this);
+        $this->renderInLayout($html);
     }
 }

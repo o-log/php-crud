@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace CRUDDemo;
 
@@ -14,11 +19,11 @@ use OLOG\CRUD\TWText;
 use OLOG\CRUD\FWInput;
 use OLOG\CRUD\TWTimestamp;
 use OLOG\CRUD\TWWeight;
-use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
 use OLOG\Layouts\TopActionObjInterface;
 
 class DemoNodesA
+    extends CRUDDemoABase
     implements ActionInterface, TopActionObjInterface, PageTitleInterface
 {
     public function pageTitle()
@@ -109,6 +114,6 @@ class DemoNodesA
 		// Загрузка скриптов
 		//$html .= CCreateFormScript::getHtml($form_id, $table_id);
 
-		AdminLayoutSelector::render($html, $this);
+		$this->renderInLayout($html);
 	}
 }

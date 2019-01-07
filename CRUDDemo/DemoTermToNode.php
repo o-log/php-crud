@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace CRUDDemo;
 
-class DemoTermToNode implements
-    \OLOG\Model\ActiveRecordInterface
+class DemoTermToNode
+    implements \OLOG\Model\ActiveRecordInterface
 {
     use \OLOG\Model\ActiveRecordTrait;
 
@@ -65,7 +70,4 @@ class DemoTermToNode implements
     {
         $this->term_id = $term_id;
     }
-
-
-
 }

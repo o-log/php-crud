@@ -25,8 +25,6 @@ class Config
 
         //$conf['return_false_if_no_route'] = true; // for local php server
 
-        LayoutsConfig::setAdminLayoutClassName(LayoutBootstrap4::class);
-
         DBConfig::setConnector(
             self::CONNECTOR_CRUDDEMO,
             new ConnectorMySQL('127.0.0.1', 'phpcrud', 'root', '1')

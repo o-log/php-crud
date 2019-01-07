@@ -1,10 +1,13 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace OLOG\CRUD;
 
-
-use OLOG\BT\BT;
-use OLOG\DB\DB;
+use OLOG\BT\BT4;
 use OLOG\HTML;
 use OLOG\MagnificPopup;
 use OLOG\Model\WeightInterface;
@@ -48,7 +51,7 @@ class CTable
             Redirects::redirect($redirect_url);
         }
 
-        \OLOG\Redirects::redirectToSelf();
+        Redirects::redirectToSelf();
     }
 
     static protected function swapModelWeightOperation()
@@ -56,7 +59,7 @@ class CTable
         // TODO: do not pass DB table name in form - pass crud table id instead, get model class name from crud table
         // TODO: also check model owner
         $model_class_name = POST::required('_class_name'); // TODO: constant for field name
-        if (!is_a($model_class_name, \OLOG\Model\WeightInterface::class, true)){
+        if (!is_a($model_class_name, WeightInterface::class, true)){
             throw new \Exception();
         }
 
@@ -77,7 +80,7 @@ class CTable
         $obj = CInternalObjectLoader::createAndLoadObject($model_class_name, $model_id);
         $obj->swapWeights($context_arr);
 
-        \OLOG\Redirects::redirectToSelf();
+        Redirects::redirectToSelf();
     }
 
     static protected function updateModelFieldOperation($table_id, $model_class_name)
@@ -185,7 +188,7 @@ class CTable
             if (($start == 0) && (count($objs_ids_arr) == 0)) {
                 // контенер с классом table здесь должен быть обязательно, инача js не сможет извлечь таблицу из выдачи
                 echo '<table class="table table-hover table-sm"><tr><td>';
-                BT::card('', '<div class="fa fa-archive"></div><div>Нет записей</div>', ['text-center']);
+                BT4::card('', '<div class="fa fa-archive"></div><div>Нет записей</div>', ['text-center']);
                 echo '</td></tr></table>';
             } else {
                 echo '<table class="table table-hover table-sm">';

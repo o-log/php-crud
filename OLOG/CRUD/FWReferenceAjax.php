@@ -1,8 +1,13 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace OLOG\CRUD;
 
-use OLOG\BT\BT;
+use OLOG\BT\BT4;
 use OLOG\Preloader;
 use OLOG\HTML;
 
@@ -95,7 +100,7 @@ class FWReferenceAjax implements FWInterface
 
         ob_start();
 
-        BT::modal($choose_form_element_id, 'Выбрать', function(){});
+        BT4::modal($choose_form_element_id, 'Выбрать', function(){});
 
         ?>
 

@@ -7,7 +7,7 @@
 	},
 	"require" : {
 		"php": ">=7.2",
-		"o-log/php-bt" : "8.*",
+		"o-log/php-bt" : "9.*",
 		"o-log/php-model" : "10.*"
 	},
 	"autoload-dev" : {

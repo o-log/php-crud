@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace CRUDDemo;
 
@@ -10,7 +15,9 @@ use OLOG\CRUD\TFLikeInline;
 use OLOG\CRUD\TWReferenceSelect;
 use OLOG\CRUD\TWText;
 
-class DemoAjaxTermsListAction implements ActionInterface
+class DemoAjaxTermsListAction
+    extends CRUDDemoABase
+    implements ActionInterface
 {
     public function url()
     {
@@ -40,7 +47,7 @@ class DemoAjaxTermsListAction implements ActionInterface
                 new TCol(
                     'Parent',
                     new TWText(
-                        function(DemoTerm $term){
+                        function (DemoTerm $term) {
                             return $term->parent() ? $term->parent()->title : '';
                         }
                     )

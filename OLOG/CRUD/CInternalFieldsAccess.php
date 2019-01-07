@@ -1,21 +1,23 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace OLOG\CRUD;
-
-
 
 class CInternalFieldsAccess
 {
     static public function getObjId($obj)
     {
         assert($obj);
-        
+
         $obj_class_name = get_class($obj);
         $obj_id_field_name = CInternalFieldsAccess::getIdFieldName($obj_class_name);
         return CInternalFieldsAccess::getObjectFieldValue($obj, $obj_id_field_name);
-        
     }
-    
+
     public static function getIdFieldName($model_class_name)
     {
         if (defined($model_class_name . '::DB_ID_FIELD_NAME')) {

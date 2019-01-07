@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace OLOG\CRUD;
 
@@ -6,7 +11,7 @@ class TCol implements TColInterface
 {
     public $title;
     public $widget_obj;
-    
+
     public function __construct($title, $widget_obj)
     {
         $this->setTitle($title);
@@ -43,9 +48,9 @@ class TCol implements TColInterface
     public function setWidgetObj($widget_obj)
     {
         // TODO: check widget object intarfsaceCrudTableWidget
-        
+
         $this->widget_obj = $widget_obj;
     }
-    
-    
+
+
 }

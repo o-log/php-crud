@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace OLOG\CRUD;
 
@@ -17,10 +22,10 @@ class FRow implements FGroupInterface
 
     public function html($obj){
         $html = '';
-        
+
         $required = false;
         // TODO
-        
+
         //$editor_context_obj = CRUDController::getEditorContext();
 
         //$field_name = $element_config_arr[self::KEY_FORM_ROW_FIELD_NAME];
@@ -47,7 +52,7 @@ class FRow implements FGroupInterface
 
         $html .= '</div>';
         $html .= '</div>';
-        
+
         return $html;
     }
 

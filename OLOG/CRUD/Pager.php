@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace OLOG\CRUD;
 
@@ -72,7 +77,7 @@ class Pager
 	 * @param int $elements_count
 	 * @return string
 	 */
-	static public function renderPager($table_index_on_page, $elements_count = null, $display_total_rows_count = false, $total_rows_count = 0)
+	static public function renderPager($table_index_on_page, $elements_count = null, $display_total_rows_count = false, $total_rows_count = 0): string
 	{
 		$pager_needed = false;
 		if (self::hasPrevPage($table_index_on_page)){
@@ -84,7 +89,7 @@ class Pager
 		}
 
         if (!$pager_needed) {
-		    return;
+		    return '';
         }
 
         $html = '<div class="btn-group btn-group-sm js-pagination" data-page-size="' . self::getPageSize($table_index_on_page) . '" data-page-offset="' . self::getPageOffset($table_index_on_page) . '">';

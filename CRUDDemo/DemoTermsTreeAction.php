@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace CRUDDemo;
 
@@ -15,9 +20,9 @@ use OLOG\CRUD\TWText;
 use OLOG\CRUD\TWTextWithLink;
 use OLOG\CRUD\FWInput;
 use OLOG\CRUD\TWWeight;
-use OLOG\Layouts\AdminLayoutSelector;
 
 class DemoTermsTreeAction
+    extends CRUDDemoABase
     implements ActionInterface
 {
     public function url()
@@ -101,7 +106,7 @@ class DemoTermsTreeAction
             1
         );
 
-        AdminLayoutSelector::render($html, $this);
+        $this->renderInLayout($html);
     }
 
 }

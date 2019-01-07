@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace CRUDDemo;
 
@@ -14,10 +19,11 @@ use OLOG\CRUD\TFEqualHidden;
 use OLOG\CRUD\TWDelete;
 use OLOG\CRUD\TWTextWithLink;
 use OLOG\CRUD\TWWeight;
-use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\MaskActionInterface;
 
-class DemoTermEditAction implements MaskActionInterface
+class DemoTermEditAction
+    extends CRUDDemoABase
+    implements MaskActionInterface
 {
     protected $term_id;
 
@@ -135,7 +141,7 @@ class DemoTermEditAction implements MaskActionInterface
 
         );
 
-        AdminLayoutSelector::render($html, $this);
+        $this->renderInLayout($html);
     }
 
 }

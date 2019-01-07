@@ -1,9 +1,15 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace OLOG\CRUD;
 
 class TFNotInHidden implements TFHiddenInterface
 {
+    protected $title;
     protected $field_name;
     protected $filter_value;
 

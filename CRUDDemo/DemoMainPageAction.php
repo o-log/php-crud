@@ -1,12 +1,18 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace CRUDDemo;
 
 use OLOG\ActionInterface;
-use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
 
-class DemoMainPageAction implements ActionInterface, PageTitleInterface
+class DemoMainPageAction
+    extends CRUDDemoABase
+    implements ActionInterface, PageTitleInterface
 {
     public function pageTitle()
     {
@@ -25,6 +31,6 @@ class DemoMainPageAction implements ActionInterface, PageTitleInterface
         $html .= '<a class="btn btn-secondary" href="' . (new DemoTermsTreeAction())->url() . '">TERMS TREE</a>';
         $html .= '</div>';
 
-        AdminLayoutSelector::render($html, $this);
+        $this->renderInLayout($html);
     }
 }

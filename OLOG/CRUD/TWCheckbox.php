@@ -1,4 +1,10 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
+
 namespace OLOG\CRUD;
 
 class TWCheckbox implements TWInterface

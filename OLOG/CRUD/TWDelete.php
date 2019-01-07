@@ -1,7 +1,11 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace OLOG\CRUD;
-
 
 use OLOG\Form;
 use OLOG\HTML;
@@ -24,7 +28,7 @@ class TWDelete implements TWInterface
 
     public function html($obj){
         assert($obj);
-        
+
         $o = '';
         $o .= '<form style="display: inline;" method="post" action="' . \OLOG\Url::current() . '">';
         $o .= Form::op(CTable::OPERATION_DELETE_MODEL);

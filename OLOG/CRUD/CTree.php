@@ -1,7 +1,11 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace OLOG\CRUD;
-
 
 use OLOG\HTML;
 use OLOG\Url;
@@ -160,7 +164,7 @@ class CTree
 
         if ($create_form_html) {
             $html .= '<div class="collapse" id="' . $create_form_element_id . '"><div class="well">' . $create_form_html . '</div></div>';
-            
+
 //            $html .= '<div style="position: relative; background: #FFF; padding: 50px 20px 30px 20px; width: auto; max-width: 700px; margin: 20px auto;" id="' . $create_form_element_id . '" class="mfp-hide">';
 //            $html .= $create_form_html;
 //            $html .= '</div>';

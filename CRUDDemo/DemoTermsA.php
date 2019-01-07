@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace CRUDDemo;
 
@@ -21,11 +26,11 @@ use OLOG\CRUD\TWTextEditor;
 use OLOG\CRUD\TWTextWithLink;
 use OLOG\CRUD\FWInput;
 use OLOG\CRUD\TWWeight;
-use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
 use OLOG\Layouts\TopActionObjInterface;
 
 class DemoTermsA
+    extends CRUDDemoABase
     implements ActionInterface, PageTitleInterface, TopActionObjInterface
 {
     public function topActionObj()
@@ -122,7 +127,7 @@ class DemoTermsA
             true
         );
 
-        AdminLayoutSelector::render($html, $this);
+        $this->renderInLayout($html);
     }
 
 }

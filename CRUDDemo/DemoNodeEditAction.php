@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @author Oleg Loginov <olognv@gmail.com>
+ */
 
 namespace CRUDDemo;
 
@@ -15,13 +20,12 @@ use OLOG\CRUD\FWTextarea;
 use OLOG\CRUD\FWTimestamp;
 use OLOG\CRUD\FGroup;
 use OLOG\CRUD\FWAceTextarea;
-use OLOG\Layouts\AdminLayoutSelector;
 use OLOG\Layouts\PageTitleInterface;
 use OLOG\Layouts\TopActionObjInterface;
 use OLOG\MaskActionInterface;
 
 class DemoNodeEditAction
-    extends DemoNodeBase
+    extends DemoNodeABase
     implements MaskActionInterface, PageTitleInterface, TopActionObjInterface
 {
     static public function mask(){
@@ -100,6 +104,6 @@ class DemoNodeEditAction
             ]
         );
 
-        AdminLayoutSelector::render($html, $this);
+        $this->renderInLayout($html);
     }
 }
