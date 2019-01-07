@@ -106,7 +106,9 @@ class DemoNodesA
             ],
 			'weight',
 			$table_id,
-            'Nodes'
+            'Nodes',
+            false,
+            5
 		);
 
 		// Загрузка скриптов

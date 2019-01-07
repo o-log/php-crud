@@ -157,7 +157,7 @@ class CTable
 	 * @param string $order_by
 	 * @return string
 	 */
-	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '', $title = '', $display_total_rows_count = false)
+	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '', $title = '', $display_total_rows_count = false, $default_page_size = 30)
 	{
 
 	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
@@ -174,14 +174,14 @@ class CTable
 
         // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
 
-		$html = HTML::div($table_container_element_id, '', function() use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $order_by, $table_id, $display_total_rows_count, $title) {
+		$html = HTML::div($table_container_element_id, '', function() use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $order_by, $table_id, $display_total_rows_count, $title, $default_page_size) {
             //echo '<div>';
             //echo '<div>';
 
             echo self::filtersAndCreateButtonHtmlInline($table_id, $filters_arr, $create_form_html, $title);
 
             $total_rows_count = 0;
-            $page_size = Pager::getPageSize($table_id);
+            $page_size = Pager::getPageSize($table_id, $default_page_size);
             $start = Pager::getPageOffset($table_id);
             $objs_ids_arr = CInternalTObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $start, $page_size, $order_by, $display_total_rows_count, $total_rows_count);
 
@@ -245,7 +245,7 @@ class CTable
                 echo '</tbody>';
                 echo '</table>';
 
-                echo Pager::renderPager($table_id, count($objs_ids_arr), $display_total_rows_count, $total_rows_count);
+                echo Pager::renderPager($table_id, count($objs_ids_arr), $display_total_rows_count, $total_rows_count, $default_page_size);
             }
 
             //echo '</div>';
