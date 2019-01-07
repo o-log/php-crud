@@ -87,9 +87,7 @@ class DemoNodesA
 				),
                 new TCol(
                     'Current time',
-                    new TWTimestamp(function(DemoNode $node){
-                        return time();
-                    })
+                    new TWTimestamp(DemoNode::_CREATED_AT_TS, 'auto')
                 ),
                 new TCol(
                     '',

@@ -26,7 +26,15 @@ class TWTimestamp implements TWInterface
             return '';
         }
 
-        $date = date($this->getFormat(), $timestamp);
+        if ($this->getFormat() == 'auto'){
+            if (date('Ymd') == date('Ymd', $timestamp)){
+                $date = date("H:i", $timestamp);
+            } else {
+                $date = date("d.m.Y", $timestamp);
+            }
+        } else {
+            $date = date($this->getFormat(), $timestamp);
+        }
         return HTML::content($date);
     }
 

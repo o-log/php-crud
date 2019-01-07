@@ -22,6 +22,7 @@ class DemoNode implements
     const DB_ID = \CRUDDemo\CrudDemoConfig::SPACE_CRUDDEMO;
     const DB_TABLE_NAME = 'node';
 
+    const _CREATED_AT_TS = 'created_at_ts';
     protected $created_at_ts = 0;
     protected $is_published = 0;
     protected $published_at_datetime_str = "0001-01-01";

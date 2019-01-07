@@ -187,11 +187,11 @@ class CTable
 
             if (($start == 0) && (count($objs_ids_arr) == 0)) {
                 // контенер с классом table здесь должен быть обязательно, инача js не сможет извлечь таблицу из выдачи
-                echo '<table class="table table-hover table-sm"><tr><td>';
+                echo '<table class="table table-hover"><tr><td>';
                 BT4::card('', '<div class="fa fa-archive"></div><div>Нет записей</div>', ['text-center']);
                 echo '</td></tr></table>';
             } else {
-                echo '<table class="table table-hover table-sm">';
+                echo '<table class="table table-hover">';
 
                 /** @var TColInterface $column_obj */
                 $has_nonempty_th = false;

@@ -98,6 +98,10 @@ class DemoNodeEditAction
                 new FGroup(
                     'пример Ace Editor',
                     new FWAceTextarea('body')
+                ),
+                new FGroup(
+                    'created at ts',
+                    new FWTimestamp(DemoNode::_CREATED_AT_TS)
                 )
             ]
         );
