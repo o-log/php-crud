@@ -19,9 +19,9 @@ use OLOG\Url;
 
 class CTable
 {
-	const KEY_LIST_COLUMNS = 'LIST_COLUMNS';
+    const KEY_LIST_COLUMNS = 'LIST_COLUMNS';
 
-	const OPERATION_ADD_MODEL = 'OPERATION_ADD_MODEL';
+    const OPERATION_ADD_MODEL = 'OPERATION_ADD_MODEL';
     const OPERATION_DELETE_MODEL = 'OPERATION_DELETE_MODEL';
     const OPERATION_SWAP_MODEL_WEIGHT = 'OPERATION_SWAP_MODEL_WEIGHT';
     const OPERATION_UPDATE_MODEL_FIELD = 'OPERATION_UPDATE_MODEL_FIELD';
@@ -36,7 +36,7 @@ class CTable
         // TODO: do not pass DB table name in form - pass crud table id instead, get model class name from crud table
         // TODO: also check model owner
         $model_class_name = POST::required(TWDelete::FIELD_CLASS_NAME);
-        if (!is_a($model_class_name, \OLOG\Model\ActiveRecordInterface::class, true)){
+        if (!is_a($model_class_name, \OLOG\Model\ActiveRecordInterface::class, true)) {
             throw new \Exception();
         }
 
@@ -47,7 +47,7 @@ class CTable
 
         $redirect_url = POST::optional(TWDelete::FIELD_REDIRECT_AFTER_DELETE_URL, '');
 
-        if ($redirect_url != ''){
+        if ($redirect_url != '') {
             Redirects::redirect($redirect_url);
         }
 
@@ -59,7 +59,7 @@ class CTable
         // TODO: do not pass DB table name in form - pass crud table id instead, get model class name from crud table
         // TODO: also check model owner
         $model_class_name = POST::required('_class_name'); // TODO: constant for field name
-        if (!is_a($model_class_name, WeightInterface::class, true)){
+        if (!is_a($model_class_name, WeightInterface::class, true)) {
             throw new \Exception();
         }
 
@@ -72,7 +72,7 @@ class CTable
         }
 
         $context_arr = [];
-        foreach ($context_fields_names_arr as $context_field_name){
+        foreach ($context_fields_names_arr as $context_field_name) {
             $context_arr[$context_field_name] = NullablePostFields::optionalFieldValue($context_field_name);
         }
 
@@ -88,7 +88,7 @@ class CTable
         $table_id_from_request = REQUEST::optional(self::FIELD_CRUDTABLE_ID, '');
 
         // проверяем, что операция выполняется для таблицы из запроса, потому что класс модели мы берем из таблицы
-        if ($table_id_from_request != $table_id){
+        if ($table_id_from_request != $table_id) {
             return;
         }
 
@@ -107,7 +107,7 @@ class CTable
         );
         */
 
-        if (!is_a($model_class_name, \OLOG\Model\ActiveRecordInterface::class, true)){
+        if (!is_a($model_class_name, \OLOG\Model\ActiveRecordInterface::class, true)) {
             throw new \Exception();
         }
 
@@ -122,14 +122,16 @@ class CTable
         $obj->save();
     }
 
-    static protected function filterFormFieldName($table_id, $filter_index){
-		return 'table_' . $table_id . '_filter_' . $filter_index;
-	}
+    static protected function filterFormFieldName($table_id, $filter_index)
+    {
+        return 'table_' . $table_id . '_filter_' . $filter_index;
+    }
 
-    static public function executeOperations($table_id = '', $model_class_name = ''){
+    static public function executeOperations($table_id = '', $model_class_name = '')
+    {
         static $__operations_executed = false;
 
-        if ($__operations_executed){
+        if ($__operations_executed) {
             return;
         }
 
@@ -143,47 +145,49 @@ class CTable
             self::swapModelWeightOperation();
         });
 
-        Form::match(self::OPERATION_UPDATE_MODEL_FIELD, function () use ($table_id,  $model_class_name) {
+        Form::match(self::OPERATION_UPDATE_MODEL_FIELD, function () use ($table_id, $model_class_name) {
             self::updateModelFieldOperation($table_id, $model_class_name);
         });
     }
 
-	/**
+    /**
      * table_id - это идентификатор таблицы на странице, к которому привязываются все данные: имена полей формы и т.п.
      * @param $model_class_name
-	 * @param $create_form_html
-	 * @param $column_obj_arr
-	 * @param array $filters_arr
-	 * @param string $order_by
-	 * @return string
-	 */
-	static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $order_by = '', $table_id = '', $title = '', $display_total_rows_count = false, $default_page_size = 30)
-	{
+     * @param $create_form_html
+     * @param $column_obj_arr
+     * @param array $filters_arr
+     * @param string $default_orderby
+     * @return string
+     */
+    static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $default_orderby = '', $tableid = '', $title = '', $display_total_rows_count = false, $default_page_size = 30)
+    {
 
-	    // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
-        self::executeOperations($table_id, $model_class_name);
+        // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
+        self::executeOperations($tableid, $model_class_name);
 
-		//
-		// вывод таблицы
-		//
+        //
+        // вывод таблицы
+        //
 
-		$table_container_element_id = uniqid('tableContainer_');
-		if ($table_id) {
-			$table_container_element_id = $table_id;
-		}
+        $table_container_element_id = uniqid('tableContainer_');
+        if ($tableid) {
+            $table_container_element_id = $tableid;
+        }
+
+        $orderby = POST::optional(self::orderbyInputName($tableid), $default_orderby);
 
         // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
 
-		$html = HTML::div($table_container_element_id, '', function() use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $order_by, $table_id, $display_total_rows_count, $title, $default_page_size) {
+        $html = HTML::div($table_container_element_id, '', function () use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $orderby, $tableid, $display_total_rows_count, $title, $default_page_size) {
             //echo '<div>';
             //echo '<div>';
 
-            echo self::filtersAndCreateButtonHtmlInline($table_id, $filters_arr, $create_form_html, $title);
+            echo self::filtersAndCreateButtonHtmlInline($tableid, $filters_arr, $create_form_html, $title, $orderby);
 
             $total_rows_count = 0;
-            $page_size = Pager::getPageSize($table_id, $default_page_size);
-            $start = Pager::getPageOffset($table_id);
-            $objs_ids_arr = CInternalTObjectsSelector::getObjIdsArrForClassName($table_id, $model_class_name, $filters_arr, $start, $page_size, $order_by, $display_total_rows_count, $total_rows_count);
+            $page_size = Pager::getPageSize($tableid, $default_page_size);
+            $start = Pager::getPageOffset($tableid);
+            $objs_ids_arr = CInternalTObjectsSelector::getObjIdsArrForClassName($model_class_name, $filters_arr, $start, $page_size, $orderby, $display_total_rows_count, $total_rows_count);
 
             if (($start == 0) && (count($objs_ids_arr) == 0)) {
                 // контенер с классом table здесь должен быть обязательно, инача js не сможет извлечь таблицу из выдачи
@@ -206,13 +210,17 @@ class CTable
                     echo '<thead><tr>';
                     foreach ($column_obj_arr as $column_obj) {
                         assert($column_obj instanceof TColInterface);
-                        echo '<th>' . $column_obj->getTitle() . '</th>';
+                        echo '<th class="js-olog-ctable-colhead" data-orderby-asc="' . $column_obj->getOrderbyAsc() . '">';
+                        echo $column_obj->getTitle();
+                        echo '</th>';
                     }
                     echo '</tr></thead>';
                 }
 
                 echo '<tbody>';
 
+                $twcontext = new TWContext();
+                $twcontext->row_index = $start;
                 foreach ($objs_ids_arr as $obj_id) {
                     $obj_obj = CInternalObjectLoader::createAndLoadObject($model_class_name, $obj_id);
 
@@ -223,7 +231,6 @@ class CTable
                         /** @var TWInterface $widget_obj */
                         $widget_obj = $column_obj->getWidgetObj();
                         assert($widget_obj);
-                        assert($widget_obj instanceof TWInterface);
 
                         $col_width_attr = '';
 
@@ -236,43 +243,127 @@ class CTable
                         }
 
                         echo '<td ' . $col_width_attr . ' style="word-break: break-all;">';
-                        echo $widget_obj->html($obj_obj);
-                        echo '</td>';
 
+                        if ($widget_obj instanceof TWInterface) {
+                            echo $widget_obj->html($obj_obj);
+                        } else if ($widget_obj instanceof TW2Interface) {
+                            echo $widget_obj->html($obj_obj, $twcontext);
+                        } else {
+                            throw new \Exception('Unsupported table widget');
+                        }
+
+                        echo '</td>';
                     }
                     echo '</tr>';
+                    $twcontext->row_index++;
                 }
                 echo '</tbody>';
                 echo '</table>';
 
-                echo Pager::renderPager($table_id, count($objs_ids_arr), $display_total_rows_count, $total_rows_count, $default_page_size);
+                echo Pager::renderPager($tableid, count($objs_ids_arr), $display_total_rows_count, $total_rows_count, $default_page_size);
             }
 
             //echo '</div>';
             //echo '</div>';
-		});
+        });
 
-		// Загрузка скриптов
-		$html .= CInternalTScript::getHtml($table_container_element_id, Url::path());
+        // Загрузка скриптов
+        $html .= CInternalTScript::getHtml($table_container_element_id, Url::path());
 
-		return $html;
-	}
+        return $html;
+    }
 
-    static public function filtersAndCreateButtonHtmlInline($table_index_on_page, $filters_arr, $create_form_html = '', $title = '')
+    static public function tsvCellRender($str)
     {
-	    if (empty($filters_arr) && ($create_form_html == '')) {
-		    return '';
-	    }
+        $str = preg_replace('@[\R\t]@', ' ', $str);
+        return $str . "\t";
+    }
 
-	    $html = HTML::div('filters-inline clearfix mb-2', '', function () use ($table_index_on_page, $filters_arr, $create_form_html, $title) {
-	        //echo '<style>.filters-inline {margin-bottom: 10px;}</style>';
+    static public function tsvRowRender($str)
+    {
+        $str = preg_replace('@\R@', ' ', $str);
+        return $str . "\r\n";
+    }
 
-            if ($title != ''){
+    /**
+     * table_id - это идентификатор таблицы на странице, к которому привязываются все данные: имена полей формы и т.п.
+     * @param $model_class_name
+     * @param $create_form_html
+     * @param $column_obj_arr
+     * @param array $filters_arr
+     * @param string $order_by
+     * @return string
+     */
+    static public function tsv($model_class_name, $column_obj_arr, $filters_arr = [], $order_by = '')
+    {
+        $html = '';
+
+        $total_rows_count = 0;
+        $objs_ids_arr = CInternalTObjectsSelector::getObjIdsArrForClassName($model_class_name, $filters_arr, 0, 100000, $order_by, false, $total_rows_count);
+
+
+        /** @var TColInterface $column_obj */
+        $has_nonempty_th = false;
+        foreach ($column_obj_arr as $column_obj) {
+            assert($column_obj instanceof TColInterface);
+            if ($column_obj->getTitle() != '') {
+                $has_nonempty_th = true;
+            }
+        }
+
+        if ($has_nonempty_th) {
+            $row_html = '';
+            foreach ($column_obj_arr as $column_obj) {
+                assert($column_obj instanceof TColInterface);
+                $row_html .= self::tsvCellRender($column_obj->getTitle());
+            }
+
+            $html .= self::tsvRowRender($row_html);
+        }
+
+        foreach ($objs_ids_arr as $obj_id) {
+            $row_html = '';
+
+            $obj_obj = CInternalObjectLoader::createAndLoadObject($model_class_name, $obj_id);
+
+            /** @var TColInterface $column_obj */
+            foreach ($column_obj_arr as $column_obj) {
+                assert($column_obj instanceof TColInterface);
+                /** @var TWInterface $widget_obj */
+                $widget_obj = $column_obj->getWidgetObj();
+                assert($widget_obj);
+                assert($widget_obj instanceof TWInterface);
+
+                $row_html .= self::tsvCellRender($widget_obj->html($obj_obj));
+            }
+
+            $html .= self::tsvRowRender($row_html);
+        }
+
+        return $html;
+    }
+
+    static public function orderbyInputName($tableid){
+        return $tableid . '__ctable-orderby';
+    }
+
+    static public function filtersAndCreateButtonHtmlInline($tableid, $filters_arr, $create_form_html = '', $title = '', $orderby = '')
+    {
+        if (empty($filters_arr) && ($create_form_html == '')) {
+            return '';
+        }
+
+        $html = HTML::div('filters-inline clearfix mb-2', '', function () use ($tableid, $filters_arr, $create_form_html, $title, $orderby) {
+            //echo '<style>.filters-inline {margin-bottom: 10px;}</style>';
+
+            if ($title != '') {
                 echo '<span class="font-weight-bold mr-3">' . $title . '</span>';
             }
 
             if (!empty($filters_arr)) {
-                echo '<form class="filters-form form-inline" style="display: inline;">';
+                echo '<form class="filters-form form-inline" style="display: inline;" id="' . $tableid . '__filtersform">';
+
+                echo '<input type="hidden" class="js-olog-ctable-orderby" name="' . self::orderbyInputName($tableid) . '" value="' . $orderby . '">';
 
                 foreach ($filters_arr as $filter_obj) {
                     if ($filter_obj instanceof TFInterface) {
@@ -294,7 +385,7 @@ class CTable
                 echo '</form>';
             }
 
-            if ($create_form_html != ''){
+            if ($create_form_html != '') {
                 $create_form_element_id = 'collapse_' . rand(1, 999999);
 
                 //echo '<span class="pull-right">';
@@ -311,14 +402,14 @@ class CTable
                 echo MagnificPopup::popupHtml($create_form_element_id, $create_form_html);
                 //}
             }
-	    });
+        });
 
-	    return $html;
+        return $html;
     }
 
     static protected function toolbarHtml($table_index_on_page, $create_form_html, $filters_arr)
     {
-        if ($create_form_html == ''){
+        if ($create_form_html == '') {
             return '';
         }
 

@@ -11,11 +11,29 @@ class TCol implements TColInterface
 {
     public $title;
     public $widget_obj;
+    public $orderby_asc;
 
-    public function __construct($title, $widget_obj)
+    /**
+     * @return mixed
+     */
+    public function getOrderbyAsc()
+    {
+        return $this->orderby_asc;
+    }
+
+    /**
+     * @param mixed $order_asc
+     */
+    public function setOrderbyAsc($orderby_asc): void
+    {
+        $this->orderby_asc = $orderby_asc;
+    }
+
+    public function __construct($title, $widget_obj, $orderby_asc = '')
     {
         $this->setTitle($title);
         $this->setWidgetObj($widget_obj);
+        $this->setOrderbyAsc($orderby_asc);
     }
 
     /**

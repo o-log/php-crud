@@ -57,10 +57,51 @@ class CInternalTScript
 							this.initOptionsEditor();
 							this.initTextEditor();
 							this.initClickRow();
+							this.orderShow();
 						};
+
+                        this.orderShow = function() {
+                            let $container = this.getContainerJqueryObj();
+                            let $orderby = $container.find('.js-olog-ctable-orderby');
+
+                            $container.find('.js-olog-ctable-colhead').each(
+                                (index, colhead) => {
+                                    $colhead = $(colhead);
+                                    let colhead_orderby_asc = $colhead.data('orderby-asc');
+
+                                    // если у колонки указано поле для сортировки - выводим стрелку и вешаем обработчик клика
+                                    if (colhead_orderby_asc !== '') {
+                                        let colhead_orderby_desc = colhead_orderby_asc + ' desc';
+
+                                        // превращаем название колонки в ссылку чтобы выглядело кликабельным
+                                        $colhead.html('<a href="#">' + $colhead.html() + '</a>');
+
+                                        if (colhead_orderby_asc === $orderby.val()) {
+                                            $colhead.append(' &#x25BC;');
+                                        }
+
+                                        if (colhead_orderby_desc === $orderby.val()) {
+                                            $colhead.append(' &#x25B2;');
+                                        }
+
+                                        $colhead.on('click', () => {
+                                            if ($orderby.val() === colhead_orderby_asc) {
+                                                $orderby.val(colhead_orderby_desc);
+                                            } else {
+                                                $orderby.val(colhead_orderby_asc);
+                                            }
+
+                                            $container.find('.filters-form').submit();
+                                            return false;
+                                        });
+                                    }
+                                }
+                            );
+                        };
 
 						this.reInit = function () {
 							this.initClickRow();
+                            this.orderShow();
 						};
 
 						this.initFilter = function () {

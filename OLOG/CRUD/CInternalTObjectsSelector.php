@@ -33,16 +33,6 @@ class CInternalTObjectsSelector
 
         /** @var TFInterface $filter_obj */
         foreach ($filters_arr as $filter_obj) {
-            /*
-            assert($filter_obj instanceof InterfaceCRUDTableFilter2);
-
-            list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
-            if ($filter_sql_condition != ''){
-                $where .= ' and ' . $filter_sql_condition;
-            }
-
-            $query_param_values_arr = array_merge($query_param_values_arr, $filter_placeholder_values_arr);
-            */
             if ($filter_obj instanceof TFInterface) {
                 list($filter_sql_condition, $filter_placeholder_values_arr) = $filter_obj->sqlConditionAndPlaceholderValue();
                 if ($filter_sql_condition != ''){
@@ -91,7 +81,7 @@ class CInternalTObjectsSelector
      * @param $context_arr array Массив пар "имя поля" - "значение поля"
      * @return array Массив идентикаторов объектов.
      */
-    static public function getObjIdsArrForClassName($table_index_on_page, $model_class_name, $filters_arr, $start, $page_size, $order_by = '', $execute_total_rows_count_query = false, &$total_rows_count = 0)
+    static public function getObjIdsArrForClassName($model_class_name, $filters_arr, $start, $page_size, $order_by = '', $execute_total_rows_count_query = false, &$total_rows_count = 0)
     {
         if (!is_a($model_class_name, \OLOG\Model\ActiveRecordInterface::class, true)){
             throw new \Exception();

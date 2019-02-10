@@ -34,6 +34,7 @@ class DemoNode implements
     protected $id;
     protected $state_code = 0;
     protected $body = '';
+    const _TITLE = 'title';
     protected $title = '';
 
     public function beforeSave(): void{

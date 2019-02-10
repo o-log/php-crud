@@ -15,6 +15,7 @@ use OLOG\CRUD\TFEqualOptionsInline;
 use OLOG\CRUD\TFLikeInline;
 use OLOG\CRUD\TWDelete;
 use OLOG\CRUD\TWHtmlWithLink;
+use OLOG\CRUD\TWRowNumber;
 use OLOG\CRUD\TWText;
 use OLOG\CRUD\FWInput;
 use OLOG\CRUD\TWTimestamp;
@@ -67,17 +68,20 @@ class DemoNodesA
 				$form_id
 			),
 			[
-				new TCol(
-					'Title',
-					new TWHtmlWithLink(
-                        function(DemoNode $node){
-					        return 'DIRECT: ' . $node->getTitle() . '<br>REVERSE: ' . $node->getReverseTitle();
-                        },
+                new TCol(
+                    '№',
+                    new TWRowNumber()
+                ),
+                new TCol(
+                    'Title',
+                    new TWHtmlWithLink(
+                        DemoNode::_TITLE,
                         function(DemoNode $node) {
                             return (new DemoNodeEditAction($node->getId()))->url();
                         }
-                    )
-				),
+                    ),
+                    DemoNode::_TITLE
+                ),
 				new TCol(
 					'Reverse title',
 					new TWText(function(DemoNode $node){
@@ -87,11 +91,13 @@ class DemoNodesA
 				),
                 new TCol(
                     'Current time',
-                    new TWTimestamp(DemoNode::_CREATED_AT_TS, '')
+                    new TWTimestamp(DemoNode::_CREATED_AT_TS, ''),
+                    DemoNode::_CREATED_AT_TS
                 ),
                 new TCol(
                     '',
-                    new TWWeight([])
+                    new TWWeight([]),
+                    DemoNode::_WEIGHT
                 ),
                 new TCol(
                     '',
@@ -106,12 +112,39 @@ class DemoNodesA
 			$table_id,
             'Nodes',
             false,
-            5
+            7
 		);
 
 		// Загрузка скриптов
 		//$html .= CCreateFormScript::getHtml($form_id, $table_id);
 
-		$this->renderInLayout($html);
+        $html .= '<code style="display: block; white-space: pre-wrap;">' . CTable::tsv(
+            DemoNode::class,
+            [
+                new TCol(
+                    'Title',
+                    new TWText(DemoNode::_TITLE)
+                ),
+                new TCol(
+                    'Reverse title',
+                    new TWText(function(DemoNode $node){
+                        $title = $node->getTitle();
+                        return 'REVERSE: ' . strrev($title);
+                    })
+                ),
+                new TCol(
+                    'Current time',
+                    new TWTimestamp(DemoNode::_CREATED_AT_TS, '')
+                ),
+            ],
+            [
+                new TFLikeInline('h7g98347hg934', 'Название', 'title'),
+                new TFEqualOptionsInline('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false)
+            ],
+            'weight'
+        ) . '</code>';
+
+
+        $this->renderInLayout($html);
 	}
 }

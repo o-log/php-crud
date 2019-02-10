@@ -11,4 +11,5 @@ interface TColInterface
 {
     public function getTitle();
     public function getWidgetObj();
+    public function getOrderbyAsc();
 }
