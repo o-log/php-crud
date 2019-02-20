@@ -7,6 +7,7 @@
 	},
 	"require" : {
 		"php": ">=7.2",
+		"ext-mbstring": "*",
 		"o-log/php-bt" : "9.*",
 		"o-log/php-model" : "10.*"
 	},

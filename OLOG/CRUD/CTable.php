@@ -275,13 +275,13 @@ class CTable
 
     static public function tsvCellRender($str)
     {
-        $str = preg_replace('@[\R\t]@', ' ', $str);
+        $str = mb_ereg_replace('[\R\t]', ' ', $str);
         return $str . "\t";
     }
 
     static public function tsvRowRender($str)
     {
-        $str = preg_replace('@\R@', ' ', $str);
+        $str = mb_ereg_replace('\R', ' ', $str);
         return $str . "\r\n";
     }
 
