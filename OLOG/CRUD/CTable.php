@@ -273,13 +273,13 @@ class CTable
         return $html;
     }
 
-    static public function tsvCellRender($str)
+    static public function tsvCellRender(string $str): string
     {
         $str = mb_ereg_replace('[\R\t]', ' ', $str);
         return $str . "\t";
     }
 
-    static public function tsvRowRender($str)
+    static public function tsvRowRender(string $str): string
     {
         $str = mb_ereg_replace('\R', ' ', $str);
         return $str . "\r\n";
@@ -315,7 +315,7 @@ class CTable
             $row_html = '';
             foreach ($column_obj_arr as $column_obj) {
                 assert($column_obj instanceof TColInterface);
-                $row_html .= self::tsvCellRender($column_obj->getTitle());
+                $row_html .= self::tsvCellRender((string) $column_obj->getTitle());
             }
 
             $html .= self::tsvRowRender($row_html);
@@ -334,7 +334,7 @@ class CTable
                 assert($widget_obj);
                 assert($widget_obj instanceof TWInterface);
 
-                $row_html .= self::tsvCellRender($widget_obj->html($obj_obj));
+                $row_html .= self::tsvCellRender((string) $widget_obj->html($obj_obj));
             }
 
             $html .= self::tsvRowRender($row_html);
