@@ -21,7 +21,7 @@ class TWDatetime implements TWInterface
 	 */
 	public function html($obj)
 	{
-		$datetime = CCompiler::compile($this->getDatetime(), ['this' => $obj]);
+		$datetime = CCompiler::fieldValueOrCallableResult($this->getDatetime(), $obj);
 		$date_obj = new \DateTime($datetime);
 		$date = $date_obj->format($this->getFormat());
 		return HTML::content($date);

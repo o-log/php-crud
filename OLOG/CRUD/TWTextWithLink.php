@@ -16,9 +16,9 @@ class TWTextWithLink implements TWInterface
     protected $classes_str;
 
     public function html($obj){
-        $url = CCompiler::compile($this->getLink(), ['this' => $obj]);
+        $url = CCompiler::fieldValueOrCallableResult($this->getLink(), $obj);
 
-        $text = CCompiler::compile($this->getText(), ['this' => $obj]);
+        $text = CCompiler::fieldValueOrCallableResult($this->getText(), $obj);
 
         if (trim((string) $text) == ''){
             $text = '#EMPTY#';

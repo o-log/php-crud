@@ -16,9 +16,9 @@ class TWHtmlWithLink implements TWInterface
     protected $classes_str;
 
     public function html($obj){
-        $url = CCompiler::compile($this->getLink(), ['this' => $obj]);
+        $url = CCompiler::fieldValueOrCallableResult($this->getLink(), $obj);
 
-	    $html = CCompiler::compile($this->getHtml(), ['this' => $obj]);
+	    $html = CCompiler::fieldValueOrCallableResult($this->getHtml(), $obj);
 
         if (trim((string) $html) == ''){
 	        $html = '#EMPTY#';

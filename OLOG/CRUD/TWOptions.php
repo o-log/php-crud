@@ -21,7 +21,7 @@ class TWOptions implements TWInterface
      */
     public function html($obj)
     {
-        $value = CCompiler::compile($this->getValue(), ['this' => $obj]);
+        $value = CCompiler::fieldValueOrCallableResult($this->getValue(), $obj);
 
         $html = "UNDEFINED";
         $options_arr = $this->getOptionsArr();

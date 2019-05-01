@@ -61,7 +61,8 @@ class FWReferenceAjax implements FWInterface
 
         if (!is_null($field_value)) {
             $referenced_obj = CInternalObjectLoader::createAndLoadObject($referenced_class_name, $field_value);
-            $referenced_obj_title = CInternalFieldsAccess::getObjectFieldValue($referenced_obj, $referenced_class_title_field);
+//            $referenced_obj_title = CInternalFieldsAccess::getObjectFieldValue($referenced_obj, $referenced_class_title_field);
+            $referenced_obj_title = CCompiler::fieldValueOrCallableResult($referenced_class_title_field, $referenced_obj);
             $disabled_btn_link = '';
         }
 
@@ -158,99 +159,61 @@ class FWReferenceAjax implements FWInterface
         return $html;
     }
 
-    /**
-     * @return mixed
-     */
     public function getIsRequired()
     {
         return $this->is_required;
     }
 
-    /**
-     * @param mixed $is_required
-     */
     public function setIsRequired($is_required)
     {
         $this->is_required = $is_required;
     }
 
-    /**
-     * @return mixed
-     */
     public function getFieldName()
     {
         return $this->field_name;
     }
 
-    /**
-     * @param mixed $field_name
-     */
     public function setFieldName($field_name)
     {
         $this->field_name = $field_name;
     }
 
-    /**
-     * @return mixed
-     */
     public function getAjaxActionUrl()
     {
         return $this->ajax_action_url;
     }
 
-    /**
-     * @param mixed $ajax_action_url
-     */
     public function setAjaxActionUrl($ajax_action_url)
     {
         $this->ajax_action_url = $ajax_action_url;
     }
 
-
-
-    /**
-     * @return mixed
-     */
     public function getReferencedClassName()
     {
         return $this->referenced_class_name;
     }
 
-    /**
-     * @param mixed $referenced_class_name
-     */
     public function setReferencedClassName($referenced_class_name)
     {
         $this->referenced_class_name = $referenced_class_name;
     }
 
-    /**
-     * @return mixed
-     */
     public function getReferencedClassTitleField()
     {
         return $this->referenced_class_title_field;
     }
 
-    /**
-     * @param mixed $referenced_class_title_field
-     */
     public function setReferencedClassTitleField($referenced_class_title_field)
     {
         $this->referenced_class_title_field = $referenced_class_title_field;
     }
 
-    /**
-     * @return mixed
-     */
     public function getEditorUrl()
     {
         return $this->editor_url;
     }
 
-    /**
-     * @param mixed $editor_url
-     */
     public function setEditorUrl($editor_url)
     {
         $this->editor_url = $editor_url;

@@ -19,7 +19,7 @@ class TWText implements TWInterface
      * @return mixed
      */
     public function html($obj){
-        $html = CCompiler::compile($this->getText(), ['this' => $obj]);
+        $html = CCompiler::fieldValueOrCallableResult($this->getText(), $obj);
         return HTML::content($html);
     }
 

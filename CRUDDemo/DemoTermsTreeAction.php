@@ -74,7 +74,7 @@ class DemoTermsTreeAction
                     new TWTextWithLink(
                         'title',
                         function (DemoTerm $term){
-                            return (new DemoTermEditAction($term->getId()))->url();
+                            return (new DemoTermEditA($term->getId()))->url();
                         }
                     )
                 ),

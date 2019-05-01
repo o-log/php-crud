@@ -21,7 +21,7 @@ class TWTimestamp implements TWInterface
      */
     public function html($obj)
     {
-        $timestamp = CCompiler::compile($this->getTimestamp(), ['this' => $obj]);
+        $timestamp = CCompiler::fieldValueOrCallableResult($this->getTimestamp(), $obj);
         if (is_null($timestamp)){
             return '';
         }

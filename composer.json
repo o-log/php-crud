@@ -9,7 +9,7 @@
 		"php": ">=7.2",
 		"ext-mbstring": "*",
 		"o-log/php-bt" : "9.*",
-		"o-log/php-model" : "10.*"
+		"o-log/php-model" : "dev-master#2c0fb78d14505dc5f4731d3d78ec2ed66f794588"
 	},
 	"autoload-dev" : {
 		"psr-0" : {

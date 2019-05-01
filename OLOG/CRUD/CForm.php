@@ -70,11 +70,11 @@ class CForm
         if ($url_to_redirect_after_save != '') {
             $obj = CInternalObjectLoader::createAndLoadObject($model_class_name, $object_id);
             $redirect_url = $url_to_redirect_after_save;
-            $redirect_url = CCompiler::compile($redirect_url, ['this' => $obj]);
+            $redirect_url = CCompiler::fieldValueOrCallableResult($redirect_url, $obj);
 
             $params_arr = [];
             foreach ($redirect_get_params_arr as $param => $value) {
-                $params_arr[$param] = CCompiler::compile($value, ['this' => $obj]);
+                $params_arr[$param] = CCompiler::fieldValueOrCallableResult($value, $obj);
             }
 
             if (!empty($redirect_get_params_arr)) {

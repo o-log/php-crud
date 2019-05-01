@@ -17,7 +17,7 @@ class TWHtml implements TWInterface
     }
 
     public function html($obj){
-        return  CCompiler::compile($this->getHtml(), ['this' => $obj]);
+        return  CCompiler::fieldValueOrCallableResult($this->getHtml(), $obj);
     }
 
     /**

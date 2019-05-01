@@ -34,7 +34,7 @@ class DemoNodesA
 
     public function topActionObj()
     {
-        return new DemoMainPageAction();
+        return new DemoMainA();
     }
 
     public function url()

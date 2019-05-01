@@ -10,7 +10,7 @@ namespace CRUDDemo;
 use OLOG\ActionInterface;
 use OLOG\Layouts\PageTitleInterface;
 
-class DemoMainPageAction
+class DemoMainA
     extends CRUDDemoABase
     implements ActionInterface, PageTitleInterface
 {
@@ -28,7 +28,8 @@ class DemoMainPageAction
         $html .= '<div>';
         $html .= '<a class="btn btn-secondary" href="' . (new DemoNodesA())->url() . '">NODES</a> ';
         $html .= '<a class="btn btn-secondary" href="' . (new DemoTermsA())->url() . '">TERMS</a> ';
-        $html .= '<a class="btn btn-secondary" href="' . (new DemoTermsTreeAction())->url() . '">TERMS TREE</a>';
+        $html .= '<a class="btn btn-secondary" href="' . (new DemoTermsTreeAction())->url() . '">TERMS TREE</a> ';
+        $html .= '<a class="btn btn-secondary" href="' . (new DemoProtectedsA())->url() . '">PROTECTED</a>';
         $html .= '</div>';
 
         $this->renderInLayout($html);

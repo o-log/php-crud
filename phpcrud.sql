@@ -25,4 +25,6 @@ alter table term add column vocabulary_id int  not null   default 1  /* rand5880
 alter table term add column weight int  not null   default 0  /* rand243952 */
 alter table node add column weight int   not null   default 0  /* rand56400 */
 update node set weight = id /* 8736546 */
-
+create table cruddemo_demoprotected (id int not null auto_increment primary key, created_at_ts int not null default 0) engine InnoDB default charset utf8; /* 2019.03.24 16:40:27 */
+alter table cruddemo_demoprotected add column int_val_nullable int   null  ; /* 2019.03.24 16:41:33 */
+alter table cruddemo_demoprotected add column string_val_notnull varchar(255)   not null  ; /* 2019.03.24 16:41:55 */

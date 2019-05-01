@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace CRUDDemo;
 
+use OLOG\CRUD\CForm;
 use OLOG\CRUD\FGroupHidden;
 use OLOG\CRUD\FRow;
 use OLOG\CRUD\FGroup;
@@ -21,7 +22,7 @@ use OLOG\CRUD\TWTextWithLink;
 use OLOG\CRUD\TWWeight;
 use OLOG\MaskActionInterface;
 
-class DemoTermEditAction
+class DemoTermEditA
     extends CRUDDemoABase
     implements MaskActionInterface
 {
@@ -49,7 +50,7 @@ class DemoTermEditAction
 
         $term_obj = DemoTerm::factory($term_id);
 
-        $html .= \OLOG\CRUD\CForm::html(
+        $html .= CForm::html(
             $term_obj,
             [
                 new FGroup(
@@ -91,9 +92,11 @@ class DemoTermEditAction
                     new FWReferenceAjax(
                         'parent_id',
                         DemoTerm::class,
-                        'title',
+                        function (DemoTerm $demoterm){
+                            return $demoterm->getId() . ': ' . $demoterm->getTitle();
+                        },
                         (new DemoAjaxTermsListAction())->url(),
-                        (new DemoTermEditAction(FWReferenceAjax::REFERENCED_ID_PLACEHOLDER))->url()
+                        (new DemoTermEditA(FWReferenceAjax::REFERENCED_ID_PLACEHOLDER))->url()
 
                     )
                 )
@@ -125,7 +128,7 @@ class DemoTermEditAction
                     new TWTextWithLink(
                         DemoTerm::_TITLE,
                         function(DemoTerm $term){
-                            return (new DemoTermEditAction($term->getId()))->url();
+                            return (new DemoTermEditA($term->getId()))->url();
                         }
                     )
                 ),

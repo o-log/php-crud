@@ -35,7 +35,7 @@ class DemoTermsA
 {
     public function topActionObj()
     {
-        return new DemoMainPageAction();
+        return new DemoMainA();
     }
 
     public function pageTitle()
@@ -67,7 +67,7 @@ class DemoTermsA
                             DemoTerm::class,
                             'title',
                             (new DemoAjaxTermsListAction())->url(),
-                            (new DemoTermEditAction(FWReferenceAjax::REFERENCED_ID_PLACEHOLDER))->url()
+                            (new DemoTermEditA(FWReferenceAjax::REFERENCED_ID_PLACEHOLDER))->url()
 
                         )
                     )
@@ -80,7 +80,7 @@ class DemoTermsA
                     new TWTextWithLink(
                         DemoTerm::_TITLE,
                         function(DemoTerm $term){
-                            return (new DemoTermEditAction($term->getId()))->url();
+                            return (new DemoTermEditA($term->getId()))->url();
                         }
                     )
                 ),

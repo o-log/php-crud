@@ -38,7 +38,7 @@ class TWWeight implements TWInterface
         $o .= '<input type="hidden" name="' . self::FORMFIELD_CONTEXT_FIELDS_NAME . '" value="' . HTML::attr(implode(',', array_keys($this->context_fields_arr))) . '">';
 
         foreach ($this->context_fields_arr as $context_field_name => $context_field_value) {
-            $context_field_value = CCompiler::compile($context_field_value, ['this' => $obj]);
+            $context_field_value = CCompiler::fieldValueOrCallableResult($context_field_value, $obj);
             $o .= NullablePostFields::hiddenFieldHtml($context_field_name, $context_field_value);
         }
 

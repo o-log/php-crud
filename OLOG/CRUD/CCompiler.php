@@ -8,23 +8,20 @@ declare(strict_types=1);
 namespace OLOG\CRUD;
 
 class CCompiler {
-    public static function compile($str, array $data)
+    public static function fieldValueOrCallableResult($fieldname_or_callable, $obj)
     {
-        if (self::is_closure($str)){
-            return $str($data['this']);
+        if (self::isClosure($fieldname_or_callable)){
+            return $fieldname_or_callable($obj);
         }
 
-        if (array_key_exists('this', $data)) {
-            $_this = $data['this'];
-            if (CInternalFieldsAccess::objectHasProperty($_this, $str)){
-                return CInternalFieldsAccess::getObjectFieldValue($_this, $str);
-            }
+        if (CInternalFieldsAccess::objectHasProperty($obj, $fieldname_or_callable)){
+            return CInternalFieldsAccess::getObjectFieldValue($obj, $fieldname_or_callable);
         }
 
-        return $str;
+        return $fieldname_or_callable;
     }
 
-    public static function is_closure($t) {
+    public static function isClosure($t) {
         return is_object($t) && ($t instanceof \Closure);
     }
 }
