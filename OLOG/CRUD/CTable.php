@@ -127,7 +127,7 @@ class CTable
         return 'table_' . $table_id . '_filter_' . $filter_index;
     }
 
-    static public function executeOperations($table_id = '', $model_class_name = '')
+    static public function executeOperations($table_id = '', $model_class_name = '', $edit_enabled = false)
     {
         static $__operations_executed = false;
 
@@ -137,15 +137,24 @@ class CTable
 
         $__operations_executed = true;
 
-        Form::match(self::OPERATION_DELETE_MODEL, function () {
+        Form::match(self::OPERATION_DELETE_MODEL, function () use ($edit_enabled) {
+            if (!$edit_enabled){
+                throw new \Exception('Edit not enabled');
+            }
             self::deleteModelOperation();
         });
 
-        Form::match(self::OPERATION_SWAP_MODEL_WEIGHT, function () {
+        Form::match(self::OPERATION_SWAP_MODEL_WEIGHT, function () use ($edit_enabled) {
+            if (!$edit_enabled){
+                throw new \Exception('Edit not enabled');
+            }
             self::swapModelWeightOperation();
         });
 
-        Form::match(self::OPERATION_UPDATE_MODEL_FIELD, function () use ($table_id, $model_class_name) {
+        Form::match(self::OPERATION_UPDATE_MODEL_FIELD, function () use ($table_id, $model_class_name, $edit_enabled) {
+            if (!$edit_enabled){
+                throw new \Exception('Edit not enabled');
+            }
             self::updateModelFieldOperation($table_id, $model_class_name);
         });
     }
@@ -159,11 +168,10 @@ class CTable
      * @param string $default_orderby
      * @return string
      */
-    static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $default_orderby = '', $tableid = '', $title = '', $display_total_rows_count = false, $default_page_size = 30)
+    static public function html($model_class_name, $create_form_html, $column_obj_arr, $filters_arr = [], $default_orderby = '', $tableid = '', $title = '', $display_total_rows_count = false, $default_page_size = 30, $edit_enabled = false)
     {
-
         // TODO: придумать способ автогенерации table_id, который был бы уникальным, но при этом один и тот же когда одну таблицу запрашиваешь несколько раз
-        self::executeOperations($tableid, $model_class_name);
+        self::executeOperations($tableid, $model_class_name, $edit_enabled);
 
         //
         // вывод таблицы

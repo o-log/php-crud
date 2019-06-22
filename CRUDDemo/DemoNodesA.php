@@ -11,6 +11,7 @@ use OLOG\ActionInterface;
 use OLOG\CRUD\CTable;
 use OLOG\CRUD\FRow;
 use OLOG\CRUD\TCol;
+use OLOG\CRUD\TFDateRange;
 use OLOG\CRUD\TFEqualOptionsInline;
 use OLOG\CRUD\TFLikeInline;
 use OLOG\CRUD\TWDelete;
@@ -47,9 +48,9 @@ class DemoNodesA
 		$table_id = 'tableContainer_NodeList';
 		$form_id = 'formElem_NodeList';
 
-		$html = '';
+		ob_start();
 
-		$html .= CTable::html(
+		echo CTable::html(
 			DemoNode::class,
 			\OLOG\CRUD\CForm::html(
 				new DemoNode(),
@@ -106,19 +107,21 @@ class DemoNodesA
 			],
 			[
 			    new TFLikeInline('h7g98347hg934', 'Название', 'title'),
-                new TFEqualOptionsInline('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false)
+                new TFEqualOptionsInline('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false),
+                new TFDateRange('i623ir2r3', '', DemoNode::_CREATED_AT_TS)
             ],
 			'weight',
 			$table_id,
             'Nodes',
             false,
-            7
+            7,
+            true
 		);
 
 		// Загрузка скриптов
 		//$html .= CCreateFormScript::getHtml($form_id, $table_id);
 
-        $html .= '<code style="display: block; white-space: pre-wrap;">' . CTable::tsv(
+        echo '<code style="display: block; white-space: pre-wrap;">' . CTable::tsv(
             DemoNode::class,
             [
                 new TCol(
@@ -144,7 +147,6 @@ class DemoNodesA
             'weight'
         ) . '</code>';
 
-
-        $this->renderInLayout($html);
+        $this->renderInLayout(ob_get_clean());
 	}
 }

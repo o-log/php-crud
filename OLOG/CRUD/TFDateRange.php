@@ -50,13 +50,13 @@ class TFDateRange implements TFInterface
         foreach ([$this->getStartFilterId(), $this->getEndFilterId()] as $filterId)
         {
 
-            $html .= '<input type="hidden" id="' . $filterId . '_input" name="' . $filterId . '"  data-field="' . $filterId . '_date" >
-                <div class="input-group date" id="' . $filterId . '">
-                <input id="' . $filterId . '_date" type="text" class="form-control" value="">
-                <span class="input-group-addon">
-                <span class="fa fa-calendar"></span>
-                </span>
-                </div>';
+            $html .= '<input type="hidden" id="' . $filterId . '_input" name="' . $filterId . '"  data-field="' . $filterId . '_date"/>
+                <span class="input-group date" id="' . $filterId . '">
+                    <input id="' . $filterId . '_date" type="text" class="form-control" value=""/>
+                    <span class="input-group-addon">
+                        <span class="fa fa-calendar"></span>
+                    </span>
+                </span>';
 
             $html .= '<script>
 			$("#' . $filterId . '").datetimepicker({
