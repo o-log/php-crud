@@ -6,16 +6,13 @@ namespace OLOG\CRUD;
 use OLOG\HTML;
 use OLOG\REQUEST;
 
-
 class TFDateRange implements TFInterface
 {
-
     private $title;
     private $field_name;
     private $filter_iniq_id;
     private $placeholder_start;
     private $placeholder_end;
-
 
     private function getStartDateValueFromForm()
     {
@@ -37,28 +34,18 @@ class TFDateRange implements TFInterface
         return $this->getFilterIniqId() . '_end_date';
     }
 
-
-    public function getHtml()
+    static public function generateInputHtml(string $filterId, string $placeholder): string
     {
-        $html = '
-								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
-								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/ru.js"></script>
-				<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
-								<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
-			';
-
-        foreach ([$this->getStartFilterId(), $this->getEndFilterId()] as $filterId)
-        {
-
-            $html .= '<input type="hidden" id="' . $filterId . '_input" name="' . $filterId . '"  data-field="' . $filterId . '_date"/>
-                <span class="input-group date" id="' . $filterId . '">
-                    <input id="' . $filterId . '_date" type="text" class="form-control" value=""/>
+        $html = '';
+        $html .= '<input type="hidden" id="' . $filterId . '_input" name="' . $filterId . '"  data-field="' . $filterId . '_date"/>
+                <span style="display: inline-block;" class="input-group date" id="' . $filterId . '">
+                    <input placeholder="' . $placeholder . '" id="' . $filterId . '_date" type="text" class="form-control form-control-sm" value=""/>
                     <span class="input-group-addon">
                         <span class="fa fa-calendar"></span>
                     </span>
                 </span>';
 
-            $html .= '<script>
+        $html .= '<script>
 			$("#' . $filterId . '").datetimepicker({
 				format: "DD-MM-YYYY HH:mm:ss",
 				sideBySide: true,
@@ -72,7 +59,20 @@ class TFDateRange implements TFInterface
 			});
 		</script>';
 
-        }
+        return $html;
+    }
+
+    public function getHtml()
+    {
+        $html = '
+								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/ru.js"></script>
+				<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
+								<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
+			';
+
+        $html .= self::generateInputHtml($this->getStartFilterId(), $this->getPlaceholderStart());
+        $html .= self::generateInputHtml($this->getEndFilterId(), $this->getPlaceholderEnd());
 
         ob_start();
         ?>
@@ -113,7 +113,7 @@ class TFDateRange implements TFInterface
      */
     public function sqlConditionAndPlaceholderValue()
     {
-        $where = '';
+        $where = [];
         $placeholder_values_arr = [];
 
         // для этого виджета галка включения не выводится: если в поле пустая строка - он игрорируется
@@ -125,16 +125,16 @@ class TFDateRange implements TFInterface
         $column_name = preg_replace("/[^a-zA-Z0-9_]+/", "", $column_name);
 
         if ($start != '') {
-            $where .= ' ' . $column_name . ' >= ? ';
+            $where[] = ' ' . $column_name . ' >= ? ';
             $placeholder_values_arr[] = $start;
         }
 
         if ($end != '') {
-            $where .= ' ' . $column_name . ' <= ? ';
+            $where[] = ' ' . $column_name . ' <= ? ';
             $placeholder_values_arr[] = $end;
         }
 
-        return [$where, $placeholder_values_arr];
+        return [implode(' and ', $where), $placeholder_values_arr];
     }
 
     public function __construct($filter_uniq_id, $title, $field_name, $placeholder_start = '', $placeholder_end = '')
@@ -146,58 +146,36 @@ class TFDateRange implements TFInterface
         $this->setPlaceholderEnd($placeholder_end);
     }
 
-    /**
-     * @return mixed
-     */
     public function getFilterIniqId()
     {
         return $this->filter_iniq_id;
     }
 
-    /**
-     * @param mixed $filter_iniq_id
-     */
     public function setFilterIniqId($filter_iniq_id)
     {
         $this->filter_iniq_id = $filter_iniq_id;
     }
 
-    /**
-     * @return mixed
-     */
     public function getTitle()
     {
         return $this->title;
     }
 
-    /**
-     * @param mixed $title
-     */
     public function setTitle($title)
     {
         $this->title = $title;
     }
 
-    /**
-     * @return mixed
-     */
     public function getFieldName()
     {
         return $this->field_name;
     }
 
-    /**
-     * @param mixed $field_name
-     */
     public function setFieldName($field_name)
     {
         $this->field_name = $field_name;
     }
 
-
-    /**
-     * @param mixed $placeholder
-     */
     public function setPlaceholderStart($placeholder_start)
     {
         $this->placeholder_start = $placeholder_start;
@@ -208,17 +186,11 @@ class TFDateRange implements TFInterface
         $this->placeholder_end = $placeholder_end;
     }
 
-    /**
-     * @return mixed
-     */
     public function getPlaceholderStart()
     {
         return $this->placeholder_start;
     }
 
-    /**
-     * @return mixed
-     */
     public function getPlaceholderEnd()
     {
         return $this->placeholder_end;
