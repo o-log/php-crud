@@ -17,6 +17,7 @@ use OLOG\CRUD\CTable;
 use OLOG\CRUD\TCol;
 use OLOG\CRUD\TFEqualInline;
 use OLOG\CRUD\TFEqualOptionsInline;
+use OLOG\CRUD\TFEqualSelectInline;
 use OLOG\CRUD\TFLikeInline;
 use OLOG\CRUD\TWDelete;
 use OLOG\CRUD\TWOptions;
@@ -113,8 +114,8 @@ class DemoTermsA
             [
                 //new CRUDTableFilterEqualInvisible('parent_id', null),
                 //new CRUDTableFilter('vocabulary_id', CRUDTableFilter::FILTER_EQUAL, DemoTerm::VOCABULARY_MAIN, new CRUDFormWidgetOptions('vocabulary_id', DemoTerm::VOCABULARIES_ARR)),
-                new TFEqualOptionsInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, null, true),
-	            new TFEqualOptionsInline('345634g3tg534', '', 'gender', DemoTerm::GENDER_ARR, false, null, true, 'М. и Ж.'),
+                new TFEqualSelectInline('34785ty8y45t8', 'Словарь', 'vocabulary_id', DemoTerm::VOCABULARIES_ARR, false, null, true),
+	            new TFEqualSelectInline('345634g3tg534', '', 'gender', DemoTerm::GENDER_ARR, false, null, true, 'М. и Ж.'),
                 //new CRUDTableFilter('title', CRUDTableFilter::FILTER_LIKE, '')
                 new TFLikeInline('3748t7t45gdfg', '', 'title', 'Название содержит'),
                 new TFEqualInline('345634g2v35234', '', 'title', 'Название')
