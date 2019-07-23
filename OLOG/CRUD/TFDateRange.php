@@ -38,11 +38,9 @@ class TFDateRange implements TFInterface
     {
         $html = '';
         $html .= '<input type="hidden" id="' . $filterId . '_input" name="' . $filterId . '"  data-field="' . $filterId . '_date"/>
-                <span style="display: inline-block;" class="input-group date" id="' . $filterId . '">
+                <span style="display: inline-block;" class="date" id="' . $filterId . '">
                     <input placeholder="' . $placeholder . '" id="' . $filterId . '_date" type="text" class="form-control form-control-sm" value=""/>
-                    <span class="input-group-addon">
-                        <span class="fa fa-calendar"></span>
-                    </span>
+                    <span class="fa fa-calendar"></span>
                 </span>';
 
         $html .= '<script>
