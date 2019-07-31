@@ -37,37 +37,39 @@ class TFDateRange implements TFInterface
     static public function generateInputHtml(string $filterId, string $placeholder): string
     {
         $html = '';
-        $html .= '<input type="hidden" id="' . $filterId . '_input" name="' . $filterId . '"  data-field="' . $filterId . '_date"/>
-                <span style="display: inline-block;" class="date" id="' . $filterId . '">
-                    <input placeholder="' . $placeholder . '" id="' . $filterId . '_date" type="text" class="form-control form-control-sm" value=""/>
-                    <span class="fa fa-calendar"></span>
-                </span>';
+        $html .= '<input type="hidden" id="' . $filterId . '_input" name="' . $filterId . '"  data-field="' . $filterId . '_date"/>';
+        $html .= '<span id="' . $filterId . '">';
+        $html .= '<input placeholder="' . $placeholder . '" id="' . $filterId . '_date" type="date" class="form-control form-control-sm" value=""/>';
+        $html .= '</span>';
 
-        $html .= '<script>
-			$("#' . $filterId . '").datetimepicker({
-				format: "DD-MM-YYYY HH:mm:ss",
-				sideBySide: true,
-				showTodayButton: true
-			}).on("dp.change", function (obj) {
-				if (obj.date) {
-					$("#' . $filterId . '_input").val(obj.date.format("YYYY-MM-DD HH:mm:ss")).trigger("change");
-				} else {
-					$("#' . $filterId . '_input").val("").trigger("change");
-				}
-			});
-		</script>';
+
+//        $html .= '<script>
+//			$("#' . $filterId . '_date").datetimepicker({
+//				format: "DD-MM-YYYY HH:mm:ss",
+//				sideBySide: true,
+//				showTodayButton: true
+//			}).on("dp.change", function (obj) {
+//				if (obj.date) {
+//					$("#' . $filterId . '_input").val(obj.date.format("YYYY-MM-DD HH:mm:ss")).trigger("change");
+//				} else {
+//					$("#' . $filterId . '_input").val("").trigger("change");
+//				}
+//			});
+//		</script>';
 
         return $html;
     }
 
     public function getHtml()
     {
-        $html = '
-								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
-								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/ru.js"></script>
-				<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
-								<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
-			';
+        $html = '';
+
+//        $html = '
+//								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+//								<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/ru.js"></script>
+//				<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
+//								<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
+//			';
 
         $html .= self::generateInputHtml($this->getStartFilterId(), $this->getPlaceholderStart());
         $html .= self::generateInputHtml($this->getEndFilterId(), $this->getPlaceholderEnd());
@@ -75,10 +77,11 @@ class TFDateRange implements TFInterface
         ob_start();
         ?>
         <script>
-            var CRUDTableFilterDateRange = function (elem_id) {
+            var CRUDTableFilterDateRange = function (elem_id, hidden_input_el_id) {
                 var $input = $('#' + elem_id);
                 var timer;
                 var value = $input.val();
+                var $hidden_input = $('#' + hidden_input_el_id);
 
                 $input.on('focusout', function (e) {
                     var $this = $(this);
@@ -88,6 +91,9 @@ class TFDateRange implements TFInterface
                     }
 
                     value = $this.val();
+                    console.log(value);
+
+					$hidden_input.val(value);
 
                     clearTimeout(timer);
                     timer = setTimeout(function () {
@@ -95,8 +101,8 @@ class TFDateRange implements TFInterface
                     }, 200);
                 });
             };
-            new CRUDTableFilterDateRange('<?= $this->getStartFilterId() . '_date' ?>');
-            new CRUDTableFilterDateRange('<?= $this->getEndFilterId() . '_date' ?>');
+            new CRUDTableFilterDateRange('<?= $this->getStartFilterId() . '_date' ?>', '<?= $this->getStartFilterId() . '_input' ?>');
+            new CRUDTableFilterDateRange('<?= $this->getEndFilterId() . '_date' ?>', '<?= $this->getEndFilterId() . '_input' ?>');
 
         </script>
         <?php

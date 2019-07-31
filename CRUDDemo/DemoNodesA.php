@@ -13,6 +13,7 @@ use OLOG\CRUD\FRow;
 use OLOG\CRUD\TCol;
 use OLOG\CRUD\TFDateRange;
 use OLOG\CRUD\TFEqualOptionsInline;
+use OLOG\CRUD\TFEqualSelectInline;
 use OLOG\CRUD\TFLikeInline;
 use OLOG\CRUD\TWDelete;
 use OLOG\CRUD\TWHtmlWithLink;
@@ -107,8 +108,8 @@ class DemoNodesA
 			],
 			[
 			    new TFLikeInline('h7g98347hg934', 'Название', 'title'),
-                new TFEqualOptionsInline('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false),
-                new TFDateRange('i623ir2r3', '', DemoNode::_CREATED_AT_TS)
+                new TFEqualSelectInline('hk4g78gwed', 'Опубликовано', 'is_published', [0 => 'Нет', 1 => 'Да'], false, 0, false),
+                new TFDateRange('i623ir2r3', 'Создан', DemoNode::_CREATED_AT_TS)
             ],
 			'weight',
 			$table_id,
