@@ -250,7 +250,7 @@ class CTable
                             $col_width_attr = ' width="1px" ';
                         }
 
-                        echo '<td ' . $col_width_attr . ' style="word-break: break-all;">';
+                        echo '<td ' . $col_width_attr . ' style="word-break: normal;">';
 
                         if ($widget_obj instanceof TWInterface) {
                             echo $widget_obj->html($obj_obj);
