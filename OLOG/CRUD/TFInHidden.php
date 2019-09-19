@@ -39,7 +39,8 @@ class TFInHidden implements TFHiddenInterface
     {
         $filter_value_arr = $this->getValue();
         if(!count($filter_value_arr)){
-            return['', []];
+            // если значений для фильтрации нет - выборка должна быть пустой, поэтому ставим невыполнимый фильтр
+            return[' 1=2 ', []];
         }
 
         $placeholder_values_arr=[];
