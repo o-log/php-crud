@@ -186,7 +186,7 @@ class CTable
 
         // оборачиваем в отдельный div для выдачи только таблицы аяксом - иначе корневой элемент документа не будет доступен в jquery селекторах
 
-        $html = HTML::div($table_container_element_id, '', function () use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $orderby, $tableid, $display_total_rows_count, $title, $default_page_size) {
+        $html = HTML::div($table_container_element_id . ' table-responsive', '', function () use ($model_class_name, $create_form_html, $column_obj_arr, $filters_arr, $orderby, $tableid, $display_total_rows_count, $title, $default_page_size) {
             //echo '<div>';
             //echo '<div>';
 
